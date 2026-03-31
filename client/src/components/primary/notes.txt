@@ -1,0 +1,21 @@
+1. Base/Primitive Components (Foundation)
+Button - Primary, secondary, danger variants with different sizes
+Card - Container for content with shadow, border, padding
+Container/Box - Wrapper for layout and spacing
+Typography - Heading (H1-H6), Body, Caption, Label
+
+2. Composite Components (Built from primitives)
+Badge - For tags/labels (gesture names, status)
+Alert - For notifications/feedback
+Spinner/Loader - Loading state indicator
+Modal/Dialog - For overlays
+
+3. Layout Components (Page structure)
+Header - Navigation bar
+MainLayout - Wrapper for main content area
+CameraContainer - Wrapper specifically for video feed
+
+4. Feature Components (Domain-specific)
+CameraFeed - Displays webcam stream with gesture overlay
+GestureDisplay - Shows detected gesture + emoji/label
+ControlPanel - Start/stop recording, settings

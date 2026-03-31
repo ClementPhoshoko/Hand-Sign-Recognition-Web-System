@@ -1,0 +1,28 @@
+1. Gesture & Detection Components
+GestureCard - Displays detected gesture with emoji, label, and confidence score
+GestureResult - Shows emoji + text result with optional animation
+ConfidenceIndicator - Bar/circular indicator showing detection confidence (0-100%)
+GestureHistory/RecognitionLog - Small list showing recent detected gestures
+
+2. Camera & Feed Components
+CameraFrame - Container for video feed with overlay borders
+CameraControls - Start/Stop button + settings toggle
+OverlayText - Displays gesture name/emoji on top of camera feed
+HandLandmarkOverlay - Shows hand keypoints on video (debug/visual)
+
+3. Status & Feedback Components
+StatusBadge - Shows connection status (✓ Connected, ✗ Disconnected, ⏳ Loading)
+LoadingSpinner - Shown during gesture processing/model loading
+Toast/Notification - Quick alerts (e.g., "Camera access denied", "Model ready")
+ErrorMessage - Shows errors with retry button
+
+4. Controls & Settings
+ToggleSwitch - Enable/disable features (sound, history, debug mode)
+SliderControl - Adjust sensitivity, confidence threshold
+DropdownSelect - Choose gesture mapping (emoji, text, voice)
+SettingsPanel - Groups multiple controls
+
+5. Info & Stats
+StatBox - Shows metrics (FPS, gesture count, session time)
+InfoTooltip - Helper text on hover
+HeaderBar - Title + status indicators
