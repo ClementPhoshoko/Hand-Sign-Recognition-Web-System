@@ -1,128 +1,31 @@
-/* ======================================================
-   LIQUID GLASS DESIGN SYSTEM (PALETTE + MODES)
-   Replaced previous legacy palette with the new requested style.
-   ====================================================== */
-
-:root {
-  color-scheme: light;
-
-  /* Base shell layers */
-  --shell: #0E1116;
-  --shell-soft: #131720;
-  --shell-elevated: #1A1F2B;
-
-  /* Glass surfaces */
-  --glass-surface: rgba(255, 255, 255, 0.05);
-  --glass-surface-strong: rgba(255, 255, 255, 0.08);
-  --glass-inner-plate: rgba(18, 20, 28, 0.70);
-
-  /* Liquid whites */
-  --soft-white: rgba(255, 255, 255, 0.35);
-  --medium-white: rgba(255, 255, 255, 0.55);
-  --strong-white: rgba(255, 255, 255, 0.75);
-
-  /* Borders */
-  --border-soft: rgba(255, 255, 255, 0.12);
-  --border-standard: rgba(255, 255, 255, 0.18);
-  --border-highlight: rgba(255, 255, 255, 0.28);
-
-  /* Highlights */
-  --top-highlight: rgba(255, 255, 255, 0.40);
-  --edge-glow: rgba(255, 255, 255, 0.25);
-
-  /* Shadows */
-  --shadow-soft: 0 12px 20px rgba(0, 0, 0, 0.25);
-  --shadow-deep: 0 18px 35px rgba(0, 0, 0, 0.45);
-
-  /* Text */
-  --text-primary: #E8ECF3;
-  --text-secondary: #B4BCCB;
-  --text-muted: #7A8191;
-
-  /* IDE/editor area */
-  --editor-bg: #10141C;
-  --line-highlight: rgba(255, 255, 255, 0.04);
-  --selection: rgba(255, 255, 255, 0.12);
-
-  /* Gradients */
-  --glass-gradient: linear-gradient(145deg, rgba(255, 255, 255, 0.10), rgba(255, 255, 255, 0.02));
-  --inner-depth-gradient: linear-gradient(145deg, rgba(0, 0, 0, 0.25), rgba(0, 0, 0, 0.05));
-
-  /* Fallbacks for components */
-  --bg-level-0: var(--shell);
-  --bg-level-1: var(--shell-soft);
-  --bg-level-2: var(--shell-elevated);
-  --bg-level-glass: var(--glass-surface);
-
-  --border-radius: 12px;
-  --glass-blur: blur(16px);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    /* Dark mode overrides */
-    --shell: #080A0F;
-    --shell-soft: #0C0F15;
-    --shell-elevated: #121622;
-
-    --glass-surface: rgba(255, 255, 255, 0.03);
-    --glass-surface-strong: rgba(255, 255, 255, 0.06);
-    --glass-inner-plate: rgba(10, 12, 18, 0.80);
-
-    --soft-white: rgba(255, 255, 255, 0.25);
-    --medium-white: rgba(255, 255, 255, 0.45);
-    --strong-white: rgba(255, 255, 255, 0.65);
-
-    --border-soft: rgba(255, 255, 255, 0.10);
-    --border-standard: rgba(255, 255, 255, 0.14);
-    --border-highlight: rgba(255, 255, 255, 0.22);
-
-    --top-highlight: rgba(255, 255, 255, 0.28);
-    --edge-glow: rgba(255, 255, 255, 0.18);
-
-    --shadow-soft: 0 14px 24px rgba(0, 0, 0, 0.35);
-    --shadow-deep: 0 20px 42px rgba(0, 0, 0, 0.60);
-
-    --text-primary: #F1F5FB;
-    --text-secondary: #AAB2C5;
-    --text-muted: #6C7385;
-
-    --editor-bg: #0B0E14;
-    --line-highlight: rgba(255, 255, 255, 0.03);
-    --selection: rgba(255, 255, 255, 0.10);
-
-    --glass-gradient: linear-gradient(145deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.01));
-    --inner-depth-gradient: linear-gradient(145deg, rgba(0, 0, 0, 0.40), rgba(0, 0, 0, 0.10));
-
-    --bg-level-0: var(--shell);
-    --bg-level-1: var(--shell-soft);
-    --bg-level-2: var(--shell-elevated);
-    --bg-level-glass: var(--glass-surface);
-  }
-}
-
-/* Base page styles using the new palette */
-html,
-body {
-  margin: 0;
-  padding: 0;
-  min-height: 100%;
-  background-color: var(--bg-level-0);
-  color: var(--text-primary);
-  font-family: var(--font-sans, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif);
-}
-
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
-}
+/* ===================================================================
+   COMPONENT STYLES
+   Uses token colors from token.css
+   =================================================================== */
 
 .glass-panel {
   background: var(--glass-surface);
   border: 1px solid var(--border-standard);
   border-radius: var(--border-radius);
-  backdrop-filter: blur(12px);
+  backdrop-filter: var(--glass-blur);
   box-shadow: var(--shadow-soft);
   background-image: var(--glass-gradient);
+  color: var(--text-primary);
+}
+
+/* example app container to adopt global color tokens */
+.app-root {
+  min-height: 100vh;
+  background: var(--bg-level-0);
+  color: var(--text-primary);
+  transition: background-color var(--transition-base, 250ms ease-in-out), color var(--transition-base, 250ms ease-in-out);
+}
+
+#center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin: 2rem auto;
+  max-width: 96vw;
 }

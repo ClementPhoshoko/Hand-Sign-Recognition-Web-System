@@ -2,13 +2,14 @@ import { useState } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from './assets/vite.svg'
 import heroImg from './assets/hero.png'
+import Card from './components/Card.jsx'
 import './App.css'
 
 function App() {
   const [count, setCount] = useState(0)
 
   return (
-    <>
+    <div className="app-root">
       <section id="center">
         <div className="hero">
           <img src={heroImg} className="base" width="170" height="179" alt="" />
@@ -28,6 +29,15 @@ function App() {
           Count is {count}
         </button>
       </section>
+
+      <Card
+        title="Glassmorphism Token Card"
+        description="This card demonstrates token-driven theming using token.css and App.css component styles."
+      >
+        <p>
+          Works in light & dark system preferences, using one shared token source.
+        </p>
+      </Card>
 
       <div className="ticks"></div>
 
@@ -114,7 +124,7 @@ function App() {
 
       <div className="ticks"></div>
       <section id="spacer"></section>
-    </>
+    </div>
   )
 }
 
