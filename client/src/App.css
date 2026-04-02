@@ -1,16 +1,33 @@
 /* ===================================================================
    COMPONENT STYLES
    Uses token colors from token.css
-   =================================================================== */
+   ===================================================================*/
 
 .glass-panel {
-  background: var(--glass-surface);
-  border: 1px solid var(--border-standard);
-  border-radius: var(--border-radius);
+  position: relative;
+  background: var(--glass-inner-plate);
+  border: 1.5px solid var(--border-highlight);
+  border-radius: 28px;
   backdrop-filter: var(--glass-blur);
-  box-shadow: var(--shadow-soft);
+  box-shadow: 
+    var(--glow-outer),
+    var(--glow-inner),
+    var(--shadow-deep);
   background-image: var(--glass-gradient);
   color: var(--text-primary);
+  transition: all var(--transition-base);
+}
+
+.glass-panel::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--top-highlight), transparent);
+  border-radius: 28px 28px 0 0;
+  z-index: 1;
 }
 
 /* example app container to adopt global color tokens */
@@ -18,7 +35,7 @@
   min-height: 100vh;
   background: var(--bg-level-0);
   color: var(--text-primary);
-  transition: background-color var(--transition-base, 250ms ease-in-out), color var(--transition-base, 250ms ease-in-out);
+  transition: background-color var(--transition-base), color var(--transition-base);
 }
 
 #center {
