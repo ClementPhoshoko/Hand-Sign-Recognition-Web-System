@@ -14,6 +14,46 @@ Premium glassmorphism theme with enhanced glow effects and luminous border effec
 4. **Premium glow effects** with dedicated `--glow-outer` and `--glow-inner` tokens.
 5. **Easy scaling** — all components get theme updates automatically.
 
+## 🔍 Alignment with Liquid Glass Rules
+
+This design system is built to align with the principles of "liquid glass" as a layered material system for UI. Here's how it matches the key rules:
+
+### 1. Layered Surface with Controlled Transparency
+- **Outer Shell**: Communicated via `--glass-surface`, `--border-highlight`, `--glow-outer`, `--top-highlight` for material cues.
+- **Inner Stabilized Plate**: `--glass-inner-plate` provides a controlled scrim under content for stability.
+- **Background Perceptible**: Transparency keeps background visible without fog, using opacity controls.
+
+### 2. Thickness and Edge Separation
+- **Cues**: Thin border (`--border-highlight`), highlight band (`--top-highlight`), inset glow (`--glow-inner`), shadow (`--shadow-deep`).
+- **Consistency**: All cues are tokenized for repeatable use across components.
+
+### 3. Locked Light Model
+- Single light direction implied by `--top-highlight` and `--glow-inner` (top-left light source).
+- Consistent across all glass elements.
+
+### 4. Stabilized Plate for Content
+- `--glass-inner-plate` acts as the stabilized layer.
+- For dense content, `--glass-inner-plate-dense` provides stronger stabilization.
+- Text colors (`--text-primary`, etc.) ensure contrast stability.
+
+### 5. Obvious State Deltas
+- **Hover**: Softens shadow for subtle feedback.
+- **Focus**: Adds crisp ring (`--focus-ring`) above the stack.
+- **Pressed**: Compresses shadow for physical response.
+- **Disabled**: Reduces opacity and removes glows/sparkle.
+
+### 6. Stress Test Compliance
+- **Background Stress**: Stabilized plate keeps content stable across backgrounds.
+- **State Stress**: Structural changes (rings, shadows) ensure visibility.
+- **Density Stress**: Dense tier (`--glass-inner-plate-dense`) for forms/tables.
+- **Fallback Stress**: `.glass-panel--fallback` provides non-blur alternative with same anatomy.
+
+### 7. Do's and Don'ts Adherence
+- **Build Stack First**: Tokens define shell and plate separately.
+- **Stabilize Content**: Dedicated plate under text/icons.
+- **Thickness via Edges**: Consistent border/highlight cues.
+- **Locked Light**: Single model across system.
+
 ## ⚙️ Token usage patterns
 
 ### Global variables (`token.css`)
@@ -142,6 +182,13 @@ export default function Card({ title, description, actions }) {
 ```
 
 Apply `glass-panel` class for instant glow + blur effect.
+
+### Variants
+- `.glass-panel--dense`: Use for dense content (forms, tables) with stronger stabilization.
+- `.glass-panel--fallback`: Use when blur is unavailable (fallback to solid surface).
+
+### States
+States are built-in: hover softens shadow, focus adds ring, pressed compresses shadow, disabled dims and removes sparkle.
 
 ---
 

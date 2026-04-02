@@ -15,6 +15,7 @@
   --glass-surface: rgba(255, 255, 255, 0.05);
   --glass-surface-strong: rgba(255, 255, 255, 0.08);
   --glass-inner-plate: rgba(18, 20, 28, 0.70);
+  --glass-inner-plate-dense: rgba(18, 20, 28, 0.85); /* Stronger for dense content */
 
   /* Liquid whites */
   --soft-white: rgba(255, 255, 255, 0.35);
@@ -102,6 +103,9 @@
   --transition-base: 250ms ease-in-out;
   --transition-slow: 350ms ease-in-out;
 
+  /* Focus ring */
+  --focus-ring: 0 0 0 2px var(--border-highlight);
+
   /* Placeholder */
   --placeholder-text: rgba(180, 188, 203, 0.6);
 }
@@ -115,6 +119,7 @@
     --glass-surface: rgba(255, 255, 255, 0.03);
     --glass-surface-strong: rgba(255, 255, 255, 0.06);
     --glass-inner-plate: rgba(10, 12, 18, 0.80);
+    --glass-inner-plate-dense: rgba(10, 12, 18, 0.90);
 
     --soft-white: rgba(255, 255, 255, 0.25);
     --medium-white: rgba(255, 255, 255, 0.45);

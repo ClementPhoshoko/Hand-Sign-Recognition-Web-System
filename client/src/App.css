@@ -30,6 +30,53 @@
   z-index: 1;
 }
 
+/* States */
+.glass-panel:hover {
+  box-shadow: 
+    var(--glow-outer),
+    var(--glow-inner),
+    var(--shadow-soft); /* Soften shadow on hover */
+}
+
+.glass-panel:focus {
+  outline: none;
+  box-shadow: 
+    var(--glow-outer),
+    var(--glow-inner),
+    var(--shadow-deep),
+    var(--focus-ring);
+}
+
+.glass-panel:active {
+  box-shadow: 
+    var(--glow-outer),
+    inset 0 2px 4px rgba(0, 0, 0, 0.2), /* Compress shadow */
+    var(--shadow-deep);
+}
+
+.glass-panel:disabled {
+  opacity: 0.6;
+  --glow-outer: none; /* Lose sparkle */
+  --glow-inner: none;
+}
+
+/* Fallback without blur */
+.glass-panel--fallback {
+  backdrop-filter: none;
+  background: var(--shell-elevated);
+  border: 1px solid var(--border-standard);
+  box-shadow: var(--shadow-soft);
+}
+
+.glass-panel--fallback::before {
+  display: none;
+}
+
+/* Dense tier */
+.glass-panel--dense {
+  background: var(--glass-inner-plate-dense);
+}
+
 /* example app container to adopt global color tokens */
 .app-root {
   min-height: 100vh;
