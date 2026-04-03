@@ -1,3 +1,153 @@
+/* ═══════════════════════════════════════════════════════════════
+   HOMEPAGE SHELL
+═══════════════════════════════════════════════════════════════ */
+
 .homepage-shell {
 	flex: 1;
+	position: relative;
+	overflow: hidden;
+	display: flex;
+	flex-direction: column;
+	min-height: calc(100vh - 80px); /* below nav */
+}
+
+/* Page content — sits above the canvas via z-index: 1 */
+.homepage-content {
+	position: relative;
+	z-index: 1;
+	flex: 1;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   CANVAS — background glow layer
+═══════════════════════════════════════════════════════════════ */
+
+.hp-canvas {
+	position: absolute;
+	inset: 0;
+	pointer-events: none;
+	z-index: 0;
+	isolation: isolate;
+}
+
+/* ── Shared orb base ────────────────────────────────────────────── */
+/*
+  Only `opacity` and `transform: scale()` are animated.
+  `filter: blur()` stays static — no layout, no paint.
+  Result: smooth GPU-composited animation, minimal CPU cost.
+*/
+.hp-orb {
+	position: absolute;
+	border-radius: 50%;
+	will-change: transform, opacity;
+	transform-origin: center center;
+}
+
+/* ── Orb 1: primary center pulse ──────────────────────────────── */
+/* Largest, centered — this is the hero glow under the future text */
+.hp-orb--1 {
+	width: 860px;
+	height: 560px;
+	top: calc(50% - 280px);
+	left: calc(50% - 430px);
+	background: radial-gradient(
+		ellipse at center,
+		rgba(120, 170, 255, 0.62) 0%,
+		rgba(120, 170, 255, 0.30) 38%,
+		rgba(120, 170, 255, 0.10) 58%,
+		transparent 72%
+	);
+	filter: blur(48px);
+	animation: orbPulse1 5.5s ease-in-out infinite;
+}
+
+/* ── Orb 2: secondary wider halo ────────────────────────────── */
+/* Wider and more diffuse, breathes slightly out of phase with orb 1 */
+.hp-orb--2 {
+	width: 1100px;
+	height: 700px;
+	top: calc(50% - 350px);
+	left: calc(50% - 550px);
+	background: radial-gradient(
+		ellipse at center,
+		rgba(176, 214, 255, 0.28) 0%,
+		rgba(176, 214, 255, 0.14) 45%,
+		transparent 70%
+	);
+	filter: blur(75px);
+	animation: orbPulse2 8s ease-in-out infinite;
+}
+
+/* ── Orb 3: left accent, blue-purple ──────────────────────────── */
+/* Adds depth — purple cast to the left of center */
+.hp-orb--3 {
+	width: 500px;
+	height: 400px;
+	top: calc(50% - 200px);
+	left: calc(50% - 380px);
+	background: radial-gradient(
+		ellipse at center,
+		rgba(110, 90, 240, 0.32) 0%,
+		rgba(110, 90, 240, 0.12) 45%,
+		transparent 68%
+	);
+	filter: blur(80px);
+	animation: orbPulse3 10s ease-in-out infinite;
+}
+
+/* ── Orb 4: right accent, cool teal-blue ───────────────────────── */
+/* Mirror accent on the right, slightly warmer blue */
+.hp-orb--4 {
+	width: 480px;
+	height: 380px;
+	top: calc(50% - 190px);
+	left: calc(50% + 60px);
+	background: radial-gradient(
+		ellipse at center,
+		rgba(80, 160, 255, 0.30) 0%,
+		rgba(80, 160, 255, 0.12) 45%,
+		transparent 68%
+	);
+	filter: blur(78px);
+	animation: orbPulse4 7s ease-in-out infinite;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   KEYFRAMES
+═══════════════════════════════════════════════════════════════ */
+
+/* Primary hero pulse: bright core breath */
+@keyframes orbPulse1 {
+	0%   { opacity: 0.30; transform: scale(0.94); }
+	50%  { opacity: 1;    transform: scale(1.08); }
+	100% { opacity: 0.30; transform: scale(0.94); }
+}
+
+/* Wide halo: slower, lags behind orb 1 */
+@keyframes orbPulse2 {
+	0%   { opacity: 0.25; transform: scale(0.97); }
+	50%  { opacity: 0.90; transform: scale(1.05); }
+	100% { opacity: 0.25; transform: scale(0.97); }
+}
+
+/* Left accent: out-of-phase, drifts left */
+@keyframes orbPulse3 {
+	0%   { opacity: 0.70; transform: scale(1.04) translateX(0);    }
+	50%  { opacity: 0.20; transform: scale(0.92) translateX(-22px); }
+	100% { opacity: 0.70; transform: scale(1.04) translateX(0);    }
+}
+
+/* Right accent: counter-moves to left accent */
+@keyframes orbPulse4 {
+	0%   { opacity: 0.20; transform: scale(0.93) translateX(0);   }
+	50%  { opacity: 0.80; transform: scale(1.09) translateX(20px); }
+	100% { opacity: 0.20; transform: scale(0.93) translateX(0);   }
+}
+
+/* ── Accessibility: respect reduced-motion ─────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+	.hp-orb {
+		animation: none;
+		opacity: 0.5;
+	}
 }
