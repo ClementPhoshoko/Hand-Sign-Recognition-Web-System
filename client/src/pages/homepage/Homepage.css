@@ -362,6 +362,285 @@
 }
 
 /* ═══════════════════════════════════════════════════════════════
+   THERE IS MORE  (unified Use Cases + Tech Stack)
+═══════════════════════════════════════════════════════════════ */
+
+.hp-more {
+	position: relative;
+	z-index: 1;
+	padding: 5rem 1.8rem 5.5rem;
+}
+
+.hp-more-inner {
+	max-width: 1160px;
+	margin: 0 auto;
+	display: flex;
+	flex-direction: column;
+	gap: 2.5rem;
+}
+
+/* ── Header row: title + tab switcher ───────────────────────── */
+.hp-more-header {
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+	gap: 1rem;
+}
+
+.hp-more-title {
+	margin: 0;
+	font-size: clamp(var(--text-2xl), 4vw, var(--text-3xl));
+	font-weight: var(--font-bold);
+	color: var(--text-primary);
+	letter-spacing: -0.02em;
+}
+
+/* ── Tab pills ───────────────────────────────────────────────── */
+.hp-more-tabs {
+	display: flex;
+	gap: 0.5rem;
+	padding: 0;
+}
+
+.hp-more-tab {
+	padding: 0.5rem 1.25rem;
+	border-radius: var(--radius-full);
+	border: 1px solid transparent;
+	font-size: var(--text-sm);
+	font-weight: var(--font-semibold);
+	color: var(--text-muted);
+	background: transparent;
+	cursor: pointer;
+	transition:
+		background var(--transition-fast),
+		color var(--transition-fast),
+		border-color var(--transition-fast),
+		box-shadow var(--transition-fast);
+	white-space: nowrap;
+}
+
+.hp-more-tab:hover {
+	color: var(--text-secondary);
+	background: var(--glass-surface);
+}
+
+.hp-more-tab--active {
+	background: var(--glass-surface-strong);
+	border-color: var(--border-standard);
+	color: var(--text-primary);
+	box-shadow:
+		0 0 12px color-mix(in srgb, var(--orb-primary) 25%, transparent),
+		var(--glow-inner);
+}
+
+/* ── Two-column body ─────────────────────────────────────────── */
+.hp-more-body {
+	display: grid;
+	grid-template-columns: 320px 1fr;
+	gap: 1.5rem;
+	align-items: start;
+}
+
+/* ── Left: vertical accordion list ──────────────────────────── */
+.hp-more-list {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	display: flex;
+	flex-direction: column;
+	max-height: 460px;
+	overflow: hidden;
+}
+
+/* ── List items: staggered slide-in from below on tab switch ── */
+@keyframes moreItemIn {
+	from {
+		opacity: 0;
+		transform: translateY(16px);
+	}
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}
+
+.hp-more-item {
+	border-bottom: 1px solid var(--border-soft);
+	position: relative;
+	display: grid;
+	grid-template-rows: auto 0fr;
+	transition:
+		background var(--transition-fast),
+		grid-template-rows 300ms ease;
+	/* each item uses its index via --i for stagger delay */
+	animation: moreItemIn 320ms ease both;
+	animation-delay: calc(var(--i, 0) * 60ms);
+}
+
+.hp-more-item--open {
+	grid-template-rows: auto 1fr;
+}
+
+.hp-more-item:first-child {
+	border-top: 1px solid var(--border-soft);
+}
+
+/* Active left accent bar */
+.hp-more-item--open::before {
+	content: '';
+	position: absolute;
+	left: 0;
+	top: 0;
+	bottom: 0;
+	width: 3px;
+	border-radius: 0 2px 2px 0;
+	background: var(--orb-primary);
+	box-shadow: 0 0 10px color-mix(in srgb, var(--orb-primary) 60%, transparent);
+}
+
+.hp-more-item-btn {
+	width: 100%;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 1rem;
+	padding: 1.35rem 1rem 1.35rem 1.2rem;
+	background: transparent;
+	border: none;
+	cursor: pointer;
+	text-align: left;
+}
+
+.hp-more-item-btn:hover .hp-more-item-label {
+	color: var(--text-primary);
+}
+
+.hp-more-item-label {
+	font-size: var(--text-sm);
+	font-weight: var(--font-semibold);
+	color: var(--text-secondary);
+	line-height: var(--line-snug);
+	transition: color var(--transition-fast);
+}
+
+.hp-more-item--open .hp-more-item-label {
+	color: var(--text-primary);
+}
+
+.hp-more-item-chevron {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 28px;
+	height: 28px;
+	flex-shrink: 0;
+	color: var(--text-muted);
+	transition: color var(--transition-fast);
+}
+
+.hp-more-item--open .hp-more-item-chevron {
+	color: var(--orb-primary);
+}
+
+.hp-more-item-preview {
+	min-height: 0;
+	overflow: hidden;
+	margin: 0;
+	padding: 0 1.2rem;
+	font-size: var(--text-sm);
+	line-height: var(--line-relaxed);
+	color: var(--text-muted);
+	opacity: 0;
+	transition:
+		opacity 250ms ease 50ms,
+		padding-bottom 300ms ease;
+}
+
+.hp-more-item-preview--open {
+	opacity: 1;
+	padding-bottom: 0.9rem;
+}
+
+/* ── Right: detail panel ─────────────────────────────────────── */
+.hp-more-panel {
+	background: var(--glass-inner-plate);
+	border: 1px solid var(--border-standard);
+	border-radius: 14px;
+	backdrop-filter: var(--glass-blur);
+	-webkit-backdrop-filter: var(--glass-blur);
+	padding: 2rem 2.2rem;
+	box-shadow:
+		var(--shadow-deep),
+		0 0 32px color-mix(in srgb, var(--orb-primary) 12%, transparent),
+		var(--glow-inner);
+	display: flex;
+	flex-direction: column;
+	gap: 1rem;
+	min-height: 280px;
+}
+
+.hp-more-panel-eyebrow {
+	margin: 0;
+	font-size: var(--text-xs);
+	font-weight: var(--font-semibold);
+	letter-spacing: 0.10em;
+	text-transform: uppercase;
+	color: var(--orb-primary);
+}
+
+.hp-more-panel-heading {
+	margin: 0;
+	font-size: clamp(var(--text-xl), 2.5vw, var(--text-2xl));
+	font-weight: var(--font-bold);
+	color: var(--text-primary);
+	line-height: var(--line-snug);
+	letter-spacing: -0.01em;
+}
+
+.hp-more-panel-body {
+	margin: 0;
+	font-size: var(--text-base);
+	line-height: var(--line-relaxed);
+	color: var(--text-secondary);
+}
+
+/* ── Tags (tech stack) ───────────────────────────────────────── */
+.hp-more-tags {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.5rem;
+	margin-top: 0.25rem;
+}
+
+.hp-more-tag {
+	display: inline-flex;
+	align-items: center;
+	padding: 0.28rem 0.75rem;
+	border-radius: var(--radius-full);
+	font-size: var(--text-xs);
+	font-weight: var(--font-semibold);
+	letter-spacing: 0.04em;
+	color: var(--orb-primary);
+	background: color-mix(in srgb, var(--orb-primary) 12%, transparent);
+	border: 1px solid color-mix(in srgb, var(--orb-primary) 30%, transparent);
+}
+
+/* ── Responsive ──────────────────────────────────────────────── */
+@media (max-width: 860px) {
+	.hp-more {
+		padding: 3.5rem 1.2rem 4rem;
+	}
+
+	.hp-more-body {
+		grid-template-columns: 1fr;
+	}
+
+	.hp-more-panel {
+		min-height: auto;
+	}
+}
+
+/* ═══════════════════════════════════════════════════════════════
    CANVAS — background glow layer
 ═══════════════════════════════════════════════════════════════ */
 
