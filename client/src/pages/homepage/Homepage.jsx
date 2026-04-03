@@ -1,4 +1,8 @@
-import heroImg from '../../assets/nav_and_home/Processing_ASL_subtitles_on_laptop.png'
+import heroImg        from '../../assets/nav_and_home/Processing_ASL_subtitles_on_laptop.png'
+import ovInputImg     from '../../assets/nav_and_home/Hello from the video call (1).png'
+import ovDetectImg    from '../../assets/nav_and_home/Computer vision pipeline overview (1).png'
+import ovTranscribeImg from '../../assets/nav_and_home/Processing_ASL_subtitles_on_laptop.png'
+import ovOutputImg    from '../../assets/nav_and_home/Support FAQ section with woman (1).png'
 import './Homepage.css'
 
 function Homepage() {
@@ -44,15 +48,80 @@ function Homepage() {
 					{/* Right — hero image */}
 					<div className="hp-hero-img-wrap">
 						<div className="hp-hero-img-glow" aria-hidden="true" />
-						<img
-							src={heroImg}
-							alt="Processing ASL subtitles on laptop"
-							className="hp-hero-img"
-							loading="eager"
-							draggable="false"
-						/>
+						<div className="hp-hero-img-outer">
+							<img
+								src={heroImg}
+								alt="Processing ASL subtitles on laptop"
+								className="hp-hero-img"
+								loading="eager"
+								draggable="false"
+							/>
+						</div>
 					</div>
 
+				</div>
+			</section>
+
+			{/* ── Overview section ──────────────────────────────── */}
+			<section className="hp-overview" aria-label="System overview">
+				<div className="hp-overview-inner">
+
+					<div className="hp-overview-header">
+						<h2 className="hp-overview-title">Overview</h2>
+						<p className="hp-overview-desc">
+							A full pipeline from webcam input to on-screen text, powered by computer vision.
+						</p>
+					</div>
+
+					<div className="hp-overview-track">
+
+						<div className="hp-ov-card">
+							<h3 className="hp-ov-card-title">Input Capture</h3>
+							<div className="hp-ov-card-img-wrap">
+								<img src={ovInputImg} alt="Webcam input capture" draggable="false" />
+							</div>
+							<p className="hp-ov-card-desc">
+								Your webcam or uploaded video feeds frames directly into the recognition pipeline.
+							</p>
+						</div>
+
+						<span className="hp-ov-arrow" aria-hidden="true">&#8212;&nbsp;&#187;</span>
+
+						<div className="hp-ov-card">
+							<h3 className="hp-ov-card-title">Hand Detection<br />&amp; Tracking</h3>
+							<div className="hp-ov-card-img-wrap">
+								<img src={ovDetectImg} alt="Hand landmark detection" draggable="false" />
+							</div>
+							<p className="hp-ov-card-desc">
+								MediaPipe isolates and tracks hand landmarks across every frame with high precision.
+							</p>
+						</div>
+
+						<span className="hp-ov-arrow" aria-hidden="true">&#8212;&nbsp;&#187;</span>
+
+						<div className="hp-ov-card">
+							<h3 className="hp-ov-card-title">Text Transcription</h3>
+							<div className="hp-ov-card-img-wrap">
+								<img src={ovTranscribeImg} alt="ASL text transcription" draggable="false" />
+							</div>
+							<p className="hp-ov-card-desc">
+								Recognised signs are mapped to characters and assembled into readable text output.
+							</p>
+						</div>
+
+						<span className="hp-ov-arrow" aria-hidden="true">&#8212;&nbsp;&#187;</span>
+
+						<div className="hp-ov-card">
+							<h3 className="hp-ov-card-title">Output Display</h3>
+							<div className="hp-ov-card-img-wrap">
+								<img src={ovOutputImg} alt="On-screen output display" draggable="false" />
+							</div>
+							<p className="hp-ov-card-desc">
+								The resulting text appears instantly on-screen or can be exported as subtitle files.
+							</p>
+						</div>
+
+					</div>
 				</div>
 			</section>
 
