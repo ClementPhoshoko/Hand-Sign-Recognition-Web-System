@@ -29,14 +29,14 @@
 
   /* Highlights & Glow */
   --top-highlight: rgba(255, 255, 255, 0.40);
-  --edge-glow: rgba(255, 255, 255, 0.25);
-  --glow-outer: 0 0 60px rgba(255, 255, 255, 0.12);
-  --glow-inner: inset 0 1px 0 rgba(255, 255, 255, 0.20);
+  --edge-glow: rgba(255, 255, 255, 0.30);
+  --glow-outer: 0 0 0 1px rgba(255, 255, 255, 0.14), 0 0 14px rgba(176, 214, 255, 0.22), 0 0 30px rgba(176, 214, 255, 0.14);
+  --glow-inner: inset 0 1px 0 rgba(255, 255, 255, 0.24), inset 0 -1px 0 rgba(255, 255, 255, 0.08);
 
   /* Shadows */
   --shadow-soft: 0 12px 20px rgba(0, 0, 0, 0.25);
   --shadow-deep: 0 18px 35px rgba(0, 0, 0, 0.45);
-  --shadow-glow: 0 0 40px rgba(255, 255, 255, 0.08);
+  --shadow-glow: 0 8px 24px rgba(120, 170, 255, 0.18);
 
   /* Text */
   --text-primary: #E8ECF3;
@@ -108,6 +108,20 @@
 
   /* Placeholder */
   --placeholder-text: rgba(180, 188, 203, 0.6);
+
+  /* Navbar */
+  --nav-height: 64px;
+  --nav-brand-color: #e9f4ff;
+  --nav-glow: 0 0 10px rgba(152, 205, 255, 0.22), 0 0 20px rgba(152, 205, 255, 0.12);
+  --nav-link-hover-bg: var(--glass-surface);
+  --nav-contact-bg: var(--glass-surface);
+  --nav-contact-hover-bg: var(--glass-surface-strong);
+
+  /* Avatar */
+  --avatar-text-color: var(--shell);
+  --avatar-bg-start: #d8f0ff;
+  --avatar-bg-end: #8fb4ff;
+  --avatar-ring-color: var(--border-soft);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -130,13 +144,13 @@
     --border-highlight: rgba(255, 255, 255, 0.22);
 
     --top-highlight: rgba(255, 255, 255, 0.28);
-    --edge-glow: rgba(255, 255, 255, 0.18);
-    --glow-outer: 0 0 50px rgba(255, 255, 255, 0.06);
-    --glow-inner: inset 0 1px 0 rgba(255, 255, 255, 0.12);
+    --edge-glow: rgba(190, 220, 255, 0.22);
+    --glow-outer: 0 0 0 1px rgba(186, 215, 255, 0.12), 0 0 12px rgba(124, 162, 255, 0.18), 0 0 24px rgba(124, 162, 255, 0.10);
+    --glow-inner: inset 0 1px 0 rgba(255, 255, 255, 0.16), inset 0 -1px 0 rgba(255, 255, 255, 0.05);
 
     --shadow-soft: 0 14px 24px rgba(0, 0, 0, 0.35);
     --shadow-deep: 0 20px 42px rgba(0, 0, 0, 0.60);
-    --shadow-glow: 0 0 30px rgba(255, 255, 255, 0.04);
+    --shadow-glow: 0 8px 20px rgba(94, 132, 219, 0.16);
 
     --text-primary: #F1F5FB;
     --text-secondary: #AAB2C5;
@@ -153,5 +167,10 @@
     --bg-level-1: var(--shell-soft);
     --bg-level-2: var(--shell-elevated);
     --bg-level-glass: var(--glass-surface);
+
+    --nav-brand-color: #d9e8ff;
+    --nav-glow: 0 0 8px rgba(112, 156, 245, 0.18), 0 0 16px rgba(112, 156, 245, 0.10);
+    --avatar-bg-start: #b7cffc;
+    --avatar-bg-end: #87a8f8;
   }
 }
