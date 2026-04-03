@@ -1,4 +1,23 @@
 /* ===================================================================
+   GLOBAL STYLES
+   ===================================================================*/
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  background: var(--bg-level-0);
+  color: var(--text-primary);
+  transition: background-color var(--transition-base), color var(--transition-base);
+  font-family: var(--font-sans);
+}
+
+#root {
+  min-height: 100vh;
+  background: var(--bg-level-0);
+}
+
+/* ===================================================================
    COMPONENT STYLES
    Uses token colors from token.css
    ===================================================================*/
@@ -77,12 +96,12 @@
   background: var(--glass-inner-plate-dense);
 }
 
-/* example app container to adopt global color tokens */
+/* App container */
 .app-root {
   min-height: 100vh;
-  background: var(--bg-level-0);
-  color: var(--text-primary);
-  transition: background-color var(--transition-base), color var(--transition-base);
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 #center {
