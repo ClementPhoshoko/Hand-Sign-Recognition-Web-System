@@ -33,7 +33,7 @@ function Foot() {
 								fill="currentColor"
 							/>
 						</svg>
-						Kuala Lumpur, Malaysia
+						187 Purchase Place, Johannesburg, South Africa, 2094
 					</address>
 				</div>
 
