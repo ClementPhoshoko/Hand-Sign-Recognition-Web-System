@@ -339,7 +339,7 @@
 }
 
 .gl-drop-title {
-	font-size: var(--text-base);
+	font-size: var(--text-sm);
 	font-weight: var(--font-semibold);
 	color: var(--text-primary);
 	margin: 0 0 0.5rem;
@@ -347,7 +347,7 @@
 }
 
 .gl-drop-desc {
-	font-size: var(--text-sm);
+	font-size: var(--text-xs);
 	color: var(--text-secondary);
 	line-height: var(--line-relaxed);
 	margin: 0;
