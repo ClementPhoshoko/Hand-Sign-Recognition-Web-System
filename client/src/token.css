@@ -122,6 +122,12 @@
   --avatar-bg-start: #d8f0ff;
   --avatar-bg-end: #8fb4ff;
   --avatar-ring-color: var(--border-soft);
+
+  /* Homepage orb colors */
+  --orb-primary:      #78aaff;  /* center hero   — steel blue   */
+  --orb-halo:         #b0d6ff;  /* wide halo     — light blue   */
+  --orb-accent-left:  #6e5af0;  /* left accent   — blue-purple  */
+  --orb-accent-right: #50a0ff;  /* right accent  — teal-blue    */
 }
 
 @media (prefers-color-scheme: dark) {
@@ -172,5 +178,11 @@
     --nav-glow: 0 0 8px rgba(112, 156, 245, 0.18), 0 0 16px rgba(112, 156, 245, 0.10);
     --avatar-bg-start: #b7cffc;
     --avatar-bg-end: #87a8f8;
+
+    /* Homepage orb colors — slightly shifted for darker bg */
+    --orb-primary:      #6699ff;
+    --orb-halo:         #99c2ff;
+    --orb-accent-left:  #7b63f5;
+    --orb-accent-right: #4496ff;
   }
 }
