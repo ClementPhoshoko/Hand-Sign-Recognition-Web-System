@@ -10,28 +10,49 @@ const USE_CASES = [
 	{
 		id: 'accessibility',
 		label: 'Accessibility Tools',
-		icon: '♿',
+		svg: (
+			<svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+				<circle cx="24" cy="10" r="4" stroke="currentColor" strokeWidth="2"/>
+				<path d="M17 20h14M24 20v10m0 0-5 8m5-8 5 8" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+				<path d="M14 30a12 12 0 1 0 20-9" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+			</svg>
+		),
 		heading: 'Breaking communication barriers',
 		body: 'Empowers deaf and hard-of-hearing individuals to communicate naturally using hand gestures. The system converts signs into readable text in real time, removing the need for an interpreter and making everyday interactions more independent.',
 	},
 	{
 		id: 'hci',
 		label: 'Human-Computer Interaction',
-		icon: '🖐',
+		svg: (
+			<svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+				<path d="M18 8v20M22 12v16M26 14v14M30 16v12" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+				<path d="M30 28c0 2 1 4 1 6a7 7 0 0 1-14 0c0-3 1-5 1-8V8" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+			</svg>
+		),
 		heading: 'Gesture-driven interfaces',
 		body: 'Replaces or augments traditional input devices — keyboard, mouse, touch — with natural hand gestures. Ideal for touchless kiosks, medical environments, industrial control panels, and any setting where physical contact with hardware is impractical.',
 	},
 	{
 		id: 'smart',
 		label: 'Smart Interfaces',
-		icon: '⚡',
+		svg: (
+			<svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+				<path d="M27 6 14 26h10l-3 16 13-20H24L27 6Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+			</svg>
+		),
 		heading: 'Hands-free smart control',
 		body: 'Integrate gesture recognition into smart home systems, presentation tools, robotics, and IoT devices. Users can switch lights, scroll through slides, or control machinery without touching a single button.',
 	},
 	{
 		id: 'education',
 		label: 'Educational Tools',
-		icon: '🎓',
+		svg: (
+			<svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+				<path d="M24 10 6 20l18 10 18-10-18-10Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+				<path d="M12 25v10c0 3 5 7 12 7s12-4 12-7V25" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+				<line x1="42" y1="20" x2="42" y2="32" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+			</svg>
+		),
 		heading: 'Interactive sign language learning',
 		body: 'Provides real-time feedback for learners practising sign language. The system recognises sign attempts, compares them to a trained model, and guides students toward correct form — making self-paced learning measurable and engaging.',
 	},
@@ -41,7 +62,13 @@ const TECH_STACK = [
 	{
 		id: 'frontend',
 		label: 'Frontend',
-		icon: '⚛',
+		svg: (
+			<svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+				<rect x="6" y="8" width="36" height="26" rx="3" stroke="currentColor" strokeWidth="2"/>
+				<path d="M16 42h16M24 34v8" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+				<path d="M18 22l-4-4 4-4M30 14l4 4-4 4M23 26l2-12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+			</svg>
+		),
 		heading: 'React + Webcam API',
 		body: 'The client is built with React and leverages the browser\'s native Webcam API to capture live video frames. Frames are sent to the backend at configurable intervals (200–500 ms) and the recognised gesture is displayed instantly without a full page refresh.',
 		tags: ['React', 'Vite', 'Webcam API', 'CSS Modules'],
@@ -49,7 +76,15 @@ const TECH_STACK = [
 	{
 		id: 'backend',
 		label: 'Backend API',
-		icon: '🔀',
+		svg: (
+			<svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+				<rect x="6" y="8" width="14" height="10" rx="2" stroke="currentColor" strokeWidth="2"/>
+				<rect x="28" y="20" width="14" height="10" rx="2" stroke="currentColor" strokeWidth="2"/>
+				<rect x="6" y="30" width="14" height="10" rx="2" stroke="currentColor" strokeWidth="2"/>
+				<path d="M20 13h6a2 2 0 0 1 2 2v8" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+				<path d="M28 25h-6a2 2 0 0 0-2 2v8" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+			</svg>
+		),
 		heading: 'Node.js + Express Gateway',
 		body: 'The Node.js Express server acts as a gateway between the browser client and the Python AI service. It handles request routing, input validation, error handling, and response formatting — keeping the AI service decoupled from the frontend.',
 		tags: ['Node.js', 'Express', 'REST API', 'Proxy'],
@@ -57,7 +92,16 @@ const TECH_STACK = [
 	{
 		id: 'ai',
 		label: 'AI Service',
-		icon: '🧠',
+		svg: (
+			<svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+				<circle cx="24" cy="24" r="5" stroke="currentColor" strokeWidth="2"/>
+				<circle cx="10" cy="14" r="3" stroke="currentColor" strokeWidth="2"/>
+				<circle cx="38" cy="14" r="3" stroke="currentColor" strokeWidth="2"/>
+				<circle cx="10" cy="34" r="3" stroke="currentColor" strokeWidth="2"/>
+				<circle cx="38" cy="34" r="3" stroke="currentColor" strokeWidth="2"/>
+				<path d="M13 15.5 19 21M29 27l6 5.5M13 32.5 19 27M29 21l6-5.5" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+			</svg>
+		),
 		heading: 'Python FastAPI + ML Engine',
 		body: 'A Python FastAPI microservice runs the computer vision pipeline. It receives frames, extracts hand landmarks via MediaPipe, and feeds the 21-keypoint vectors into a classifier (rule-based or ML model) to return a gesture label.',
 		tags: ['Python', 'FastAPI', 'TensorFlow', 'PyTorch'],
@@ -65,7 +109,13 @@ const TECH_STACK = [
 	{
 		id: 'cv',
 		label: 'CV Library',
-		icon: '👁',
+		svg: (
+			<svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+				<path d="M6 24C6 24 12 12 24 12s18 12 18 12-6 12-18 12S6 24 6 24Z" stroke="currentColor" strokeWidth="2" strokeLinejoin="round"/>
+				<circle cx="24" cy="24" r="5" stroke="currentColor" strokeWidth="2"/>
+				<path d="M8 8l6 6M40 8l-6 6M8 40l6-6M40 40l-6-6" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+			</svg>
+		),
 		heading: 'MediaPipe + OpenCV',
 		body: 'MediaPipe\'s Hand Landmarker model extracts 21 3-D keypoints from each hand in under 10 ms. OpenCV handles frame pre-processing — resizing to 224×224, colour normalisation, and noise reduction — before the frame reaches the landmark detector.',
 		tags: ['MediaPipe', 'OpenCV', '21 Landmarks', 'Real-time'],
@@ -276,20 +326,21 @@ function Homepage() {
 						</ul>
 
 						{/* Right — detail panel */}
-						<div className="hp-more-panel" role="region" aria-live="polite">
-							<p className="hp-more-panel-eyebrow">
-								<span aria-hidden="true">{active.icon}</span>&nbsp;{active.label}
-							</p>
-							<h3 className="hp-more-panel-heading">{active.heading}</h3>
-							<p className="hp-more-panel-body">{active.body}</p>
-							{active.tags && (
-								<div className="hp-more-tags">
-									{active.tags.map(t => (
-										<span key={t} className="hp-more-tag">{t}</span>
-									))}
-								</div>
-							)}
+					<div className="hp-more-panel" key={activeItem} role="region" aria-live="polite">
+						<div className="hp-more-panel-top">
+							<div className="hp-more-panel-icon">{active.svg}</div>
+							<p className="hp-more-panel-eyebrow">{active.label}</p>
 						</div>
+						<h3 className="hp-more-panel-heading">{active.heading}</h3>
+						<p className="hp-more-panel-body">{active.body}</p>
+						{active.tags && (
+							<div className="hp-more-tags">
+								{active.tags.map(t => (
+									<span key={t} className="hp-more-tag">{t}</span>
+								))}
+							</div>
+						)}
+					</div>
 
 					</div>
 				</div>
