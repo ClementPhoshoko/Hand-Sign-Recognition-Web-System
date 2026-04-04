@@ -10,8 +10,12 @@
 	background-position: center;
 	background-repeat: no-repeat;
 	display: flex;
-	align-items: center;
+	align-items: flex-start;
 	justify-content: center;
+	padding-top: 8vh;
+	padding-bottom: 8vh;
+	overflow-y: auto;
+	box-sizing: border-box;
 }
 
 .auth-shell::after {
@@ -116,6 +120,121 @@
 	pointer-events: none;
 }
 
+.auth-info-panel {
+	position: absolute;
+	z-index: 2;
+	top: 50%;
+	right: calc(100% + 0.1rem);
+	transform: translateY(-50%);
+	width: var(--auth-info-panel-width, 380px);
+	max-width: min(380px, calc(100vw - 3rem));
+	min-width: 0;
+	max-height: var(--auth-card-height, 70vh);
+	display: flex;
+	flex-direction: column;
+	gap: 1rem;
+	padding: 0.5rem 0;
+	box-sizing: border-box;
+	background: transparent;
+	border: none;
+	border-radius: 0;
+	box-shadow: none;
+	backdrop-filter: none;
+	overflow: hidden;
+	animation: authPanelReveal 260ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.auth-info-panel__header {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 1rem;
+	padding-bottom: 0.35rem;
+}
+
+.auth-info-panel__content {
+	min-height: 0;
+	overflow-y: auto;
+	scrollbar-gutter: stable;
+	padding-right: 0.35rem;
+	display: flex;
+	flex-direction: column;
+	gap: 1rem;
+}
+
+.auth-info-panel__eyebrow {
+	margin: 0;
+	font-size: var(--text-xs);
+	font-weight: var(--font-semibold);
+	letter-spacing: 0.08em;
+	text-transform: uppercase;
+	color: var(--text-muted);
+}
+
+.auth-info-panel__close {
+	border: 1px solid transparent;
+	border-radius: 999px;
+	padding: 0.45rem 0.85rem;
+	background: transparent;
+	color: var(--text-primary);
+	font-size: var(--text-xs);
+	font-weight: var(--font-medium);
+	cursor: pointer;
+	transition: background var(--transition-fast), border-color var(--transition-fast), color var(--transition-fast);
+}
+
+.auth-info-panel__close:hover {
+	background: rgba(255, 255, 255, 0.06);
+	border-color: var(--border-highlight);
+}
+
+.auth-info-panel__title {
+	margin: 0;
+	font-size: var(--text-2xl);
+	line-height: var(--line-tight);
+	color: var(--text-primary);
+}
+
+.auth-info-panel__intro,
+.auth-info-panel__section-body {
+	margin: 0;
+	font-size: var(--text-sm);
+	line-height: var(--line-relaxed);
+	color: var(--text-secondary);
+}
+
+.auth-info-panel__sections {
+	display: flex;
+	flex-direction: column;
+	gap: 0.9rem;
+}
+
+.auth-info-panel__section {
+	display: flex;
+	flex-direction: column;
+	gap: 0.35rem;
+	padding-top: 0.85rem;
+	border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.auth-info-panel__section-title {
+	margin: 0;
+	font-size: var(--text-sm);
+	font-weight: var(--font-semibold);
+	color: var(--text-primary);
+}
+
+@keyframes authPanelReveal {
+	from {
+		opacity: 0;
+		transform: translate(-18px, -50%);
+	}
+	to {
+		opacity: 1;
+		transform: translate(0, -50%);
+	}
+}
+
 /* ── Avatar ──────────────────────────────────────────────────────── */
 .auth-avatar {
 	width: 64px;
@@ -184,10 +303,14 @@
 /* ── Form area ───────────────────────────────────────────────────── */
 .auth-form-area {
 	width: 100%;
-	animation: authFormSlide 300ms cubic-bezier(0.22, 1, 0.36, 1) both;
+	animation: authFormEnter 320ms cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
-@keyframes authFormSlide {
+.auth-form-area--exit {
+	animation: authFormExit 220ms cubic-bezier(0.55, 0, 0.45, 1) both;
+}
+
+@keyframes authFormEnter {
 	from {
 		opacity: 0;
 		transform: translateY(10px);
@@ -195,6 +318,17 @@
 	to {
 		opacity: 1;
 		transform: translateY(0);
+	}
+}
+
+@keyframes authFormExit {
+	from {
+		opacity: 1;
+		transform: translateY(0);
+	}
+	to {
+		opacity: 0;
+		transform: translateY(-8px);
 	}
 }
 
@@ -233,8 +367,43 @@
 
 /* ── Responsive ──────────────────────────────────────────────────── */
 @media (max-width: 480px) {
+	.auth-wrap {
+		padding: 1rem;
+	}
+
 	.auth-card {
 		padding: 2rem 1.25rem 1.75rem;
 		border-radius: 18px;
+	}
+}
+
+@media (max-width: 900px) {
+	.auth-wrap {
+		max-width: 520px;
+		flex-direction: column;
+		align-items: stretch;
+	}
+
+	.auth-info-panel {
+		position: relative;
+		top: auto;
+		right: auto;
+		transform: none;
+		width: 100%;
+		order: -1;
+		max-width: none;
+		max-height: min(var(--auth-card-height, 70vh), 60vh);
+		padding: 0;
+	}
+
+	@keyframes authPanelReveal {
+		from {
+			opacity: 0;
+			transform: translateY(12px);
+		}
+		to {
+			opacity: 1;
+			transform: translateY(0);
+		}
 	}
 }

@@ -64,7 +64,13 @@
 	transform: translateY(-1px);
 }
 
-.auth-submit:active {
-	opacity: 1;
-	transform: translateY(0);
+.auth-submit:disabled {
+	opacity: 0.35;
+	cursor: not-allowed;
+	transform: none;
+}
+
+.auth-submit:disabled:hover {
+	opacity: 0.35;
+	transform: none;
 }

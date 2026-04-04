@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import './Register.css'
 
-function Register() {
+function Register({ onOpenInfoPanel }) {
 	const [form, setForm] = useState({
 		name: '',
 		email: '',
@@ -17,6 +17,12 @@ function Register() {
 	const handleSubmit = (e) => {
 		e.preventDefault()
 		// TODO: hook up to auth API
+	}
+
+	const handleInfoLinkClick = (panel) => (e) => {
+		e.preventDefault()
+		e.stopPropagation()
+		onOpenInfoPanel?.(panel)
 	}
 
 	return (
@@ -78,9 +84,21 @@ function Register() {
 				/>
 				<span className="auth-terms-text">
 					I agree to the{' '}
-					<a href="#" className="auth-terms-link">Terms &amp; Conditions</a>
+					<a
+						href="#"
+						className="auth-terms-link"
+						onClick={handleInfoLinkClick('terms')}
+					>
+						Terms &amp; Conditions
+					</a>
 					{' '}and{' '}
-					<a href="#" className="auth-terms-link">Privacy Policy</a>
+					<a
+						href="#"
+						className="auth-terms-link"
+						onClick={handleInfoLinkClick('privacy')}
+					>
+						Privacy Policy
+					</a>
 				</span>
 			</label>
 

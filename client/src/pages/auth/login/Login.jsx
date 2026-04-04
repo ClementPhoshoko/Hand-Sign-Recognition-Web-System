@@ -4,6 +4,8 @@ import './Login.css'
 function Login() {
 	const [form, setForm] = useState({ email: '', password: '' })
 
+	const isReady = form.email.trim() !== '' && form.password !== ''
+
 	const handleChange = (e) => {
 		setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }))
 	}
@@ -46,7 +48,7 @@ function Login() {
 				/>
 			</div>
 
-			<button className="auth-submit" type="submit">Login</button>
+			<button className="auth-submit" type="submit" disabled={!isReady}>Login</button>
 
 		</form>
 	)

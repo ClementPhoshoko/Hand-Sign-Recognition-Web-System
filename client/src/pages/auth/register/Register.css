@@ -34,9 +34,3 @@
 	color: var(--orb-halo);
 	border-bottom-color: var(--orb-halo);
 }
-
-.auth-submit:disabled {
-	opacity: 0.38;
-	cursor: not-allowed;
-	transform: none;
-}
