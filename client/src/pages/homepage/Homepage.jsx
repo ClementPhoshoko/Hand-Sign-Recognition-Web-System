@@ -1,9 +1,10 @@
 import { useState, useEffect } from 'react'
-import heroImg        from '../../assets/nav_and_home/Processing_ASL_subtitles_on_laptop.png'
-import ovInputImg     from '../../assets/nav_and_home/Hello from the video call (1).png'
-import ovDetectImg    from '../../assets/nav_and_home/Computer vision pipeline overview (1).png'
-import ovTranscribeImg from '../../assets/nav_and_home/Processing_ASL_subtitles_on_laptop.png'
-import ovOutputImg    from '../../assets/nav_and_home/Support FAQ section with woman (1).png'
+import heroImg        from '../../assets/avatars/processing_ASL_subtitles_on_laptop.png'
+import ovInputImg     from '../../assets/avatars/hello_from_the_video_call_1.png'
+import ovDetectImg    from '../../assets/avatars/gesture tracking.png'
+import ovTranscribeImg from '../../assets/avatars/processing_ASL_subtitles_on_laptop.png'
+import ovOutputImg    from '../../assets/avatars/hello_world_output
+.png'
 import './Homepage.css'
 
 const USE_CASES = [
