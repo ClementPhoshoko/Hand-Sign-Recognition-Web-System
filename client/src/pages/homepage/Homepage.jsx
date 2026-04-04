@@ -3,8 +3,7 @@ import heroImg        from '../../assets/avatars/processing_ASL_subtitles_on_lap
 import ovInputImg     from '../../assets/avatars/hello_from_the_video_call_1.png'
 import ovDetectImg    from '../../assets/avatars/gesture tracking.png'
 import ovTranscribeImg from '../../assets/avatars/processing_ASL_subtitles_on_laptop.png'
-import ovOutputImg    from '../../assets/avatars/hello_world_output
-.png'
+import ovOutputImg    from '../../assets/avatars/hello_world_output.png'
 import './Homepage.css'
 
 const USE_CASES = [
