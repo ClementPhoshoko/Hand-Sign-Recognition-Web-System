@@ -148,6 +148,14 @@
 	fill: currentColor;
 }
 
+.gl-user-pill a {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	color: inherit;
+	line-height: 0;
+}
+
 .gl-user-pill:hover {
 	filter: brightness(0.98);
 }

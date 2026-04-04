@@ -1,0 +1,42 @@
+/* Register-specific additions (base form styles live in Login.css) */
+
+.auth-terms {
+	display: flex;
+	align-items: flex-start;
+	gap: 0.6rem;
+	cursor: pointer;
+}
+
+.auth-terms-checkbox {
+	width: 16px;
+	height: 16px;
+	flex-shrink: 0;
+	margin-top: 2px;
+	accent-color: var(--orb-primary);
+	cursor: pointer;
+}
+
+.auth-terms-text {
+	font-size: var(--text-xs);
+	color: var(--text-secondary);
+	line-height: var(--line-relaxed);
+}
+
+.auth-terms-link {
+	color: var(--orb-primary);
+	font-weight: var(--font-semibold);
+	text-decoration: none;
+	border-bottom: 1px solid transparent;
+	transition: border-color var(--transition-fast), color var(--transition-fast);
+}
+
+.auth-terms-link:hover {
+	color: var(--orb-halo);
+	border-bottom-color: var(--orb-halo);
+}
+
+.auth-submit:disabled {
+	opacity: 0.38;
+	cursor: not-allowed;
+	transform: none;
+}
