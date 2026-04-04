@@ -4,6 +4,7 @@ import ovInputImg     from '../../assets/avatars/hello_from_the_video_call_1.png
 import ovDetectImg    from '../../assets/avatars/gesture tracking.png'
 import ovTranscribeImg from '../../assets/avatars/processing_ASL_subtitles_on_laptop.png'
 import ovOutputImg    from '../../assets/avatars/hello_world_output.png'
+import morePanelAvatar from '../../assets/avatars/man_pointing_north_east_seating_2.png'
 import './Homepage.css'
 
 const USE_CASES = [
@@ -331,8 +332,12 @@ function Homepage() {
 							<div className="hp-more-panel-icon">{active.svg}</div>
 							<p className="hp-more-panel-eyebrow">{active.label}</p>
 						</div>
-						<h3 className="hp-more-panel-heading">{active.heading}</h3>
-						<p className="hp-more-panel-body">{active.body}</p>
+						<h3 className="hp-more-panel-heading">{active.heading}</h3>					<img
+						src={morePanelAvatar}
+						alt="Avatar"
+						className="hp-more-panel-avatar"
+						draggable="false"
+					/>						<p className="hp-more-panel-body">{active.body}</p>
 						{active.tags && (
 							<div className="hp-more-tags">
 								{active.tags.map(t => (

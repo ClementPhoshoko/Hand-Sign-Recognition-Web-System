@@ -574,11 +574,18 @@
 
 /* ── Right: detail panel ─────────────────────────────────────── */
 .hp-more-panel {
+	position: relative;
 	display: flex;
 	flex-direction: column;
 	gap: 1.25rem;
 	padding: 0.5rem 0 0.5rem 1.5rem;
 	min-height: 280px;
+	overflow: hidden;
+}
+
+.hp-more-panel > * {
+	position: relative;
+	z-index: 1;
 }
 
 /* ── Icon + eyebrow row ──────────────────────────────────────── */
@@ -623,6 +630,22 @@
 	letter-spacing: -0.01em;
 	animation: panelSlideIn 900ms cubic-bezier(0.22, 1, 0.36, 1) both;
 	animation-delay: 80ms;
+}
+
+.hp-more-panel-avatar {
+	position: absolute;
+	z-index: 0;
+	top: 0;
+	left: 60%;
+	transform: translateX(-50%);
+	width: 130px;
+	height: auto;
+	object-fit: contain;
+	opacity: 0.18;
+	pointer-events: none;
+	user-select: none;
+	animation: panelSlideIn 900ms cubic-bezier(0.22, 1, 0.36, 1) both;
+	animation-delay: 120ms;
 }
 
 .hp-more-panel-body {
