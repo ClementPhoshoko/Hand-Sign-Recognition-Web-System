@@ -108,6 +108,24 @@
 	gap: 0;
 	flex-shrink: 0;
 	margin-left: 0;
+	overflow: hidden;
+}
+
+.gl-nav-advisory {
+	font-size: var(--text-sm);
+	font-weight: var(--font-medium);
+	color: var(--text-secondary);
+	white-space: nowrap;
+	opacity: 0;
+	transform: translateX(1.5rem);
+	transition: opacity 350ms ease, transform 350ms ease;
+	pointer-events: none;
+	padding-right: 0.65rem;
+}
+
+.gl-nav-right:hover .gl-nav-advisory {
+	opacity: 1;
+	transform: translateX(0);
 }
 
 .gl-user-pill {
