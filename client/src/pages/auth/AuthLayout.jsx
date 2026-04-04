@@ -1,5 +1,6 @@
 import { useState, useRef, useLayoutEffect } from 'react'
 import bgImg from '../../assets/avatars/hello_from_the_video_call_1.png'
+import Breadcrumbs from '../../components/breadcrumbs/Breadcrumbs'
 import Login from './login/Login'
 import Register from './register/Register'
 import './AuthLayout.css'
@@ -151,6 +152,7 @@ function AuthLayout() {
 			className="auth-shell"
 			style={{ backgroundImage: `url(${bgImg})` }}
 		>
+			<Breadcrumbs />
 			<div className="auth-wrap" ref={wrapRef}>
 
 				{/* ── Ambient background orbs ── */}

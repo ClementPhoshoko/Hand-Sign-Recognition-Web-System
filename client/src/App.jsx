@@ -4,6 +4,7 @@ import Nav from './components/navbar/Nav'
 import Homepage from './pages/homepage/Homepage'
 import Foot from './components/footer/Foot'
 import AuthLayout from './pages/auth/AuthLayout'
+import Dashboard from './pages/dashboard/Dashboard'
 import './App.css'
 
 function App() {
@@ -15,6 +16,7 @@ function App() {
         <Routes>
           <Route path="/" element={<><Nav /><Homepage /><Foot /></>} />
           <Route path="/auth" element={<AuthLayout />} />
+          <Route path="/in/:username" element={<Dashboard />} />
         </Routes>
       </div>
     </BrowserRouter>
