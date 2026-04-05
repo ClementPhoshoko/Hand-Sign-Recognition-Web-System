@@ -69,6 +69,13 @@
 	gap: var(--space-5);
 	width: 100%;
 	align-items: flex-start;
+	padding: var(--space-5);
+	background: var(--glass-surface);
+	/* border: 1px solid var(--border-soft); */
+	border-radius: var(--radius-lg, 20px);
+	backdrop-filter: var(--glass-blur);
+	-webkit-backdrop-filter: var(--glass-blur);
+	box-shadow: var(--shadow-soft);
 }
 
 /* Left column — preview + selectors */
@@ -389,6 +396,7 @@
 @media (max-width: 768px) {
 	.liveroom-body {
 		flex-direction: column;
+		padding: var(--space-4);
 	}
 
 	.liveroom-left,
