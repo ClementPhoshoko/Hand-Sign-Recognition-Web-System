@@ -1,11 +1,13 @@
 import { useState } from 'react'
 import Breadcrumbs from '../../components/breadcrumbs/Breadcrumbs'
+import useMediaDevices from '../../hooks/useMediaDevices'
 import Join from './join/Join'
 import New from './new/New'
 import './LiveroomLayout.css'
 
 function LiveroomLayout() {
 	const [activeTab, setActiveTab] = useState('join')
+	const { videoRef, cameraOn, micOn, audioLevel, errors, toggleCamera, toggleMic } = useMediaDevices()
 
 	return (
 		<div className="liveroom-shell">
@@ -58,51 +60,103 @@ function LiveroomLayout() {
 								</button>
 							</div>
 
-							{/* Center message */}
+							{/* Center — video feed or status */}
 							<div className="liveroom-preview__body">
-								<div className="liveroom-preview__status">
-									<svg width="28" height="28" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-										<path
-											d="M15.75 10.5l4.72-4.72a.75.75 0 011.28.53v11.38a.75.75 0 01-1.28.53l-4.72-4.72M4.5 18.75h9a2.25 2.25 0 002.25-2.25v-9A2.25 2.25 0 0013.5 5.25h-9A2.25 2.25 0 002.25 7.5v9a2.25 2.25 0 002.25 2.25z"
-											stroke="currentColor"
-											strokeWidth="1.5"
-											strokeLinecap="round"
-											strokeLinejoin="round"
-										/>
-										<line x1="3" y1="20" x2="20" y2="4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
-									</svg>
-									<span>Camera is off</span>
-								</div>
+								{cameraOn ? (
+									<video
+										ref={videoRef}
+										className="liveroom-preview__video"
+										autoPlay
+										playsInline
+										muted
+									/>
+								) : (
+									<div className={`liveroom-preview__status${errors.camera ? ' liveroom-preview__status--error' : ''}`}>
+										{errors.camera ? (
+											<>
+												<svg width="28" height="28" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+													<path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"
+														stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+													<line x1="12" y1="9" x2="12" y2="13" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+													<line x1="12" y1="17" x2="12.01" y2="17" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+												</svg>
+												<span>{errors.camera}</span>
+											</>
+										) : (
+											<>
+												<svg width="28" height="28" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+													<path
+														d="M15.75 10.5l4.72-4.72a.75.75 0 011.28.53v11.38a.75.75 0 01-1.28.53l-4.72-4.72M4.5 18.75h9a2.25 2.25 0 002.25-2.25v-9A2.25 2.25 0 0013.5 5.25h-9A2.25 2.25 0 002.25 7.5v9a2.25 2.25 0 002.25 2.25z"
+														stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"
+													/>
+													<line x1="3" y1="20" x2="20" y2="4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+												</svg>
+												<span>Camera is off</span>
+											</>
+										)}
+									</div>
+								)}
 							</div>
 
 							{/* Control buttons */}
 							<div className="liveroom-preview__controls">
+								{/* Audio level indicator — always visible */}
+								<div className="liveroom-audio-level" aria-hidden="true">
+									{[0.02, 0.06, 0.12, 0.20, 0.35].map((threshold, i) => (
+										<span
+											key={i}
+											className={`liveroom-audio-level__bar${audioLevel >= threshold ? ' liveroom-audio-level__bar--active' : ''}`}
+										/>
+									))}
+								</div>
+
 								{/* Microphone */}
-								<button type="button" className="liveroom-ctrl liveroom-ctrl--mic" aria-label="Toggle microphone">
-									<svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-										<path
-											d="M12 1a3 3 0 00-3 3v8a3 3 0 006 0V4a3 3 0 00-3-3z"
-											stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"
-										/>
-										<path
-											d="M19 10v2a7 7 0 01-14 0v-2M12 19v4M8 23h8"
-											stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"
-										/>
-									</svg>
+								<button
+									type="button"
+									className={`liveroom-ctrl liveroom-ctrl--mic${micOn ? ' liveroom-ctrl--mic-on' : ' liveroom-ctrl--off'}${errors.mic ? ' liveroom-ctrl--error' : ''}`}
+									aria-label={micOn ? 'Mute microphone' : 'Unmute microphone'}
+									onClick={toggleMic}
+								>
+									{micOn ? (
+										<svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+											<path d="M12 1a3 3 0 00-3 3v8a3 3 0 006 0V4a3 3 0 00-3-3z"
+												stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+											<path d="M19 10v2a7 7 0 01-14 0v-2M12 19v4M8 23h8"
+												stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+										</svg>
+									) : (
+										<svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+											<path d="M12 1a3 3 0 00-3 3v8a3 3 0 006 0V4a3 3 0 00-3-3z"
+												stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+											<path d="M19 10v2a7 7 0 01-14 0v-2M12 19v4M8 23h8"
+												stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+											<line x1="2" y1="2" x2="22" y2="22" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+										</svg>
+									)}
 								</button>
 
-								{/* Camera off */}
-								<button type="button" className="liveroom-ctrl liveroom-ctrl--cam" aria-label="Toggle camera">
-									<svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-										<path
-											d="M15.75 10.5l4.72-4.72a.75.75 0 011.28.53v11.38a.75.75 0 01-1.28.53l-4.72-4.72M4.5 18.75h9a2.25 2.25 0 002.25-2.25v-9A2.25 2.25 0 0013.5 5.25h-9A2.25 2.25 0 002.25 7.5v9a2.25 2.25 0 002.25 2.25z"
-											stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"
-										/>
-										<line x1="3" y1="20" x2="20" y2="4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
-									</svg>
+								{/* Camera */}
+								<button
+									type="button"
+									className={`liveroom-ctrl liveroom-ctrl--cam${cameraOn ? ' liveroom-ctrl--cam-on' : ''}${errors.camera ? ' liveroom-ctrl--error' : ''}`}
+									aria-label={cameraOn ? 'Turn off camera' : 'Turn on camera'}
+									onClick={toggleCamera}
+								>
+									{cameraOn ? (
+										<svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+											<path d="M15.75 10.5l4.72-4.72a.75.75 0 011.28.53v11.38a.75.75 0 01-1.28.53l-4.72-4.72M4.5 18.75h9a2.25 2.25 0 002.25-2.25v-9A2.25 2.25 0 0013.5 5.25h-9A2.25 2.25 0 002.25 7.5v9a2.25 2.25 0 002.25 2.25z"
+												stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+										</svg>
+									) : (
+										<svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+											<path d="M15.75 10.5l4.72-4.72a.75.75 0 011.28.53v11.38a.75.75 0 01-1.28.53l-4.72-4.72M4.5 18.75h9a2.25 2.25 0 002.25-2.25v-9A2.25 2.25 0 0013.5 5.25h-9A2.25 2.25 0 002.25 7.5v9a2.25 2.25 0 002.25 2.25z"
+												stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+											<line x1="3" y1="20" x2="20" y2="4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+										</svg>
+									)}
 								</button>
 
-								{/* Additional control */}
+								{/* Settings */}
 								<button type="button" className="liveroom-ctrl liveroom-ctrl--extra" aria-label="More controls">
 									<svg width="20" height="20" viewBox="0 0 24 24" fill="none">
 										<circle cx="12" cy="12" r="3" stroke="currentColor" strokeWidth="1.8" />
