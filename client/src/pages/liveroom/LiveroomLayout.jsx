@@ -101,7 +101,7 @@ function LiveroomLayout() {
 							{/* Control buttons */}
 							<div className="liveroom-preview__controls">
 								{/* Audio level indicator — always visible */}
-								<div className="liveroom-audio-level" aria-hidden="true">
+								<div className="liveroom-audio-level" aria-hidden="true" data-tooltip="Audio Level Indicator">
 									{[0.02, 0.06, 0.12, 0.20, 0.35].map((threshold, i) => (
 										<span
 											key={i}
@@ -115,6 +115,7 @@ function LiveroomLayout() {
 									type="button"
 									className={`liveroom-ctrl liveroom-ctrl--mic${micOn ? ' liveroom-ctrl--mic-on' : ' liveroom-ctrl--off'}${errors.mic ? ' liveroom-ctrl--error' : ''}`}
 									aria-label={micOn ? 'Mute microphone' : 'Unmute microphone'}
+									data-tooltip={micOn ? 'Mic on' : 'Mic off'}
 									onClick={toggleMic}
 								>
 									{micOn ? (
@@ -140,6 +141,7 @@ function LiveroomLayout() {
 									type="button"
 									className={`liveroom-ctrl liveroom-ctrl--cam${cameraOn ? ' liveroom-ctrl--cam-on' : ''}${errors.camera ? ' liveroom-ctrl--error' : ''}`}
 									aria-label={cameraOn ? 'Turn off camera' : 'Turn on camera'}
+									data-tooltip={cameraOn ? 'Camera on' : 'Camera off'}
 									onClick={toggleCamera}
 								>
 									{cameraOn ? (
