@@ -1,13 +1,14 @@
 import { useState } from 'react'
 import Breadcrumbs from '../../components/breadcrumbs/Breadcrumbs'
 import useMediaDevices from '../../hooks/useMediaDevices'
+import DevicePicker from './DevicePicker'
 import Join from './join/Join'
 import New from './new/New'
 import './LiveroomLayout.css'
 
 function LiveroomLayout() {
 	const [activeTab, setActiveTab] = useState('join')
-	const { videoRef, cameraOn, micOn, audioLevel, errors, toggleCamera, toggleMic } = useMediaDevices()
+	const { videoRef, cameraOn, micOn, audioLevel, errors, devices, selectedDevices, toggleCamera, toggleMic, switchDevice } = useMediaDevices()
 
 	return (
 		<div className="liveroom-shell">
@@ -60,17 +61,20 @@ function LiveroomLayout() {
 								</button>
 							</div>
 
-							{/* Center — video feed or status */}
-							<div className="liveroom-preview__body">
-								{cameraOn ? (
-									<video
-										ref={videoRef}
-										className="liveroom-preview__video"
-										autoPlay
-										playsInline
-										muted
-									/>
-								) : (
+							{/* Full-bleed video — direct child of preview card */}
+							{cameraOn && (
+								<video
+									ref={videoRef}
+									className="liveroom-preview__video"
+									autoPlay
+									playsInline
+									muted
+								/>
+							)}
+
+							{/* Center — camera off / error status */}
+							{!cameraOn && (
+								<div className="liveroom-preview__body">
 									<div className={`liveroom-preview__status${errors.camera ? ' liveroom-preview__status--error' : ''}`}>
 										{errors.camera ? (
 											<>
@@ -95,8 +99,8 @@ function LiveroomLayout() {
 											</>
 										)}
 									</div>
-								)}
-							</div>
+								</div>
+							)}
 
 							{/* Control buttons */}
 							<div className="liveroom-preview__controls">
@@ -173,50 +177,61 @@ function LiveroomLayout() {
 
 						{/* ── Device selectors ── */}
 						<div className="liveroom-selectors">
-							<div className="liveroom-pill">
-								<svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-									<path d="M12 1a3 3 0 00-3 3v8a3 3 0 006 0V4a3 3 0 00-3-3z"
-										stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
-									<path d="M19 10v2a7 7 0 01-14 0v-2"
-										stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
-								</svg>
-								<span className="liveroom-pill__label">Microphone</span>
-								<svg className="liveroom-pill__arrow" width="12" height="12" viewBox="0 0 24 24" fill="none">
-									<path d="M6 9l6 6 6-6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-								</svg>
-							</div>
+							<DevicePicker
+								kind="audioinput"
+								label="Microphone"
+								devices={devices.audioinput}
+								selectedId={selectedDevices.audioinput}
+								onSelect={switchDevice}
+								icon={
+									<svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+										<path d="M12 1a3 3 0 00-3 3v8a3 3 0 006 0V4a3 3 0 00-3-3z"
+											stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+										<path d="M19 10v2a7 7 0 01-14 0v-2"
+											stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+									</svg>
+								}
+							/>
 
-							<div className="liveroom-pill">
-								<svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-									<path d="M11 5L6 9H2v6h4l5 4V5zM19.07 4.93a10 10 0 010 14.14M15.54 8.46a5 5 0 010 7.07"
-										stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
-								</svg>
-								<span className="liveroom-pill__label">Speaker</span>
-								<svg className="liveroom-pill__arrow" width="12" height="12" viewBox="0 0 24 24" fill="none">
-									<path d="M6 9l6 6 6-6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-								</svg>
-							</div>
+							<DevicePicker
+								kind="audiooutput"
+								label="Speaker"
+								devices={devices.audiooutput}
+								selectedId={selectedDevices.audiooutput}
+								onSelect={switchDevice}
+								icon={
+									<svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+										<path d="M11 5L6 9H2v6h4l5 4V5zM19.07 4.93a10 10 0 010 14.14M15.54 8.46a5 5 0 010 7.07"
+											stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+									</svg>
+								}
+							/>
 
-							<div className="liveroom-pill">
-								<svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-									<path d="M15.75 10.5l4.72-4.72a.75.75 0 011.28.53v11.38a.75.75 0 01-1.28.53l-4.72-4.72M4.5 18.75h9a2.25 2.25 0 002.25-2.25v-9A2.25 2.25 0 0013.5 5.25h-9A2.25 2.25 0 002.25 7.5v9a2.25 2.25 0 002.25 2.25z"
-										stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-								</svg>
-								<span className="liveroom-pill__label">Camera Input</span>
-								<svg className="liveroom-pill__arrow" width="12" height="12" viewBox="0 0 24 24" fill="none">
-									<path d="M6 9l6 6 6-6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-								</svg>
-							</div>
+							<DevicePicker
+								kind="videoinput"
+								label="Camera Input"
+								devices={devices.videoinput}
+								selectedId={selectedDevices.videoinput}
+								onSelect={switchDevice}
+								icon={
+									<svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+										<path d="M15.75 10.5l4.72-4.72a.75.75 0 011.28.53v11.38a.75.75 0 01-1.28.53l-4.72-4.72M4.5 18.75h9a2.25 2.25 0 002.25-2.25v-9A2.25 2.25 0 0013.5 5.25h-9A2.25 2.25 0 002.25 7.5v9a2.25 2.25 0 002.25 2.25z"
+											stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+									</svg>
+								}
+							/>
 
-							<div className="liveroom-pill">
-								<svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-									<rect x="3" y="3" width="18" height="18" rx="2" stroke="currentColor" strokeWidth="1.8" />
-									<circle cx="12" cy="12" r="3" stroke="currentColor" strokeWidth="1.8" />
-								</svg>
-								<span className="liveroom-pill__label">Background</span>
-								<svg className="liveroom-pill__arrow" width="12" height="12" viewBox="0 0 24 24" fill="none">
-									<path d="M6 9l6 6 6-6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-								</svg>
+							<div className="liveroom-pill liveroom-pill--disabled">
+								<button type="button" className="liveroom-pill__trigger" disabled>
+									<svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+										<rect x="3" y="3" width="18" height="18" rx="2" stroke="currentColor" strokeWidth="1.8" />
+										<circle cx="12" cy="12" r="3" stroke="currentColor" strokeWidth="1.8" />
+									</svg>
+									<span className="liveroom-pill__label">Background</span>
+									<svg className="liveroom-pill__arrow" width="12" height="12" viewBox="0 0 24 24" fill="none">
+										<path d="M6 9l6 6 6-6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+									</svg>
+								</button>
 							</div>
 						</div>
 					</div>

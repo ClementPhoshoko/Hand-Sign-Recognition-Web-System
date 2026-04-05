@@ -22,11 +22,39 @@ export default function useMediaDevices() {
 	const [audioLevel, setAudioLevel] = useState(0)
 	const [errors, setErrors] = useState({ camera: null, mic: null, speaker: null })
 
+	// Device lists
+	const [devices, setDevices] = useState({ audioinput: [], audiooutput: [], videoinput: [] })
+	const [selectedDevices, setSelectedDevices] = useState({ audioinput: '', audiooutput: '', videoinput: '' })
+
 	const streamRef = useRef(null)
 	const videoRef = useRef(null)
 	const audioCtxRef = useRef(null)
 	const analyserRef = useRef(null)
 	const rafRef = useRef(null)
+	const micStreamRef = useRef(null)
+
+	// ── Enumerate devices ──
+	const enumerateDevices = useCallback(async () => {
+		try {
+			const list = await navigator.mediaDevices.enumerateDevices()
+			const grouped = { audioinput: [], audiooutput: [], videoinput: [] }
+			list.forEach((d) => {
+				if (grouped[d.kind]) {
+					grouped[d.kind].push({ deviceId: d.deviceId, label: d.label || `${d.kind} ${grouped[d.kind].length + 1}` })
+				}
+			})
+			setDevices(grouped)
+		} catch {
+			// Silently fail
+		}
+	}, [])
+
+	// Refresh device list on mount and when devices change
+	useEffect(() => {
+		enumerateDevices()
+		navigator.mediaDevices.addEventListener('devicechange', enumerateDevices)
+		return () => navigator.mediaDevices.removeEventListener('devicechange', enumerateDevices)
+	}, [enumerateDevices])
 
 	// ── Audio level analyser ──
 	const startAudioAnalyser = useCallback((stream) => {
@@ -70,11 +98,11 @@ export default function useMediaDevices() {
 	}, [])
 
 	// ── Mic: request audio-only or enable existing tracks ──
-	const startMic = useCallback(async () => {
+	const startMic = useCallback(async (deviceId) => {
 		setErrors((prev) => ({ ...prev, mic: null }))
 
-		// If stream already has audio tracks, just enable them
-		if (streamRef.current) {
+		// If stream already has audio tracks and no device switch, just enable them
+		if (!deviceId && streamRef.current) {
 			const existing = streamRef.current.getAudioTracks()
 			if (existing.length > 0) {
 				existing.forEach((t) => { t.enabled = true })
@@ -85,21 +113,42 @@ export default function useMediaDevices() {
 		}
 
 		try {
-			const audioStream = await navigator.mediaDevices.getUserMedia({ audio: true })
+			const constraints = { audio: deviceId ? { deviceId: { exact: deviceId } } : true }
+			const audioStream = await navigator.mediaDevices.getUserMedia(constraints)
+
+			// Stop old audio tracks before adding new ones
+			if (streamRef.current) {
+				streamRef.current.getAudioTracks().forEach((t) => {
+					t.stop()
+					streamRef.current.removeTrack(t)
+				})
+			}
+			if (micStreamRef.current) {
+				micStreamRef.current.getTracks().forEach((t) => t.stop())
+			}
+			micStreamRef.current = audioStream
 
 			if (streamRef.current) {
-				// Add audio track to existing stream
 				audioStream.getAudioTracks().forEach((t) => streamRef.current.addTrack(t))
 			} else {
 				streamRef.current = audioStream
 			}
 
+			// Track which device is active
+			const activeTrack = audioStream.getAudioTracks()[0]
+			if (activeTrack) {
+				const settings = activeTrack.getSettings()
+				setSelectedDevices((prev) => ({ ...prev, audioinput: settings.deviceId || deviceId || '' }))
+			}
+
+			stopAudioAnalyser()
 			startAudioAnalyser(streamRef.current)
 			setMicOn(true)
+			enumerateDevices() // Labels become available after permission grant
 		} catch (err) {
 			setErrors((prev) => ({ ...prev, mic: parseMediaError(err) }))
 		}
-	}, [startAudioAnalyser])
+	}, [startAudioAnalyser, stopAudioAnalyser, enumerateDevices])
 
 	const stopMic = useCallback(() => {
 		stopAudioAnalyser()
@@ -118,11 +167,20 @@ export default function useMediaDevices() {
 	}, [micOn, startMic, stopMic])
 
 	// ── Camera: request video-only or toggle video tracks ──
-	const startCamera = useCallback(async () => {
+	const startCamera = useCallback(async (deviceId) => {
 		setErrors((prev) => ({ ...prev, camera: null }))
 
 		try {
-			const videoStream = await navigator.mediaDevices.getUserMedia({ video: true })
+			const constraints = { video: deviceId ? { deviceId: { exact: deviceId } } : true }
+			const videoStream = await navigator.mediaDevices.getUserMedia(constraints)
+
+			// Stop old video tracks before adding new ones
+			if (streamRef.current) {
+				streamRef.current.getVideoTracks().forEach((t) => {
+					t.stop()
+					streamRef.current.removeTrack(t)
+				})
+			}
 
 			if (streamRef.current) {
 				videoStream.getVideoTracks().forEach((t) => streamRef.current.addTrack(t))
@@ -130,11 +188,19 @@ export default function useMediaDevices() {
 				streamRef.current = videoStream
 			}
 
+			// Track which device is active
+			const activeTrack = videoStream.getVideoTracks()[0]
+			if (activeTrack) {
+				const settings = activeTrack.getSettings()
+				setSelectedDevices((prev) => ({ ...prev, videoinput: settings.deviceId || deviceId || '' }))
+			}
+
 			setCameraOn(true)
+			enumerateDevices() // Labels become available after permission grant
 		} catch (err) {
 			setErrors((prev) => ({ ...prev, camera: parseMediaError(err) }))
 		}
-	}, [])
+	}, [enumerateDevices])
 
 	const stopCamera = useCallback(() => {
 		if (streamRef.current) {
@@ -166,11 +232,23 @@ export default function useMediaDevices() {
 		}
 		try {
 			await videoRef.current.setSinkId(deviceId)
+			setSelectedDevices((prev) => ({ ...prev, audiooutput: deviceId }))
 			setErrors((prev) => ({ ...prev, speaker: null }))
 		} catch (err) {
 			setErrors((prev) => ({ ...prev, speaker: parseMediaError(err) }))
 		}
 	}, [])
+
+	// ── Switch device by kind ──
+	const switchDevice = useCallback((kind, deviceId) => {
+		if (kind === 'audioinput') {
+			startMic(deviceId)
+		} else if (kind === 'videoinput') {
+			startCamera(deviceId)
+		} else if (kind === 'audiooutput') {
+			setSpeakerDevice(deviceId)
+		}
+	}, [startMic, startCamera, setSpeakerDevice])
 
 	// ── Bind stream to <video> after it mounts ──
 	useEffect(() => {
@@ -195,8 +273,11 @@ export default function useMediaDevices() {
 		micOn,
 		audioLevel,
 		errors,
+		devices,
+		selectedDevices,
 		toggleCamera,
 		toggleMic,
+		switchDevice,
 		setSpeakerDevice,
 	}
 }
