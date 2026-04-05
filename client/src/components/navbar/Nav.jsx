@@ -210,7 +210,7 @@ function DropFAQ() {
 
 /* ── Nav item config ─────────────────────────────────────────────── */
 const NAV_ITEMS = [
-	{ label: 'Live Translation', Drop: DropLiveTranslation },
+	{ label: 'Live Translation', Drop: DropLiveTranslation, to: '/liveroom' },
 	{ label: 'Upload / Convert', Drop: DropUploadConvert },
 	{ label: 'How it Works', Drop: DropHowItWorks, wide: true },
 	{ label: 'FAQ', Drop: DropFAQ },
@@ -244,7 +244,7 @@ function Nav() {
 
 					<ul className={`gl-nav-links ${isMenuOpen ? 'is-open' : ''}`} role="list">
 						{NAV_ITEMS.map((navItem) => {
-							const { label, wide } = navItem
+							const { label, wide, to } = navItem
 							const DropPanel = navItem.Drop
 							const isActive = activeDropdown === label
 							return (
@@ -254,10 +254,17 @@ function Nav() {
 									onMouseEnter={() => openDrop(label)}
 									onMouseLeave={scheduleDrop}
 								>
-									<a href="#" className={`gl-nav-link${isActive ? ' is-active' : ''}`}>
-										{label}
-										<Caret open={isActive} />
-									</a>
+									{to ? (
+										<Link to={to} className={`gl-nav-link${isActive ? ' is-active' : ''}`}>
+											{label}
+											<Caret open={isActive} />
+										</Link>
+									) : (
+										<a href="#" className={`gl-nav-link${isActive ? ' is-active' : ''}`}>
+											{label}
+											<Caret open={isActive} />
+										</a>
+									)}
 
 									{isActive && (
 										<div

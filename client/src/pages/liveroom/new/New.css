@@ -1,0 +1,211 @@
+/* =================================================================
+   CREATE ROOM FORM
+   ================================================================= */
+
+.new-form {
+	display: flex;
+	flex-direction: column;
+	gap: var(--space-5);
+}
+
+.new-heading {
+	font-family: var(--font-sans);
+	font-size: var(--text-xl);
+	font-weight: var(--font-semibold);
+	color: var(--text-primary);
+	margin: 0;
+}
+
+.new-subtext {
+	font-family: var(--font-sans);
+	font-size: var(--text-sm);
+	color: var(--text-muted);
+	margin: 0;
+	margin-top: calc(var(--space-1) * -1);
+	line-height: var(--line-relaxed);
+}
+
+/* ── Field ── */
+.new-field {
+	display: flex;
+	flex-direction: column;
+	gap: 0.35rem;
+}
+
+.new-label {
+	font-family: var(--font-sans);
+	font-size: var(--text-xs);
+	font-weight: var(--font-semibold);
+	color: var(--text-secondary);
+	text-transform: uppercase;
+	letter-spacing: 0.06em;
+}
+
+.new-label-row {
+	display: flex;
+	align-items: center;
+	gap: var(--space-2);
+}
+
+/* Info icon + tooltip */
+.new-info-wrap {
+	position: relative;
+	display: inline-flex;
+	align-items: center;
+}
+
+.new-info-icon {
+	color: var(--text-muted);
+	cursor: help;
+	transition: color var(--transition-fast);
+}
+
+.new-info-wrap:hover .new-info-icon {
+	color: var(--text-secondary);
+}
+
+.new-info-tooltip {
+	position: absolute;
+	left: 50%;
+	bottom: calc(100% + 8px);
+	transform: translateX(-50%);
+	width: 240px;
+	padding: var(--space-3);
+	background: var(--glass-inner-plate-dense);
+	border: 1px solid var(--border-soft);
+	border-radius: var(--radius-base);
+	backdrop-filter: var(--glass-blur);
+	-webkit-backdrop-filter: var(--glass-blur);
+	box-shadow: var(--shadow-soft);
+	font-family: var(--font-sans);
+	font-size: var(--text-xs);
+	font-weight: var(--font-normal);
+	color: var(--text-secondary);
+	line-height: var(--line-normal);
+	pointer-events: none;
+	opacity: 0;
+	transition: opacity var(--transition-fast);
+	z-index: 10;
+}
+
+.new-info-wrap:hover .new-info-tooltip {
+	opacity: 1;
+}
+
+.new-input {
+	height: 44px;
+	padding: 0 var(--space-4);
+	font-family: var(--font-sans);
+	font-size: var(--text-sm);
+	color: var(--text-primary);
+	background: var(--glass-surface-strong);
+	border: 1px solid var(--border-soft);
+	border-radius: 10px;
+	outline: none;
+	transition:
+		border-color var(--transition-fast),
+		box-shadow var(--transition-fast);
+}
+
+.new-input::placeholder {
+	color: var(--placeholder-text);
+}
+
+.new-input:focus {
+	border-color: var(--border-highlight);
+	box-shadow: var(--focus-ring);
+}
+
+/* ── Toggle switch ── */
+.new-toggle-row {
+	display: flex;
+	align-items: center;
+	gap: var(--space-2);
+}
+
+.new-toggle {
+	display: flex;
+	align-items: center;
+	gap: var(--space-3);
+	cursor: pointer;
+}
+
+.new-toggle__checkbox {
+	position: absolute;
+	opacity: 0;
+	width: 0;
+	height: 0;
+	pointer-events: none;
+}
+
+.new-toggle__track {
+	position: relative;
+	width: 40px;
+	height: 22px;
+	border-radius: var(--radius-full);
+	background: var(--glass-surface-strong);
+	border: 1px solid var(--border-soft);
+	transition: background var(--transition-fast), border-color var(--transition-fast);
+	flex-shrink: 0;
+}
+
+.new-toggle__thumb {
+	position: absolute;
+	top: 2px;
+	left: 2px;
+	width: 16px;
+	height: 16px;
+	border-radius: 50%;
+	background: var(--text-muted);
+	transition: transform var(--transition-fast), background var(--transition-fast);
+}
+
+.new-toggle__checkbox:checked + .new-toggle__track {
+	background: rgba(120, 170, 255, 0.25);
+	border-color: rgba(120, 170, 255, 0.40);
+}
+
+.new-toggle__checkbox:checked + .new-toggle__track .new-toggle__thumb {
+	transform: translateX(18px);
+	background: var(--orb-primary);
+}
+
+.new-toggle__text {
+	font-family: var(--font-sans);
+	font-size: var(--text-sm);
+	color: var(--text-secondary);
+	user-select: none;
+}
+
+/* ── Submit button ── */
+.new-submit {
+	width: 100%;
+	height: 44px;
+	margin-top: 0.25rem;
+	border: none;
+	border-radius: 999px;
+	background: var(--strong-white);
+	color: var(--shell);
+	font-family: var(--font-sans);
+	font-size: var(--text-sm);
+	font-weight: var(--font-semibold);
+	letter-spacing: 0.03em;
+	cursor: pointer;
+	transition: opacity var(--transition-fast), transform var(--transition-fast);
+}
+
+.new-submit:hover:not(:disabled) {
+	opacity: 0.88;
+	transform: translateY(-1px);
+}
+
+.new-submit:disabled {
+	opacity: 0.35;
+	cursor: not-allowed;
+	transform: none;
+}
+
+.new-submit:disabled:hover {
+	opacity: 0.35;
+	transform: none;
+}

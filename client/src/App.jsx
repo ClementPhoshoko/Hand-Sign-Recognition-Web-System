@@ -4,7 +4,7 @@ import Nav from './components/navbar/Nav'
 import Homepage from './pages/homepage/Homepage'
 import Foot from './components/footer/Foot'
 import AuthLayout from './pages/auth/AuthLayout'
-import Dashboard from './pages/dashboard/Dashboard'
+import LiveroomLayout from './pages/liveroom/LiveroomLayout'
 import './App.css'
 
 function App() {
@@ -14,9 +14,15 @@ function App() {
     <BrowserRouter>
       <div className="app-root" data-theme={theme}>
         <Routes>
-          <Route path="/" element={<><Nav /><Homepage /><Foot /></>} />
+          <Route path="/" element={
+            <>
+              <Nav />
+              <Homepage />
+              <Foot />
+            </>
+          } />
           <Route path="/auth" element={<AuthLayout />} />
-          <Route path="/in/:username" element={<Dashboard />} />
+          <Route path="/liveroom" element={<LiveroomLayout />} />
         </Routes>
       </div>
     </BrowserRouter>

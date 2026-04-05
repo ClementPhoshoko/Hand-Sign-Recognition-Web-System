@@ -1,0 +1,418 @@
+/* =================================================================
+   LIVEROOM LAYOUT
+   ================================================================= */
+
+/* ── Shell ── */
+.liveroom-shell {
+	position: relative;
+	/* min-height: 100vh; */
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	background: var(--shell);
+	overflow: hidden;
+	padding-top: calc(var(--nav-height, 0px) + var(--space-6));
+}
+
+/* ── Ambient orbs ── */
+.liveroom-canvas {
+	position: fixed;
+	inset: 0;
+	pointer-events: none;
+	z-index: 0;
+	overflow: hidden;
+}
+
+.liveroom-orb {
+	position: absolute;
+	border-radius: 50%;
+	filter: blur(100px);
+	opacity: 0.35;
+	will-change: transform;
+}
+
+.liveroom-orb--1 {
+	width: 520px;
+	height: 520px;
+	background: var(--orb-primary);
+	top: -10%;
+	left: 50%;
+	transform: translateX(-50%);
+}
+
+.liveroom-orb--2 {
+	width: 380px;
+	height: 380px;
+	background: var(--orb-accent-left);
+	bottom: -5%;
+	right: -5%;
+}
+
+/* ── Wrapper ── */
+.liveroom-wrap {
+	position: relative;
+	z-index: 1;
+	width: 100%;
+	max-width: 1100px;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: var(--space-5);
+	padding: 0 var(--space-4);
+}
+
+/* ── Two-column body ── */
+.liveroom-body {
+	display: flex;
+	gap: var(--space-5);
+	width: 100%;
+	align-items: flex-start;
+}
+
+/* Left column — preview + selectors */
+.liveroom-left {
+	flex: 1 1 58%;
+	min-width: 0;
+	display: flex;
+	flex-direction: column;
+	gap: var(--space-4);
+}
+
+/* ── Switch Tabs ── */
+.liveroom-tabs {
+	display: flex;
+	gap: var(--space-1);
+	background: var(--glass-inner-plate);
+	border: 1px solid var(--border-soft);
+	border-radius: var(--radius-full);
+	padding: 4px;
+	backdrop-filter: var(--glass-blur);
+	-webkit-backdrop-filter: var(--glass-blur);
+}
+
+.liveroom-tab {
+	position: relative;
+	padding: var(--space-2) var(--space-5);
+	font-family: var(--font-sans);
+	font-size: var(--text-sm);
+	font-weight: var(--font-medium);
+	color: var(--text-muted);
+	background: transparent;
+	border: none;
+	border-radius: var(--radius-full);
+	cursor: pointer;
+	transition: color var(--transition-fast), background var(--transition-fast);
+	white-space: nowrap;
+}
+
+.liveroom-tab:hover {
+	color: var(--text-secondary);
+	background: var(--glass-surface);
+}
+
+.liveroom-tab--active {
+	color: var(--text-primary);
+	background: var(--glass-surface-strong);
+	box-shadow: var(--glow-inner);
+}
+
+/* ── Preview Card ── */
+.liveroom-preview {
+	width: 100%;
+	aspect-ratio: 16 / 9;
+	border-radius: 20px;
+	background: linear-gradient(160deg, #1a1e28 0%, #0d0f14 100%);
+	border: 1px solid var(--border-soft);
+	box-shadow:
+		var(--shadow-soft),
+		0 0 40px rgba(120, 170, 255, 0.06);
+	display: flex;
+	flex-direction: column;
+	overflow: hidden;
+	position: relative;
+}
+
+/* Header */
+.liveroom-preview__header {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding: var(--space-4) var(--space-4) 0;
+	z-index: 1;
+}
+
+.liveroom-preview__name {
+	font-family: var(--font-sans);
+	font-size: var(--text-sm);
+	font-weight: var(--font-medium);
+	color: var(--text-primary);
+	letter-spacing: 0.01em;
+}
+
+.liveroom-preview__menu {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 32px;
+	height: 32px;
+	background: transparent;
+	border: none;
+	border-radius: var(--radius-base);
+	color: var(--text-muted);
+	cursor: pointer;
+	transition: background var(--transition-fast), color var(--transition-fast);
+}
+
+.liveroom-preview__menu:hover {
+	background: var(--glass-surface-strong);
+	color: var(--text-secondary);
+}
+
+/* Body — camera off message */
+.liveroom-preview__body {
+	flex: 1;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.liveroom-preview__status {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: var(--space-2);
+	color: var(--text-muted);
+}
+
+.liveroom-preview__status svg {
+	opacity: 0.5;
+}
+
+.liveroom-preview__status span {
+	font-family: var(--font-sans);
+	font-size: var(--text-lg);
+	font-weight: var(--font-light);
+	color: var(--soft-white);
+	letter-spacing: 0.02em;
+}
+
+/* Control buttons */
+.liveroom-preview__controls {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: var(--space-4);
+	padding: 0 var(--space-4) var(--space-4);
+	z-index: 1;
+}
+
+.liveroom-ctrl {
+	width: 48px;
+	height: 48px;
+	border-radius: 50%;
+	border: none;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	cursor: pointer;
+	transition:
+		transform var(--transition-fast),
+		box-shadow var(--transition-fast),
+		background var(--transition-fast);
+	color: var(--text-primary);
+}
+
+.liveroom-ctrl:hover {
+	transform: scale(1.08);
+}
+
+.liveroom-ctrl:active {
+	transform: scale(0.96);
+}
+
+/* Mic — light grey */
+.liveroom-ctrl--mic {
+	background: rgba(255, 255, 255, 0.14);
+	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+}
+
+.liveroom-ctrl--mic:hover {
+	background: rgba(255, 255, 255, 0.20);
+}
+
+/* Camera — soft red */
+.liveroom-ctrl--cam {
+	background: rgba(220, 70, 70, 0.55);
+	box-shadow: 0 2px 10px rgba(220, 70, 70, 0.30);
+}
+
+.liveroom-ctrl--cam:hover {
+	background: rgba(220, 70, 70, 0.70);
+}
+
+/* Extra — dark grey */
+.liveroom-ctrl--extra {
+	background: rgba(255, 255, 255, 0.08);
+	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+}
+
+.liveroom-ctrl--extra:hover {
+	background: rgba(255, 255, 255, 0.14);
+}
+
+/* ── Bottom device selector pills ── */
+.liveroom-selectors {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	gap: var(--space-2);
+	width: 100%;
+}
+
+.liveroom-pill {
+	position: relative;
+	display: flex;
+	align-items: center;
+	gap: var(--space-2);
+	padding: var(--space-2) var(--space-3);
+	background: var(--glass-inner-plate);
+	border: 1px solid var(--border-soft);
+	border-radius: var(--radius-full);
+	backdrop-filter: var(--glass-blur);
+	-webkit-backdrop-filter: var(--glass-blur);
+	cursor: not-allowed;
+	color: var(--text-secondary);
+	opacity: 0.45;
+	transition: opacity var(--transition-fast), border-color var(--transition-fast);
+	max-width: 180px;
+}
+
+.liveroom-pill:hover {
+	opacity: 0.65;
+	border-color: var(--border-standard);
+}
+
+.liveroom-pill::after {
+	content: 'Coming soon';
+	position: absolute;
+	bottom: calc(100% + 6px);
+	left: 50%;
+	transform: translateX(-50%);
+	padding: var(--space-1) var(--space-3);
+	background: var(--glass-inner-plate-dense);
+	border: 1px solid var(--border-soft);
+	border-radius: var(--radius-base);
+	backdrop-filter: var(--glass-blur);
+	-webkit-backdrop-filter: var(--glass-blur);
+	box-shadow: var(--shadow-soft);
+	font-family: var(--font-sans);
+	font-size: var(--text-xs);
+	font-weight: var(--font-medium);
+	color: var(--text-secondary);
+	white-space: nowrap;
+	pointer-events: none;
+	opacity: 0;
+	transition: opacity var(--transition-fast);
+	z-index: 10;
+}
+
+.liveroom-pill:hover::after {
+	opacity: 1;
+}
+
+.liveroom-pill__label {
+	font-family: var(--font-sans);
+	font-size: var(--text-xs);
+	font-weight: var(--font-normal);
+	color: var(--text-secondary);
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	max-width: 100px;
+}
+
+.liveroom-pill__arrow {
+	flex-shrink: 0;
+	opacity: 0.5;
+}
+
+/* ── Tab content area (right column) ── */
+.liveroom-content {
+	flex: 1 1 42%;
+	min-width: 0;
+}
+
+.liveroom-content__panel {
+	min-height: 60px;
+	animation: lr-panel-in 350ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* Stagger children: heading, subtext, fields, toggle, button */
+.liveroom-content__panel > * > *:nth-child(1) { animation: lr-field-in 400ms cubic-bezier(0.22, 1, 0.36, 1) 60ms both; }
+.liveroom-content__panel > * > *:nth-child(2) { animation: lr-field-in 400ms cubic-bezier(0.22, 1, 0.36, 1) 120ms both; }
+.liveroom-content__panel > * > *:nth-child(3) { animation: lr-field-in 400ms cubic-bezier(0.22, 1, 0.36, 1) 180ms both; }
+.liveroom-content__panel > * > *:nth-child(4) { animation: lr-field-in 400ms cubic-bezier(0.22, 1, 0.36, 1) 240ms both; }
+.liveroom-content__panel > * > *:nth-child(5) { animation: lr-field-in 400ms cubic-bezier(0.22, 1, 0.36, 1) 300ms both; }
+.liveroom-content__panel > * > *:nth-child(6) { animation: lr-field-in 400ms cubic-bezier(0.22, 1, 0.36, 1) 360ms both; }
+
+@keyframes lr-panel-in {
+	from {
+		opacity: 0;
+	}
+	to {
+		opacity: 1;
+	}
+}
+
+@keyframes lr-field-in {
+	from {
+		opacity: 0;
+		transform: translateY(10px);
+	}
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}
+
+/* Respect reduced motion */
+@media (prefers-reduced-motion: reduce) {
+	.liveroom-content__panel,
+	.liveroom-content__panel > * > * {
+		animation: none !important;
+	}
+}
+
+/* ── Responsive ── */
+@media (max-width: 768px) {
+	.liveroom-body {
+		flex-direction: column;
+	}
+
+	.liveroom-left,
+	.liveroom-content {
+		flex: 1 1 100%;
+	}
+
+	.liveroom-wrap {
+		max-width: 100%;
+		padding: 0 var(--space-3);
+	}
+
+	.liveroom-preview {
+		border-radius: 14px;
+	}
+
+	.liveroom-ctrl {
+		width: 42px;
+		height: 42px;
+	}
+
+	.liveroom-pill {
+		padding: var(--space-1) var(--space-2);
+	}
+
+	.liveroom-pill__label {
+		max-width: 70px;
+	}
+}
