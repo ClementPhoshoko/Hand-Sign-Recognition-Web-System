@@ -1,9 +1,9 @@
 import { useEffect, useRef } from 'react'
+import { createPortal } from 'react-dom'
 import './PrimaryModal.css'
 
 function PrimaryModal({ open, customMsg, firstOption, secondOption, onFirstOption, onSecondOption, onClose }) {
 	const overlayRef = useRef(null)
-	const panelRef = useRef(null)
 
 	// Close on Escape
 	useEffect(() => {
@@ -21,10 +21,11 @@ function PrimaryModal({ open, customMsg, firstOption, secondOption, onFirstOptio
 	}
 
 	if (!open) return null
+	if (typeof document === 'undefined') return null
 
-	return (
+	return createPortal(
 		<div className="pm-overlay" ref={overlayRef} onClick={handleOverlayClick}>
-			<div className="pm-panel" ref={panelRef} role="dialog" aria-modal="true">
+			<div className="pm-panel" role="dialog" aria-modal="true">
 				{/* Top highlight edge */}
 				<span className="pm-highlight" aria-hidden="true" />
 
@@ -52,7 +53,8 @@ function PrimaryModal({ open, customMsg, firstOption, secondOption, onFirstOptio
 					)}
 				</div>
 			</div>
-		</div>
+		</div>,
+		document.body,
 	)
 }
 
