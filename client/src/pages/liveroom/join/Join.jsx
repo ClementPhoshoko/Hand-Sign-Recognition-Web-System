@@ -1,14 +1,22 @@
 import { useState } from 'react'
+import PrimaryModal from '../../../components/modals/primary/PrimaryModal'
 import './Join.css'
 
 function Join() {
 	const [name, setName] = useState('')
 	const [gestureTranscription, setGestureTranscription] = useState(false)
+	const [showConfirm, setShowConfirm] = useState(false)
 
 	const isReady = name.trim() !== ''
 
 	const handleSubmit = (e) => {
 		e.preventDefault()
+		if (!isReady) return
+		setShowConfirm(true)
+	}
+
+	const handleConfirm = () => {
+		setShowConfirm(false)
 		// TODO: hook up to room join API
 	}
 
@@ -84,7 +92,20 @@ function Join() {
 
 			<button className="join-submit" type="submit" disabled={!isReady}>
 				Join Room
+				<svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+					<path d="M9 18l6-6-6-6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+				</svg>
 			</button>
+
+			<PrimaryModal
+				open={showConfirm}
+				customMsg="You're about to join the session. Make sure your camera and microphone are set up correctly before proceeding."
+				firstOption="Join Now"
+				secondOption="Go Back"
+				onFirstOption={handleConfirm}
+				onSecondOption={() => setShowConfirm(false)}
+				onClose={() => setShowConfirm(false)}
+			/>
 		</form>
 	)
 }

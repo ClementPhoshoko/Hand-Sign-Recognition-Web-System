@@ -1,0 +1,163 @@
+/* =================================================================
+   PRIMARY MODAL
+   Reusable glass-style modal with customMsg, firstOption, secondOption.
+   ================================================================= */
+
+/* ── Overlay ── */
+.pm-overlay {
+	position: fixed;
+	inset: 0;
+	z-index: 1000;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	/* background: rgba(0, 0, 0, 0.55); */
+	backdrop-filter: blur(6px);
+	-webkit-backdrop-filter: blur(6px);
+	animation: pm-overlay-in 200ms ease-out both;
+}
+
+@keyframes pm-overlay-in {
+	from { opacity: 0; }
+	to   { opacity: 1; }
+}
+
+/* ── Panel ── */
+.pm-panel {
+	position: relative;
+	width: 90%;
+	max-width: 400px;
+	padding: var(--space-6);
+	background: var(--glass-inner-plate-dense);
+	border: 1px solid var(--border-soft);
+	border-radius: var(--border-radius);
+	backdrop-filter: var(--glass-blur);
+	-webkit-backdrop-filter: var(--glass-blur);
+	box-shadow:
+		var(--glow-outer),
+		var(--glow-inner),
+		var(--shadow-deep);
+	display: flex;
+	flex-direction: column;
+	gap: var(--space-5);
+	animation: pm-panel-in 280ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes pm-panel-in {
+	from {
+		opacity: 0;
+		transform: scale(0.95) translateY(8px);
+	}
+	to {
+		opacity: 1;
+		transform: scale(1) translateY(0);
+	}
+}
+
+/* Top highlight edge */
+.pm-highlight {
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	height: 1px;
+	background: linear-gradient(90deg, transparent, var(--top-highlight), transparent);
+	border-radius: var(--border-radius) var(--border-radius) 0 0;
+	pointer-events: none;
+}
+
+/* ── Message ── */
+.pm-message {
+	margin: 0;
+	font-family: var(--font-sans);
+	font-size: var(--text-sm);
+	font-weight: var(--font-normal);
+	color: var(--text-secondary);
+	line-height: var(--line-relaxed);
+	text-align: center;
+}
+
+/* ── Actions ── */
+.pm-actions {
+	display: flex;
+	align-items: center;
+	justify-content: flex-end;
+	gap: var(--space-3);
+}
+
+/* Shared button base */
+.pm-btn {
+	height: 40px;
+	padding: 0 var(--space-5);
+	border: none;
+	border-radius: var(--radius-full);
+	font-family: var(--font-sans);
+	font-size: var(--text-sm);
+	font-weight: var(--font-semibold);
+	letter-spacing: 0.02em;
+	cursor: pointer;
+	display: inline-flex;
+	align-items: center;
+	gap: var(--space-2);
+	transition:
+		opacity var(--transition-fast),
+		transform var(--transition-fast),
+		box-shadow var(--transition-fast),
+		background var(--transition-fast);
+}
+
+.pm-btn:active {
+	transform: scale(0.97);
+}
+
+/* Primary action */
+.pm-btn--primary {
+	background: var(--strong-white);
+	color: var(--shell);
+}
+
+.pm-btn--primary:hover {
+	opacity: 0.88;
+	transform: translateY(-1px);
+	box-shadow: var(--shadow-glow);
+}
+
+/* Secondary / cancel action */
+.pm-btn--secondary {
+	background: var(--glass-surface-strong);
+	color: var(--text-secondary);
+	border: 1px solid var(--border-soft);
+}
+
+.pm-btn--secondary:hover {
+	background: var(--glass-surface);
+	border-color: var(--border-standard);
+	color: var(--text-primary);
+	transform: translateY(-1px);
+	box-shadow: var(--shadow-soft);
+}
+
+/* ── Reduced motion ── */
+@media (prefers-reduced-motion: reduce) {
+	.pm-overlay,
+	.pm-panel {
+		animation: none !important;
+	}
+}
+
+/* ── Mobile ── */
+@media (max-width: 480px) {
+	.pm-panel {
+		width: 94%;
+		padding: var(--space-5);
+	}
+
+	.pm-actions {
+		flex-direction: column;
+		gap: var(--space-2);
+	}
+
+	.pm-btn {
+		width: 100%;
+	}
+}
