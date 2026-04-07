@@ -402,14 +402,18 @@
 	opacity: 1;
 }
 
-/* Extra — dark grey */
+/* Extra — dark grey (disabled / coming soon) */
 .liveroom-ctrl--extra {
 	background: rgba(255, 255, 255, 0.08);
 	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+	opacity: 0.45;
+	cursor: not-allowed;
 }
 
 .liveroom-ctrl--extra:hover {
-	background: rgba(255, 255, 255, 0.14);
+	background: rgba(255, 255, 255, 0.08);
+	opacity: 0.65;
+	transform: none;
 }
 
 /* ── Bottom device selector pills ── */

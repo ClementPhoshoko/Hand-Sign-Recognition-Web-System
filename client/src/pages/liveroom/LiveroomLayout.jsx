@@ -73,10 +73,10 @@ function LiveroomLayout() {
 							)}
 
 							{/* Center — camera off / error status */}
-							{!cameraOn && (
+							{(!cameraOn || errors.camera || errors.mic) && (
 								<div className="liveroom-preview__body">
-									<div className={`liveroom-preview__status${errors.camera ? ' liveroom-preview__status--error' : ''}`}>
-										{errors.camera ? (
+									<div className={`liveroom-preview__status${(errors.camera || errors.mic) ? ' liveroom-preview__status--error' : ''}`}>
+										{(errors.camera || errors.mic) ? (
 											<>
 												<svg width="28" height="28" viewBox="0 0 24 24" fill="none" aria-hidden="true">
 													<path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"
@@ -84,7 +84,8 @@ function LiveroomLayout() {
 													<line x1="12" y1="9" x2="12" y2="13" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
 													<line x1="12" y1="17" x2="12.01" y2="17" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
 												</svg>
-												<span>{errors.camera}</span>
+												{errors.camera && <span>Video: {errors.camera}</span>}
+												{errors.mic && <span>Mic: {errors.mic}</span>}
 											</>
 										) : (
 											<>
@@ -163,7 +164,7 @@ function LiveroomLayout() {
 								</button>
 
 								{/* Settings */}
-								<button type="button" className="liveroom-ctrl liveroom-ctrl--extra" aria-label="More controls">
+								<button type="button" className="liveroom-ctrl liveroom-ctrl--extra" aria-label="More controls" data-tooltip="Coming soon" disabled>
 									<svg width="20" height="20" viewBox="0 0 24 24" fill="none">
 										<circle cx="12" cy="12" r="3" stroke="currentColor" strokeWidth="1.8" />
 										<path

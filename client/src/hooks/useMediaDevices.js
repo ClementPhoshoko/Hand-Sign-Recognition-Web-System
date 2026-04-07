@@ -146,7 +146,7 @@ export default function useMediaDevices() {
 			setMicOn(true)
 			enumerateDevices() // Labels become available after permission grant
 		} catch (err) {
-			setErrors((prev) => ({ ...prev, mic: parseMediaError(err) }))
+			setErrors((prev) => ({ ...prev, mic: parseMediaError(err), camera: null }))
 		}
 	}, [startAudioAnalyser, stopAudioAnalyser, enumerateDevices])
 
@@ -198,7 +198,7 @@ export default function useMediaDevices() {
 			setCameraOn(true)
 			enumerateDevices() // Labels become available after permission grant
 		} catch (err) {
-			setErrors((prev) => ({ ...prev, camera: parseMediaError(err) }))
+			setErrors((prev) => ({ ...prev, camera: parseMediaError(err), mic: null }))
 		}
 	}, [enumerateDevices])
 
