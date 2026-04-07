@@ -1,15 +1,23 @@
 import { useState } from 'react'
+import PrimaryModal from '../../../components/modals/primary/PrimaryModal'
 import './New.css'
 
 function New() {
 	const [roomName, setRoomName] = useState('')
 	const [name, setName] = useState('')
 	const [gestureTranscription, setGestureTranscription] = useState(false)
+	const [showConfirm, setShowConfirm] = useState(false)
 
 	const isReady = roomName.trim() !== '' && name.trim() !== ''
 
 	const handleSubmit = (e) => {
 		e.preventDefault()
+		if (!isReady) return
+		setShowConfirm(true)
+	}
+
+	const handleConfirm = () => {
+		setShowConfirm(false)
 		// TODO: hook up to room creation API
 	}
 
@@ -116,7 +124,20 @@ function New() {
 
 			<button className="new-submit" type="submit" disabled={!isReady}>
 				Create Room
+				<svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+					<path d="M9 18l6-6-6-6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+				</svg>
 			</button>
+
+			<PrimaryModal
+				open={showConfirm}
+				customMsg="You're about to create a new meeting room. Make sure your devices are ready and your room name is set before starting."
+				firstOption="Create Now"
+				secondOption="Go Back"
+				onFirstOption={handleConfirm}
+				onSecondOption={() => setShowConfirm(false)}
+				onClose={() => setShowConfirm(false)}
+			/>
 		</form>
 	)
 }
