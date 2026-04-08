@@ -65,7 +65,7 @@ function LiveroomLayout() {
 							{cameraOn && (
 								<video
 									ref={videoRef}
-									className="liveroom-preview__video"
+									className="liveroom-preview__video liveroom-preview__video--mirror"
 									autoPlay
 									playsInline
 									muted
