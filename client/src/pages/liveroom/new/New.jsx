@@ -2,7 +2,7 @@ import { useState } from 'react'
 import PrimaryModal from '../../../components/modals/primary/PrimaryModal'
 import './New.css'
 
-function New() {
+function New({ onCreate }) {
 	const [roomName, setRoomName] = useState('')
 	const [name, setName] = useState('')
 	const [gestureTranscription, setGestureTranscription] = useState(false)
@@ -17,8 +17,8 @@ function New() {
 	}
 
 	const handleConfirm = () => {
+		onCreate?.({ roomName, name, gestureTranscription })
 		setShowConfirm(false)
-		// TODO: hook up to room creation API
 	}
 
 	return (

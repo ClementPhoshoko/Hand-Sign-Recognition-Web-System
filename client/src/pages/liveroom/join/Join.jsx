@@ -2,7 +2,7 @@ import { useState } from 'react'
 import PrimaryModal from '../../../components/modals/primary/PrimaryModal'
 import './Join.css'
 
-function Join() {
+function Join({ onJoin }) {
 	const [name, setName] = useState('')
 	const [gestureTranscription, setGestureTranscription] = useState(false)
 	const [showConfirm, setShowConfirm] = useState(false)
@@ -16,8 +16,8 @@ function Join() {
 	}
 
 	const handleConfirm = () => {
+		onJoin?.({ name, gestureTranscription })
 		setShowConfirm(false)
-		// TODO: hook up to room join API
 	}
 
 	return (
