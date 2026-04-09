@@ -1,0 +1,16 @@
+Connect participants and active speaker to real meeting state from your signaling/media layer.
+Add screen-share priority logic so shared content auto-promotes to stage.
+Persist selected layout mode per user session.
+
+Real participants and active speaker sync: this needs backend signaling infrastructure (room state, participant presence, events),
+    plus WebRTC services (STUN/TURN and signaling server).
+Screen-share auto-promote: mostly frontend logic once media events exist, but it depends on signaling events from backend
+    to keep all clients in sync.
+Persist layout mode: no backend required if you store locally (localStorage). Backend is only needed if you want the preference
+    to follow the user across devices/accounts.
+
+-------------------------------------
+Move all .gl-toolbar-control buttons (Camera, Mic, Speaker, Leave) from .gl-meeting-toolbar to .gl-stage__header.
+Style these action buttons as borderless, circular, icon-only (no text), using only SVGs.
+For dropdowns (View options, Meeting info), keep label + icon + chevron, but style as borderless and glassy.
+Ensure all colors, backgrounds, and effects use your design tokens from

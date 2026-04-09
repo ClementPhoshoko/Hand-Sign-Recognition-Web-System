@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import Breadcrumbs from '../../components/breadcrumbs/Breadcrumbs'
 import useMediaDevices from '../../hooks/useMediaDevices'
 import DevicePicker from './DevicePicker'
@@ -7,8 +8,44 @@ import New from './new/New'
 import './LiveroomLayout.css'
 
 function LiveroomLayout() {
+	const navigate = useNavigate()
 	const [activeTab, setActiveTab] = useState('join')
 	const { videoRef, cameraOn, micOn, audioLevel, errors, devices, selectedDevices, toggleCamera, toggleMic, switchDevice } = useMediaDevices()
+
+	const createMeetingId = (seed = 'meeting') => {
+		const base = seed
+			.toLowerCase()
+			.trim()
+			.replace(/[^a-z0-9]+/g, '-')
+			.replace(/^-+|-+$/g, '')
+			.slice(0, 24)
+
+		const suffix = Math.random().toString(36).slice(2, 8)
+		return `${base || 'meeting'}-${suffix}`
+	}
+
+	const goToMeeting = ({ meetingId, ...state }) => {
+		navigate(`/liveroom/meeting?meetingid=${encodeURIComponent(meetingId)}`, { state })
+	}
+
+	const handleCreateRoom = ({ roomName, name, gestureTranscription }) => {
+		goToMeeting({
+			meetingId: createMeetingId(roomName),
+			mode: 'create',
+			roomName,
+			displayName: name,
+			gestureTranscription,
+		})
+	}
+
+	const handleJoinRoom = ({ name, gestureTranscription }) => {
+		goToMeeting({
+			meetingId: createMeetingId('meeting'),
+			mode: 'join',
+			displayName: name,
+			gestureTranscription,
+		})
+	}
 
 	return (
 		<div className="liveroom-shell">
@@ -241,12 +278,12 @@ function LiveroomLayout() {
 					<div className="liveroom-content">
 						{activeTab === 'join' && (
 							<div className="liveroom-content__panel" key="join">
-								<Join />
+								<Join onJoin={handleJoinRoom} />
 							</div>
 						)}
 						{activeTab === 'create' && (
 							<div className="liveroom-content__panel" key="create">
-								<New />
+								<New onCreate={handleCreateRoom} />
 							</div>
 						)}
 					</div>

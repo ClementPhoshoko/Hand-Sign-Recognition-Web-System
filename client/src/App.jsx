@@ -5,6 +5,7 @@ import Homepage from './pages/homepage/Homepage'
 import Foot from './components/footer/Foot'
 import AuthLayout from './pages/auth/AuthLayout'
 import LiveroomLayout from './pages/liveroom/LiveroomLayout'
+import MeetingId from './pages/liveroom/meeting_id/MeetingId'
 import './App.css'
 
 function App() {
@@ -23,6 +24,8 @@ function App() {
           } />
           <Route path="/auth" element={<AuthLayout />} />
           <Route path="/liveroom" element={<LiveroomLayout />} />
+          <Route path="/liveroom/meeting" element={<MeetingId />} />
+          <Route path="/liveroom/meeting/:meetingId" element={<MeetingId />} />
         </Routes>
       </div>
     </BrowserRouter>
