@@ -70,7 +70,7 @@
 	background: var(--glass-surface-strong);
 	color: var(--text-primary);
 }
-.gl-toolbar-menu[open] .gl-toolbar-pill {
+.gl-toolbar-pill.is-open {
 	background: var(--glass-surface-strong);
 	color: var(--text-primary);
 }
@@ -85,6 +85,10 @@
 	width: 10px;
 	height: 10px;
 	opacity: 0.5;
+	transition: transform var(--transition-fast);
+}
+.gl-pill-caret.is-flipped {
+	transform: rotate(180deg);
 }
 
 /* ── Dropdown panel ── */
@@ -357,7 +361,7 @@
 }
 
 .gl-people__body {
-	/* flex: 1; */
+	flex: 1;
 	min-height: 0;
 	overflow: auto;
 	padding: var(--space-3);
@@ -377,16 +381,16 @@
 	gap: var(--space-3);
 	padding: 0.72rem 0.85rem;
 	background: var(--glass-surface);
-	/* border: 1px solid var(--border-soft); */
+	border: 1px solid var(--border-soft);
 	border-radius: var(--radius-base);
-	/* box-shadow: var(--glow-inner); */
+	box-shadow: var(--glow-inner);
 	transition:
 		border-color var(--transition-fast),
 		box-shadow var(--transition-fast);
 }
 .gl-person-card.is-pinned {
+	border-color: rgba(130, 170, 255, 0.36);
 	box-shadow: var(--focus-ring), var(--glow-inner);
-	/* border: 1px solid var(--border-soft); */
 }
 
 .gl-person-card__left {

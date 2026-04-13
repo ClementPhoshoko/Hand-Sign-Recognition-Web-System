@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useMemo, useState, useRef, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import Breadcrumbs from '../../../components/breadcrumbs/Breadcrumbs'
 import './MeetingId.css'
@@ -13,7 +13,35 @@ function MeetingId() {
 	const [isCameraOn, setIsCameraOn] = useState(true)
 	const [isMicOn, setIsMicOn] = useState(true)
 	const [isSpeakerOn, setIsSpeakerOn] = useState(true)
+
+	// Single piece of state: which menu is open ('view' | 'info' | null)
+	const [openMenu, setOpenMenu] = useState(null)
+
+	const viewMenuRef = useRef(null)
+	const infoMenuRef = useRef(null)
 	const meetingCode = 'HSR-2419'
+
+	// Close when clicking outside both menus
+	useEffect(() => {
+		const handleClickOutside = (e) => {
+			const insideView = viewMenuRef.current?.contains(e.target)
+			const insideInfo = infoMenuRef.current?.contains(e.target)
+			if (!insideView && !insideInfo) setOpenMenu(null)
+		}
+		document.addEventListener('mousedown', handleClickOutside)
+		return () => document.removeEventListener('mousedown', handleClickOutside)
+	}, [])
+
+	// Close on Escape
+	useEffect(() => {
+		const handleKeyDown = (e) => {
+			if (e.key === 'Escape') setOpenMenu(null)
+		}
+		document.addEventListener('keydown', handleKeyDown)
+		return () => document.removeEventListener('keydown', handleKeyDown)
+	}, [])
+
+	const toggleMenu = (name) => setOpenMenu((prev) => (prev === name ? null : name))
 
 	const participants = useMemo(
 		() => [
@@ -64,126 +92,199 @@ function MeetingId() {
 		if (isAutoLayout) return
 		setLayoutMode(mode)
 		if (mode === 'grid') setIsVideoMaximized(false)
+		setOpenMenu(null)
 	}
 
 	const onToggleVideoMaximize = () => {
 		if (!canMaximizeVideo || isAutoLayout) return
 		setIsVideoMaximized((prev) => !prev)
+		setOpenMenu(null)
 	}
 
-	const onToggleAutoLayout = () => setIsAutoLayout((prev) => !prev)
+	const onToggleAutoLayout = () => {
+		setIsAutoLayout((prev) => !prev)
+		setOpenMenu(null)
+	}
+
+	const onToggleScreenShare = () => {
+		setHasScreenShare((prev) => !prev)
+		setOpenMenu(null)
+	}
+
 	const onLeaveMeeting = () => navigate('/liveroom')
 
 	return (
 		<div className="gl-meeting-page">
 			<Breadcrumbs />
 
-			{/* ── Main layout ── */}
 			<section className={layoutClassName} aria-label="Meeting room layout">
 				{!isGridMode && (
 					<section className="gl-stage" aria-label="Primary video stage">
 						<header className="gl-stage__header">
 							<h2 className="gl-stage__title">{selectedVideoTitle}</h2>
 
-							{/* ── Toolbar: dropdowns ── */}
-							<header className="gl-meeting-toolbar" aria-label="Meeting controls">
-								<details className="gl-toolbar-menu">
-									<summary className="gl-toolbar-pill" aria-label="Meeting view options">
+							{/* ── Toolbar: React-controlled dropdowns ── */}
+							<div className="gl-meeting-toolbar" aria-label="Meeting controls">
+
+								{/* View dropdown */}
+								<div className="gl-toolbar-menu" ref={viewMenuRef}>
+									<button
+										type="button"
+										className={`gl-toolbar-pill${openMenu === 'view' ? ' is-open' : ''}`}
+										aria-haspopup="true"
+										aria-expanded={openMenu === 'view'}
+										aria-label="Meeting view options"
+										onClick={() => toggleMenu('view')}
+									>
 										<svg viewBox="0 0 24 24" aria-hidden="true" className="gl-pill-icon">
 											<path d="M4 6h7v5H4V6Zm9 0h7v5h-7V6ZM4 13h7v5H4v-5Zm9 2.5 3-2.5 3 2.5-3 2.5-3-2.5Z" fill="currentColor" />
 										</svg>
 										<span>View</span>
-										<svg viewBox="0 0 24 24" aria-hidden="true" className="gl-pill-caret">
+										<svg
+											viewBox="0 0 24 24"
+											aria-hidden="true"
+											className={`gl-pill-caret${openMenu === 'view' ? ' is-flipped' : ''}`}
+										>
 											<path d="m7 10 5 5 5-5H7Z" fill="currentColor" />
 										</svg>
-									</summary>
+									</button>
 
-									<div className="gl-toolbar-menu__panel" role="menu">
-										<button type="button" className="gl-toolbar-menu__item" onClick={onToggleAutoLayout}>
-											<svg viewBox="0 0 24 24" aria-hidden="true" className="gl-menu-icon">
-												<path d="M12 3 4 7v6c0 5 3.4 8.4 8 8.9 4.6-.5 8-3.9 8-8.9V7l-8-4Zm0 3.2 5 2.5v4.3c0 3.3-2 5.8-5 6.6-3-.8-5-3.3-5-6.6V8.7l5-2.5Z" fill="currentColor" />
-											</svg>
-											{isAutoLayout ? 'Auto layout: On' : 'Auto layout: Off'}
-										</button>
+									{openMenu === 'view' && (
+										<div className="gl-toolbar-menu__panel" role="menu">
+											<button
+												type="button"
+												className="gl-toolbar-menu__item"
+												role="menuitem"
+												onClick={onToggleAutoLayout}
+											>
+												<svg viewBox="0 0 24 24" aria-hidden="true" className="gl-menu-icon">
+													<path d="M12 3 4 7v6c0 5 3.4 8.4 8 8.9 4.6-.5 8-3.9 8-8.9V7l-8-4Zm0 3.2 5 2.5v4.3c0 3.3-2 5.8-5 6.6-3-.8-5-3.3-5-6.6V8.7l5-2.5Z" fill="currentColor" />
+												</svg>
+												{isAutoLayout ? 'Auto layout: On' : 'Auto layout: Off'}
+											</button>
 
-										<button type="button" className="gl-toolbar-menu__item" onClick={() => onLayoutModeChange('stage')} disabled={isAutoLayout}>
-											<svg viewBox="0 0 24 24" aria-hidden="true" className="gl-menu-icon">
-												<path d="M3 5h18v14H3V5Zm2 2v10h14V7H5Z" fill="currentColor" />
-											</svg>
-											Stage view
-										</button>
+											<button
+												type="button"
+												className="gl-toolbar-menu__item"
+												role="menuitem"
+												onClick={() => onLayoutModeChange('stage')}
+												disabled={isAutoLayout}
+											>
+												<svg viewBox="0 0 24 24" aria-hidden="true" className="gl-menu-icon">
+													<path d="M3 5h18v14H3V5Zm2 2v10h14V7H5Z" fill="currentColor" />
+												</svg>
+												Stage view
+											</button>
 
-										<button type="button" className="gl-toolbar-menu__item" onClick={() => onLayoutModeChange('grid')} disabled={isAutoLayout}>
-											<svg viewBox="0 0 24 24" aria-hidden="true" className="gl-menu-icon">
-												<path d="M4 4h7v7H4V4Zm9 0h7v7h-7V4ZM4 13h7v7H4v-7Zm9 0h7v7h-7v-7Z" fill="currentColor" />
-											</svg>
-											Grid view
-										</button>
+											<button
+												type="button"
+												className="gl-toolbar-menu__item"
+												role="menuitem"
+												onClick={() => onLayoutModeChange('grid')}
+												disabled={isAutoLayout}
+											>
+												<svg viewBox="0 0 24 24" aria-hidden="true" className="gl-menu-icon">
+													<path d="M4 4h7v7H4V4Zm9 0h7v7h-7V4ZM4 13h7v7H4v-7Zm9 0h7v7h-7v-7Z" fill="currentColor" />
+												</svg>
+												Grid view
+											</button>
 
-										<button type="button" className="gl-toolbar-menu__item" onClick={() => onLayoutModeChange('focus')} disabled={isAutoLayout}>
-											<svg viewBox="0 0 24 24" aria-hidden="true" className="gl-menu-icon">
-												<path d="M4 4h16v16H4V4Zm2 2v12h12V6H6Zm3 3h6v6H9V9Z" fill="currentColor" />
-											</svg>
-											Focus view
-										</button>
+											<button
+												type="button"
+												className="gl-toolbar-menu__item"
+												role="menuitem"
+												onClick={() => onLayoutModeChange('focus')}
+												disabled={isAutoLayout}
+											>
+												<svg viewBox="0 0 24 24" aria-hidden="true" className="gl-menu-icon">
+													<path d="M4 4h16v16H4V4Zm2 2v12h12V6H6Zm3 3h6v6H9V9Z" fill="currentColor" />
+												</svg>
+												Focus view
+											</button>
 
-										<button type="button" className="gl-toolbar-menu__item" onClick={onToggleVideoMaximize} disabled={!canMaximizeVideo || isAutoLayout}>
-											<svg viewBox="0 0 24 24" aria-hidden="true" className="gl-menu-icon">
-												<path d="M4 10V4h6v2H6v4H4Zm10-6h6v6h-2V6h-4V4ZM4 20v-6h2v4h4v2H4Zm14-6h2v6h-6v-2h4v-4Z" fill="currentColor" />
-											</svg>
-											{isVideoEffectivelyMaximized ? 'Restore stage' : 'Maximize video'}
-										</button>
+											<button
+												type="button"
+												className="gl-toolbar-menu__item"
+												role="menuitem"
+												onClick={onToggleVideoMaximize}
+												disabled={!canMaximizeVideo || isAutoLayout}
+											>
+												<svg viewBox="0 0 24 24" aria-hidden="true" className="gl-menu-icon">
+													<path d="M4 10V4h6v2H6v4H4Zm10-6h6v6h-2V6h-4V4ZM4 20v-6h2v4h4v2H4Zm14-6h2v6h-6v-2h4v-4Z" fill="currentColor" />
+												</svg>
+												{isVideoEffectivelyMaximized ? 'Restore stage' : 'Maximize video'}
+											</button>
 
-										<button type="button" className="gl-toolbar-menu__item" onClick={() => setHasScreenShare((prev) => !prev)}>
-											<svg viewBox="0 0 24 24" aria-hidden="true" className="gl-menu-icon">
-												<path d="M3 5h18v11H3V5Zm2 2v7h14V7H5Zm5 11h4v2h-4v-2Z" fill="currentColor" />
-											</svg>
-											{hasScreenShare ? 'Stop share (demo)' : 'Start share (demo)'}
-										</button>
-									</div>
-								</details>
+											<button
+												type="button"
+												className="gl-toolbar-menu__item"
+												role="menuitem"
+												onClick={onToggleScreenShare}
+											>
+												<svg viewBox="0 0 24 24" aria-hidden="true" className="gl-menu-icon">
+													<path d="M3 5h18v11H3V5Zm2 2v7h14V7H5Zm5 11h4v2h-4v-2Z" fill="currentColor" />
+												</svg>
+												{hasScreenShare ? 'Stop share (demo)' : 'Start share (demo)'}
+											</button>
+										</div>
+									)}
+								</div>
 
 								<div className="gl-toolbar-sep" aria-hidden="true" />
 
-								<details className="gl-toolbar-menu">
-									<summary className="gl-toolbar-pill" aria-label="Meeting info">
+								{/* Info dropdown */}
+								<div className="gl-toolbar-menu" ref={infoMenuRef}>
+									<button
+										type="button"
+										className={`gl-toolbar-pill${openMenu === 'info' ? ' is-open' : ''}`}
+										aria-haspopup="true"
+										aria-expanded={openMenu === 'info'}
+										aria-label="Meeting info"
+										onClick={() => toggleMenu('info')}
+									>
 										<svg viewBox="0 0 24 24" aria-hidden="true" className="gl-pill-icon">
 											<path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2Zm1 15h-2v-6h2v6Zm0-8h-2V7h2v2Z" fill="currentColor" />
 										</svg>
 										<span>Info</span>
-										<svg viewBox="0 0 24 24" aria-hidden="true" className="gl-pill-caret">
+										<svg
+											viewBox="0 0 24 24"
+											aria-hidden="true"
+											className={`gl-pill-caret${openMenu === 'info' ? ' is-flipped' : ''}`}
+										>
 											<path d="m7 10 5 5 5-5H7Z" fill="currentColor" />
 										</svg>
-									</summary>
+									</button>
 
-									<div className="gl-toolbar-menu__panel" role="menu">
-										<div className="gl-toolbar-menu__meta">
-											<svg viewBox="0 0 24 24" aria-hidden="true" className="gl-menu-icon">
-												<path d="M7 4h10l1 2h3v2H3V6h3l1-2Zm-2 6h14v10H5V10Zm2 2v6h10v-6H7Z" fill="currentColor" />
-											</svg>
-											Meeting code: {meetingCode}
+									{openMenu === 'info' && (
+										<div className="gl-toolbar-menu__panel" role="menu">
+											<div className="gl-toolbar-menu__meta">
+												<svg viewBox="0 0 24 24" aria-hidden="true" className="gl-menu-icon">
+													<path d="M7 4h10l1 2h3v2H3V6h3l1-2Zm-2 6h14v10H5V10Zm2 2v6h10v-6H7Z" fill="currentColor" />
+												</svg>
+												Meeting code: {meetingCode}
+											</div>
+											<div className="gl-toolbar-menu__meta">
+												<svg viewBox="0 0 24 24" aria-hidden="true" className="gl-menu-icon">
+													<path d="M16 11a4 4 0 1 0-4-4 4 4 0 0 0 4 4Zm-8 2a3 3 0 1 0-3-3 3 3 0 0 0 3 3Zm0 2c-2.2 0-4 1.2-4 2.7V20h8v-2.3C12 16.2 10.2 15 8 15Zm8-2c-2.7 0-5 1.6-5 3.5V20h10v-3.5C21 14.6 18.7 13 16 13Z" fill="currentColor" />
+												</svg>
+												Participants: {participants.length}
+											</div>
+											<div className="gl-toolbar-menu__meta">
+												<svg viewBox="0 0 24 24" aria-hidden="true" className="gl-menu-icon">
+													<path d="M4 6h16v12H4V6Zm2 2v8h12V8H6Zm4 10h4v2h-4v-2Z" fill="currentColor" />
+												</svg>
+												{isAutoLayout ? `Auto: ${autoLayoutMode}` : `Manual: ${layoutMode}`}
+											</div>
+											<div className="gl-toolbar-menu__meta">
+												<svg viewBox="0 0 24 24" aria-hidden="true" className="gl-menu-icon">
+													<path d="M12 3a9 9 0 0 0-9 9h2a7 7 0 1 1 7 7v2a9 9 0 0 0 0-18Z" fill="currentColor" />
+												</svg>
+												{isAutoLayout ? autoLayoutReason : 'Manual controls active'}
+											</div>
 										</div>
-										<div className="gl-toolbar-menu__meta">
-											<svg viewBox="0 0 24 24" aria-hidden="true" className="gl-menu-icon">
-												<path d="M16 11a4 4 0 1 0-4-4 4 4 0 0 0 4 4Zm-8 2a3 3 0 1 0-3-3 3 3 0 0 0 3 3Zm0 2c-2.2 0-4 1.2-4 2.7V20h8v-2.3C12 16.2 10.2 15 8 15Zm8-2c-2.7 0-5 1.6-5 3.5V20h10v-3.5C21 14.6 18.7 13 16 13Z" fill="currentColor" />
-											</svg>
-											Participants: {participants.length}
-										</div>
-										<div className="gl-toolbar-menu__meta">
-											<svg viewBox="0 0 24 24" aria-hidden="true" className="gl-menu-icon">
-												<path d="M4 6h16v12H4V6Zm2 2v8h12V8H6Zm4 10h4v2h-4v-2Z" fill="currentColor" />
-											</svg>
-											{isAutoLayout ? `Auto: ${autoLayoutMode}` : `Manual: ${layoutMode}`}
-										</div>
-										<div className="gl-toolbar-menu__meta">
-											<svg viewBox="0 0 24 24" aria-hidden="true" className="gl-menu-icon">
-												<path d="M12 3a9 9 0 0 0-9 9h2a7 7 0 1 1 7 7v2a9 9 0 0 0 0-18Z" fill="currentColor" />
-											</svg>
-											{isAutoLayout ? autoLayoutReason : 'Manual controls active'}
-										</div>
-									</div>
-								</details>
-							</header>
+									)}
+								</div>
+							</div>
 
 							{/* ── Media controls ── */}
 							<div className="gl-stage__media-controls" role="group" aria-label="Media controls">
