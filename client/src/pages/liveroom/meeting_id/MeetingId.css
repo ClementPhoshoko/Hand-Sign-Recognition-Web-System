@@ -16,7 +16,39 @@
 }
 
 /* ─────────────────────────────────────────
-   TOOLBAR  —  inline borderless group inside gl-stage__header
+   CONTROLS BAR  —  Persistent header for all modes
+   ───────────────────────────────────────── */
+.gl-meeting-controls-bar {
+	display: flex;
+	align-items: center;
+	gap: var(--space-3);
+	padding: 0.6rem 0.85rem 0.6rem 1.1rem;
+	border-bottom: 1px solid var(--border-soft);
+	background: var(--glass-surface);
+	backdrop-filter: var(--glass-blur);
+	-webkit-backdrop-filter: var(--glass-blur);
+	border-radius: var(--border-radius) var(--border-radius) 0 0;
+	flex-shrink: 0;
+	z-index: 10;
+}
+
+.gl-controls-title {
+	margin: 0;
+	font-family: var(--font-sans);
+	font-size: var(--text-base);
+	font-weight: var(--font-semibold);
+	line-height: var(--line-snug);
+	color: var(--text-primary);
+	letter-spacing: 0.01em;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	flex: 1;
+	min-width: 0;
+}
+
+/* ─────────────────────────────────────────
+   TOOLBAR  —  inline borderless group
    ───────────────────────────────────────── */
 .gl-meeting-toolbar {
 	display: flex;
@@ -176,7 +208,7 @@
 .gl-meeting-layout--grid   { grid-template-columns: minmax(0, 1fr); }
 
 /* ─────────────────────────────────────────
-   STAGE
+   STAGE & PEOPLE containers
    ───────────────────────────────────────── */
 .gl-stage,
 .gl-people {
@@ -192,36 +224,16 @@
 	overflow: hidden;
 }
 
-/* ── Stage header: title · toolbar · media controls ── */
-.gl-stage__header {
-	display: flex;
-	align-items: center;
-	gap: var(--space-3);
-	padding: 0.6rem 0.85rem 0.6rem 1.1rem;
-	border-bottom: 1px solid var(--border-soft);
-	background: var(--glass-surface);
-	flex-shrink: 0;
+/* Adjust radius when bar is present */
+.gl-meeting-controls-bar + .gl-meeting-layout .gl-stage,
+.gl-meeting-controls-bar + .gl-meeting-layout .gl-people {
+	border-top-left-radius: 0;
+	border-top-right-radius: 0;
+	border-top: none;
 }
 
-
-
-.gl-stage__title {
-	margin: 0;
-	font-family: var(--font-sans);
-	font-size: var(--text-base);
-	font-weight: var(--font-semibold);
-	line-height: var(--line-snug);
-	color: var(--text-primary);
-	letter-spacing: 0.01em;
-	white-space: nowrap;
-	overflow: hidden;
-	text-overflow: ellipsis;
-	flex: 1;
-	min-width: 0;
-}
-
-/* ── Circular icon-only media buttons ── */
-.gl-stage__media-controls {
+/* ── Media controls ── */
+.gl-meeting-media-controls {
 	display: flex;
 	align-items: center;
 	gap: 0.3rem;
@@ -500,10 +512,10 @@
 	.gl-meeting-page {
 		padding: calc(var(--nav-height, 0px) + var(--space-4)) var(--space-4) var(--space-4);
 	}
-	.gl-stage__header {
+	.gl-meeting-controls-bar {
 		padding: 0.5rem 0.7rem 0.5rem 0.85rem;
 	}
-	.gl-stage__title {
+	.gl-controls-title {
 		font-size: var(--text-sm);
 	}
 	.gl-media-btn {
