@@ -438,6 +438,22 @@
 	background: rgba(80, 200, 140, 0.60);
 }
 
+/* Screen Share states */
+.liveroom-ctrl--screen {
+	background: rgba(255, 255, 255, 0.14);
+	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+}
+.liveroom-ctrl--screen:hover {
+	background: rgba(255, 255, 255, 0.20);
+}
+.liveroom-ctrl--screen.liveroom-ctrl--on {
+	background: rgba(130, 170, 255, 0.45);
+	box-shadow: 0 2px 10px rgba(130, 170, 255, 0.30);
+}
+.liveroom-ctrl--screen.liveroom-ctrl--on:hover {
+	background: rgba(130, 170, 255, 0.60);
+}
+
 /* Speaker states */
 .liveroom-ctrl--speaker {
 	background: rgba(255, 255, 255, 0.14);

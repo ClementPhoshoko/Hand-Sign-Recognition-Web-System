@@ -19,15 +19,18 @@ function parseMediaError(err) {
 export default function useMediaDevices() {
 	const [cameraOn, setCameraOn] = useState(false)
 	const [micOn, setMicOn] = useState(false)
+	const [screenOn, setScreenOn] = useState(false)
 	const [audioLevel, setAudioLevel] = useState(0)
-	const [errors, setErrors] = useState({ camera: null, mic: null, speaker: null })
+	const [errors, setErrors] = useState({ camera: null, mic: null, speaker: null, screen: null })
 
 	// Device lists
 	const [devices, setDevices] = useState({ audioinput: [], audiooutput: [], videoinput: [] })
 	const [selectedDevices, setSelectedDevices] = useState({ audioinput: '', audiooutput: '', videoinput: '' })
 
 	const streamRef = useRef(null)
+	const screenStreamRef = useRef(null)
 	const videoRef = useRef(null)
+	const screenVideoRef = useRef(null)
 	const audioCtxRef = useRef(null)
 	const analyserRef = useRef(null)
 	const rafRef = useRef(null)
@@ -223,8 +226,55 @@ export default function useMediaDevices() {
 		}
 	}, [cameraOn, startCamera, stopCamera])
 
+	// ── Screen Share: request display media ──
+	const startScreenShare = useCallback(async () => {
+		setErrors((prev) => ({ ...prev, screen: null }))
+		try {
+			const stream = await navigator.mediaDevices.getDisplayMedia({
+				video: {
+					cursor: 'always',
+				},
+				audio: false,
+			})
+
+			screenStreamRef.current = stream
+			setScreenOn(true)
+
+			// Handle when user clicks "Stop sharing" in browser UI
+			stream.getVideoTracks()[0].addEventListener('ended', () => {
+				stopScreenShare()
+			})
+		} catch (err) {
+			if (err.name !== 'NotAllowedError') {
+				setErrors((prev) => ({ ...prev, screen: parseMediaError(err) }))
+			}
+			setScreenOn(false)
+		}
+	}, [])
+
+	const stopScreenShare = useCallback(() => {
+		if (screenStreamRef.current) {
+			screenStreamRef.current.getTracks().forEach((t) => t.stop())
+			screenStreamRef.current = null
+		}
+		if (screenVideoRef.current) {
+			screenVideoRef.current.srcObject = null
+		}
+		setScreenOn(false)
+	}, [])
+
+	const toggleScreenShare = useCallback(() => {
+		if (screenOn) {
+			stopScreenShare()
+		} else {
+			startScreenShare()
+		}
+	}, [screenOn, startScreenShare, stopScreenShare])
+
 	// ── Speaker output device (if supported) ──
 	const setSpeakerDevice = useCallback(async (deviceId) => {
+		setSelectedDevices((prev) => ({ ...prev, audiooutput: deviceId }))
+
 		if (!videoRef.current) return
 		if (typeof videoRef.current.setSinkId !== 'function') {
 			setErrors((prev) => ({ ...prev, speaker: 'Not supported by browser' }))
@@ -232,7 +282,6 @@ export default function useMediaDevices() {
 		}
 		try {
 			await videoRef.current.setSinkId(deviceId)
-			setSelectedDevices((prev) => ({ ...prev, audiooutput: deviceId }))
 			setErrors((prev) => ({ ...prev, speaker: null }))
 		} catch (err) {
 			setErrors((prev) => ({ ...prev, speaker: parseMediaError(err) }))
@@ -254,8 +303,19 @@ export default function useMediaDevices() {
 	useEffect(() => {
 		if (cameraOn && streamRef.current && videoRef.current) {
 			videoRef.current.srcObject = streamRef.current
+			// Apply speaker output if set
+			if (selectedDevices.audiooutput && typeof videoRef.current.setSinkId === 'function') {
+				videoRef.current.setSinkId(selectedDevices.audiooutput).catch(() => {})
+			}
 		}
-	}, [cameraOn])
+	}, [cameraOn, selectedDevices.audiooutput])
+
+	// ── Bind screen stream to <video> after it mounts ──
+	useEffect(() => {
+		if (screenOn && screenStreamRef.current && screenVideoRef.current) {
+			screenVideoRef.current.srcObject = screenStreamRef.current
+		}
+	}, [screenOn])
 
 	// ── Cleanup on unmount ──
 	useEffect(() => {
@@ -264,19 +324,25 @@ export default function useMediaDevices() {
 			if (streamRef.current) {
 				streamRef.current.getTracks().forEach((t) => t.stop())
 			}
+			if (screenStreamRef.current) {
+				screenStreamRef.current.getTracks().forEach((t) => t.stop())
+			}
 		}
 	}, [stopAudioAnalyser])
 
 	return {
 		videoRef,
+		screenVideoRef,
 		cameraOn,
 		micOn,
+		screenOn,
 		audioLevel,
 		errors,
 		devices,
 		selectedDevices,
 		toggleCamera,
 		toggleMic,
+		toggleScreenShare,
 		switchDevice,
 		setSpeakerDevice,
 	}

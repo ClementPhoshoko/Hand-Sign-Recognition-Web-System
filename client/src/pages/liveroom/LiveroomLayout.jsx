@@ -10,7 +10,18 @@ import './LiveroomLayout.css'
 function LiveroomLayout() {
 	const navigate = useNavigate()
 	const [activeTab, setActiveTab] = useState('join')
-	const { videoRef, cameraOn, micOn, audioLevel, errors, devices, selectedDevices, toggleCamera, toggleMic, switchDevice } = useMediaDevices()
+	const {
+		videoRef,
+		cameraOn,
+		micOn,
+		audioLevel,
+		errors,
+		devices,
+		selectedDevices,
+		toggleCamera,
+		toggleMic,
+		switchDevice,
+	} = useMediaDevices()
 
 	const createMeetingId = (seed = 'meeting') => {
 		const base = seed

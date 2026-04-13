@@ -6,13 +6,26 @@ import './MeetingId.css'
 
 function MeetingId() {
 	const navigate = useNavigate()
-	const { videoRef, cameraOn, micOn, audioLevel, errors, devices, selectedDevices, toggleCamera, toggleMic, switchDevice } = useMediaDevices()
+	const {
+		videoRef,
+		screenVideoRef,
+		cameraOn,
+		micOn,
+		screenOn,
+		audioLevel,
+		errors,
+		devices,
+		selectedDevices,
+		toggleCamera,
+		toggleMic,
+		toggleScreenShare,
+		switchDevice,
+	} = useMediaDevices()
 
 	const [layoutMode, setLayoutMode] = useState('stage')
 	const [isAutoLayout, setIsAutoLayout] = useState(true)
 	const [isVideoMaximized, setIsVideoMaximized] = useState(false)
 	const [pinnedParticipant, setPinnedParticipant] = useState('Host Camera')
-	const [hasScreenShare, setHasScreenShare] = useState(false)
 	const [isSpeakerOn, setIsSpeakerOn] = useState(true)
 	const [isFullScreen, setIsFullScreen] = useState(false)
 
@@ -84,19 +97,19 @@ function MeetingId() {
 	)
 
 	const autoLayoutMode = useMemo(() => {
-		if (hasScreenShare) return 'focus'
+		if (screenOn) return 'focus'
 		if (participants.length >= 6) return 'grid'
 		if (participants.length <= 2) return 'focus'
 		return 'stage'
-	}, [hasScreenShare, participants.length])
+	}, [screenOn, participants.length])
 
 	const effectiveLayoutMode = isAutoLayout ? autoLayoutMode : layoutMode
 	const isGridMode = effectiveLayoutMode === 'grid'
 	const canMaximizeVideo = !isGridMode
-	const isVideoEffectivelyMaximized = canMaximizeVideo && (isAutoLayout ? hasScreenShare : isVideoMaximized)
+	const isVideoEffectivelyMaximized = canMaximizeVideo && (isAutoLayout ? screenOn : isVideoMaximized)
 
 	const autoLayoutReason =
-		hasScreenShare
+		screenOn
 			? 'Screen share active'
 			: participants.length >= 6
 				? 'Large room'
@@ -131,11 +144,6 @@ function MeetingId() {
 		if (document.fullscreenElement) {
 			document.exitFullscreen()
 		}
-		setOpenMenu(null)
-	}
-
-	const onToggleScreenShare = () => {
-		setHasScreenShare((prev) => !prev)
 		setOpenMenu(null)
 	}
 
@@ -253,12 +261,12 @@ function MeetingId() {
 									type="button"
 									className="gl-toolbar-menu__item"
 									role="menuitem"
-									onClick={onToggleScreenShare}
+									onClick={toggleScreenShare}
 								>
 									<svg viewBox="0 0 24 24" aria-hidden="true" className="gl-menu-icon">
 										<path d="M3 5h18v11H3V5Zm2 2v7h14V7H5Zm5 11h4v2h-4v-2Z" fill="currentColor" />
 									</svg>
-									{hasScreenShare ? 'Stop share (demo)' : 'Start share (demo)'}
+									{screenOn ? 'Stop screen sharing' : 'Start screen sharing'}
 								</button>
 							</div>
 						)}
@@ -340,8 +348,15 @@ function MeetingId() {
 				{!isGridMode && (
 					<section className="gl-stage" aria-label="Primary video stage">
 						<div className="gl-stage__viewport" role="img" aria-label="Main stage video preview" ref={viewportRef}>
-							{/* Video Feed */}
-							{cameraOn && (
+							{/* Video Feed (Screen Share has priority) */}
+							{screenOn ? (
+								<video
+									ref={screenVideoRef}
+									className="gl-stage__video"
+									autoPlay
+									playsInline
+								/>
+							) : cameraOn && (
 								<video
 									ref={videoRef}
 									className="gl-stage__video"
@@ -465,6 +480,21 @@ function MeetingId() {
 										</button>
 									}
 								/>
+
+								<button
+									type="button"
+									className={`liveroom-ctrl liveroom-ctrl--screen${screenOn ? ' liveroom-ctrl--on' : ''}${errors.screen ? ' liveroom-ctrl--error' : ''}`}
+									onClick={(e) => {
+										e.stopPropagation()
+										toggleScreenShare()
+									}}
+									aria-label={screenOn ? 'Stop sharing screen' : 'Start sharing screen'}
+									data-tooltip={screenOn ? 'Stop sharing' : 'Share screen'}
+								>
+									<svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+										<path d="M3 5h18v11H3V5Zm2 2v7h14V7H5Zm5 11h4v2h-4v-2Z" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+									</svg>
+								</button>
 							</div>
 
 							<button
