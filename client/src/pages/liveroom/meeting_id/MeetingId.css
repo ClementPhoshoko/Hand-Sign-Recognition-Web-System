@@ -689,6 +689,25 @@
 	color: rgba(180, 200, 255, 0.72);
 	flex-shrink: 0;
 	letter-spacing: 0.03em;
+	transition: box-shadow var(--transition-fast), border-color var(--transition-fast);
+	box-shadow: var(--shadow-soft);
+}
+
+.gl-person-card__avatar.is-speaking {
+	box-shadow: 0 0 0 1px var(--avatar-speaking-ring), 0 0 8px var(--avatar-speaking-glow);
+	animation: avatar-speaking-pulse 0.6s ease-out forwards;
+}
+
+@keyframes avatar-speaking-pulse {
+	0% {
+		box-shadow: 0 0 0 0px var(--avatar-speaking-ring), 0 0 0px var(--avatar-speaking-glow);
+	}
+	50% {
+		box-shadow: 0 0 0 2px var(--avatar-speaking-ring), 0 0 12px var(--avatar-speaking-glow);
+	}
+	100% {
+		box-shadow: 0 0 0 1px var(--avatar-speaking-ring), 0 0 8px var(--avatar-speaking-glow);
+	}
 }
 
 .gl-person-card__name {

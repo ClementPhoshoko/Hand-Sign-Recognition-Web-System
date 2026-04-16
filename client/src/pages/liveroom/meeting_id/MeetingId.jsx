@@ -87,15 +87,15 @@ function MeetingId() {
 
 	const participants = useMemo(
 		() => [
-			{ id: 'cam-host', name: 'Host Camera', initials: 'HC', role: 'Presenter', status: 'Live', sharing: false },
-			{ id: 'cam-1', name: 'Lebo M.', initials: 'LM', role: 'Participant', status: 'Online', sharing: false },
-			{ id: 'cam-2', name: 'Ana K.', initials: 'AK', role: 'Participant', status: 'Muted', sharing: false },
-			{ id: 'cam-3', name: 'David N.', initials: 'DN', role: 'Participant', status: 'Online', sharing: false },
-			{ id: 'cam-4', name: 'Nia S.', initials: 'NS', role: 'Participant', status: 'Online', sharing: false },
-			{ id: 'cam-5', name: 'Marcus T.', initials: 'MT', role: 'Participant', status: 'Muted', sharing: false },
-			{ id: 'cam-6', name: 'Sarah J.', initials: 'SJ', role: 'Participant', status: 'Online', sharing: false },
-			{ id: 'cam-7', name: 'James W.', initials: 'JW', role: 'Participant', status: 'Muted', sharing: false },
-			{ id: 'cam-8', name: 'Elena R.', initials: 'ER', role: 'Participant', status: 'Online', sharing: false },
+			{ id: 'cam-host', name: 'Host Camera', initials: 'HC', role: 'Presenter', status: 'Live', sharing: false, isSpeaking: true },
+			{ id: 'cam-1', name: 'Lebo M.', initials: 'LM', role: 'Participant', status: 'Online', sharing: false, isSpeaking: false },
+			{ id: 'cam-2', name: 'Ana K.', initials: 'AK', role: 'Participant', status: 'Muted', sharing: false, isSpeaking: false },
+			{ id: 'cam-3', name: 'David N.', initials: 'DN', role: 'Participant', status: 'Online', sharing: false, isSpeaking: true },
+			{ id: 'cam-4', name: 'Nia S.', initials: 'NS', role: 'Participant', status: 'Online', sharing: false, isSpeaking: false },
+			{ id: 'cam-5', name: 'Marcus T.', initials: 'MT', role: 'Participant', status: 'Muted', sharing: false, isSpeaking: false },
+			{ id: 'cam-6', name: 'Sarah J.', initials: 'SJ', role: 'Participant', status: 'Online', sharing: false, isSpeaking: false },
+			{ id: 'cam-7', name: 'James W.', initials: 'JW', role: 'Participant', status: 'Muted', sharing: false, isSpeaking: false },
+			{ id: 'cam-8', name: 'Elena R.', initials: 'ER', role: 'Participant', status: 'Online', sharing: false, isSpeaking: false },
 		],
 		[]
 	)
@@ -530,7 +530,9 @@ function MeetingId() {
 								return (
 									<article key={person.id} className={`gl-person-card${isPinned ? ' is-pinned' : ''}`}>
 										<div className="gl-person-card__left">
-											<div className="gl-person-card__avatar">{person.initials}</div>
+											<div className={`gl-person-card__avatar${person.isSpeaking ? ' is-speaking' : ''}`}>
+												{person.initials}
+											</div>
 											<div>
 												<p className="gl-person-card__name">{person.name}</p>
 												<p className="gl-person-card__meta">{person.role} · {person.status}</p>

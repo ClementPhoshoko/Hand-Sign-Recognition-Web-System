@@ -122,6 +122,8 @@
   --avatar-bg-start: #d8f0ff;
   --avatar-bg-end: #8fb4ff;
   --avatar-ring-color: var(--border-soft);
+  --avatar-speaking-ring: #50c88c;
+  --avatar-speaking-glow: rgba(80, 200, 140, 0.45);
 
   /* Homepage orb colors */
   --orb-primary:      #78aaff;  /* center hero   — steel blue   */
@@ -178,6 +180,8 @@
     --nav-glow: 0 0 8px rgba(112, 156, 245, 0.18), 0 0 16px rgba(112, 156, 245, 0.10);
     --avatar-bg-start: #b7cffc;
     --avatar-bg-end: #87a8f8;
+    --avatar-speaking-ring: #40b87c;
+    --avatar-speaking-glow: rgba(64, 184, 124, 0.35);
 
     /* Homepage orb colors — slightly shifted for darker bg */
     --orb-primary:      #6699ff;
