@@ -1,0 +1,83 @@
+===================================================================
+   GL WEB SYSTEM: AUTHENTICATION DATA REQUIREMENTS & ENDPOINTS
+   File: AuthLayout.jsx | Login.jsx | Register.jsx
+===================================================================
+
+This document outlines the authentication endpoints, data structures, 
+and SQL queries required for the Login and Registration flows.
+
+-------------------------------------------------------------------
+1. LOGIN FLOW
+-------------------------------------------------------------------
+Used in: Login.jsx
+
+[Endpoint]: POST /api/auth/login
+[Payload]:
+{
+    "email": "you@example.com",
+    "password": "hashed_password"
+}
+[Returns]:
+{
+    "token": "jwt_access_token",
+    "user": {
+        "id": "uuid",
+        "name": "Jane Doe",
+        "email": "you@example.com"
+    }
+}
+
+[SQL Query - Verification]:
+SELECT id, full_name, email, password_hash
+FROM users
+WHERE email = :email AND status = 'active';
+
+-------------------------------------------------------------------
+2. REGISTRATION FLOW
+-------------------------------------------------------------------
+Used in: Register.jsx
+
+[Endpoint]: POST /api/auth/register
+[Payload]:
+{
+    "name": "Jane Doe",
+    "email": "you@example.com",
+    "password": "hashed_password",
+    "agreedToTerms": true
+}
+[Returns]: 201 Created (Success message or auto-login token)
+
+[SQL Query - Creation]:
+INSERT INTO users (id, full_name, email, password_hash, agreed_to_terms, created_at)
+VALUES (UUID(), :name, :email, :password_hash, :agreedToTerms, NOW());
+
+-------------------------------------------------------------------
+3. TOKEN VALIDATION / SESSION
+-------------------------------------------------------------------
+Used in: App initialization / Auth Protected Routes
+
+[Endpoint]: GET /api/auth/me
+[Headers]: Authorization: Bearer <token>
+[Returns]: User object if token is valid.
+
+-------------------------------------------------------------------
+4. TERMS & PRIVACY (Dynamic Content)
+-------------------------------------------------------------------
+Used in: AuthLayout.jsx (Info Panel)
+
+Currently hardcoded in termsContent, but could be fetched:
+[Endpoint]: GET /api/content/legal/:type ('terms' | 'privacy')
+[Returns]:
+{
+    "eyebrow": "Privacy Policy",
+    "title": "...",
+    "sections": [...]
+}
+
+-------------------------------------------------------------------
+5. VALIDATION RULES (Backend)
+-------------------------------------------------------------------
+- Email: Must be unique in 'users' table.
+- Password: Minimum 8 characters, hashed using bcrypt/argon2.
+- Name: Sanitized for XSS.
+- Terms: Must be true for registration to proceed.

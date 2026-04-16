@@ -1,40 +1,93 @@
--- Replace ? with the meeting_id
-SELECT
-    mp.id AS id,                 -- e.g., 'cam-1', 'cam-host'
-    u.full_name AS name,         -- e.g., 'Lebo M.'
-    CONCAT(SUBSTRING(u.first_name, 1, 1), SUBSTRING(u.last_name, 1, 1)) AS initials,
-    mp.role AS role,             -- 'Presenter', 'Participant'
-    mp.status AS status,         -- 'Live', 'Online', 'Muted'
-    mp.is_sharing AS sharing,    -- true / false (maps to your new sharing boolean)
-    FALSE AS isSpeaking          -- Placeholder for client-side dynamic state
-FROM
-    meeting_participants mp
-INNER JOIN 
-    users u ON mp.user_id = u.id
-WHERE 
-    mp.meeting_id = ?
-    AND mp.status != 'offline'   -- Only fetch people actively in the room
-ORDER BY 
-    -- Optional: Keep the Host/Presenter at the top of the list
-    CASE WHEN mp.role = 'Presenter' THEN 1 ELSE 2 END,
-    u.full_name ASC;
+===================================================================
+   GL WEB SYSTEM: MEETING ROOM DATA REQUIREMENTS & ENDPOINTS
+   File: MeetingId.jsx | MeetingId.css
+===================================================================
 
--------------------------------------------------
-Endpoints needed
+This document outlines the data structures and API endpoints required to fully 
+connect the Meeting Room UI to a live backend.
 
-// Instead of the hardcoded useMemo array:
-const [participants, setParticipants] = useState([]);
-const [roomInfo, setRoomInfo] = useState({ meetingCode: '', roomName: '' });
+-------------------------------------------------------------------
+1. CORE MEETING INFORMATION
+-------------------------------------------------------------------
+Used in: Header (gl-controls-title), Info Dock (gl-info-dock)
 
-useEffect(() => {
-    // Fetch Meeting Details (Endpoint 1)
-    fetch(`/api/meetings/${meetingId}`)
-        .then(res => res.json())
-        .then(data => setRoomInfo(data));
+[Endpoint]: GET /api/meetings/:meeting_id
+[Returns]:
+{
+    "id": "uuid",
+    "roomName": "Project Alpha: Strategy Sync",
+    "meetingCode": "HSR-2419",
+    "hostId": "user-uuid",
+    "createdAt": "timestamp",
+    "isLocked": false
+}
 
-    // Fetch Participants (Endpoint 2) - This might also be handled via WebSockets for real-time updates
-    fetch(`/api/meetings/${meetingId}/participants`)
-        .then(res => res.json())
-        .then(data => setParticipants(data));
-}, [meetingId]);
+-------------------------------------------------------------------
+2. PARTICIPANT MANAGEMENT
+-------------------------------------------------------------------
+Used in: People Aside (gl-person-card), Gallery View (gl-meeting-layout--grid)
 
+[Endpoint]: GET /api/meetings/:meeting_id/participants
+[Returns]: Array of Participant Objects
+[Structure]:
+{
+    "id": "cam-1",               // Unique session ID for the participant
+    "userId": "user-uuid",       // Link to the user record
+    "name": "Lebo M.",           // Display name
+    "initials": "LM",            // Calculated from name
+    "role": "Presenter",         // 'Presenter' | 'Participant'
+    "status": "Live",            // 'Live' | 'Online' | 'Muted' | 'Offline'
+    "isSharing": false,          // Boolean for screen sharing state
+    "isSpeaking": false          // Dynamic state (often handled by client-side audio level)
+}
+
+[SQL Suggestion]:
+SELECT mp.id, u.full_name as name, mp.role, mp.status, mp.is_sharing as isSharing
+FROM meeting_participants mp
+JOIN users u ON mp.user_id = u.id
+WHERE mp.meeting_id = :meeting_id AND mp.status != 'offline';
+
+-------------------------------------------------------------------
+3. TRANSCRIPT DATA
+-------------------------------------------------------------------
+Used in: Transcript Aside (gl-transcript-dock)
+
+[Endpoint]: GET /api/meetings/:meeting_id/transcripts
+[Returns]: Array of Transcript Objects (History)
+[Structure]:
+{
+    "id": "entry-1",
+    "speakerId": "cam-1",        // ID of the person who spoke
+    "speaker": "Lebo M.",        // Cached name for quick rendering
+    "time": "10:02",             // Localized timestamp
+    "text": "The message text content..."
+}
+
+-------------------------------------------------------------------
+4. REAL-TIME EVENTS (WebSockets / Socket.io)
+-------------------------------------------------------------------
+The UI requires real-time updates for a seamless experience.
+
+[Event: participant_joined]: Updates the 'participants' state.
+[Event: participant_left]: Removes or updates status to 'offline'.
+[Event: status_change]: Updates 'micOn', 'cameraOn', or 'isSharing' for a user.
+[Event: new_transcript]: Appends a new entry to 'transcriptData' (triggers auto-scroll).
+[Event: hand_raised]: (Future) Visual indicator in gl-person-card.
+
+-------------------------------------------------------------------
+5. USER ACTIONS (Outbound API/Socket)
+-------------------------------------------------------------------
+[Action: toggle_mic]: PATCH /api/meetings/:meeting_id/participants/:id { "status": "Muted/Live" }
+[Action: start_share]: PATCH /api/meetings/:meeting_id/participants/:id { "isSharing": true }
+[Action: end_meeting]: DELETE /api/meetings/:meeting_id (Host only)
+[Action: leave_session]: POST /api/meetings/:meeting_id/leave
+
+-------------------------------------------------------------------
+6. CSS STATE CLASSES (Driven by Data)
+-------------------------------------------------------------------
+The following classes in MeetingId.css depend on backend/real-time data:
+- .gl-person-card.is-speaking : Applied when isSpeaking is true.
+- .gl-person-card.is-pinned  : Applied when the user pins a participant.
+- .gl-stage__video.is-screen-share : Applied when sharing is active.
+- .gl-meeting-layout--stage.is-sharing : Layout shifts when someone starts sharing.
+- .gl-media-btn.is-muted : Reflects local device state (micOn/cameraOn).

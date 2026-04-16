@@ -1,0 +1,95 @@
+===================================================================
+   GL WEB SYSTEM: LIVEROOM (LOBBY) DATA REQUIREMENTS & ENDPOINTS
+   File: LiveroomLayout.jsx | New.jsx | Join.jsx
+===================================================================
+
+This document outlines the data requirements and API endpoints for the 
+Meeting Lobby (Preview, Create, and Join flows).
+
+-------------------------------------------------------------------
+1. CREATE ROOM FLOW
+-------------------------------------------------------------------
+Used in: New.jsx
+
+[Endpoint]: POST /api/meetings
+[Payload]:
+{
+    "roomName": "Study Session",
+    "displayName": "Clement Phoshoko",
+    "gestureTranscription": true
+}
+[Returns]:
+{
+    "meetingId": "study-session-a1b2c3",
+    "meetingCode": "HSR-1234",
+    "mode": "create"
+}
+
+[SQL - Create Meeting]:
+INSERT INTO meetings (id, meeting_code, room_name, host_id, created_at)
+VALUES (UUID(), :generatedCode, :roomName, :currentUserId, NOW());
+
+[SQL - Add Host to Participants]:
+INSERT INTO meeting_participants (meeting_id, user_id, role, status, gesture_enabled)
+VALUES (:meetingId, :currentUserId, 'Presenter', 'Online', :gestureTranscription);
+
+-------------------------------------------------------------------
+2. JOIN ROOM FLOW
+-------------------------------------------------------------------
+Used in: Join.jsx
+
+[Endpoint]: POST /api/meetings/join
+[Payload]:
+{
+    "meetingCode": "HSR-1234",  // Note: UI currently needs a code input field
+    "displayName": "Jane Doe",
+    "gestureTranscription": false
+}
+[Returns]:
+{
+    "meetingId": "uuid",
+    "roomName": "Original Room Name",
+    "mode": "join"
+}
+
+[SQL - Validate Code]:
+SELECT id, room_name 
+FROM meetings 
+WHERE meeting_code = :meetingCode AND status = 'active';
+
+[SQL - Add Participant]:
+INSERT INTO meeting_participants (meeting_id, user_id, role, status, gesture_enabled)
+VALUES (:meetingId, :currentUserId, 'Participant', 'Online', :gestureTranscription);
+
+-------------------------------------------------------------------
+3. PREVIEW & USER DATA
+-------------------------------------------------------------------
+Used in: LiveroomLayout.jsx (Left Column)
+
+[Endpoint]: GET /api/auth/me (or /api/user/profile)
+[Returns]:
+{
+    "id": "uuid",
+    "fullName": "Clement Phoshoko",
+    "initials": "CP",
+    "preferredDevices": { "audio": "...", "video": "..." }
+}
+
+-------------------------------------------------------------------
+4. DEVICE CONFIGURATION (Local Persistence)
+-------------------------------------------------------------------
+The `useMediaDevices` hook and `DevicePicker` components manage local browser 
+state. However, saving "Last Used" devices to the backend improves UX.
+
+[Endpoint]: PATCH /api/user/settings/devices
+[Payload]: { "lastMicId": "...", "lastCamId": "..." }
+
+-------------------------------------------------------------------
+5. NOTES ON IMPLEMENTATION
+-------------------------------------------------------------------
+- Meeting Codes: Should be short, human-readable strings (e.g., HSR-2419).
+- Meeting IDs: Should be URL-friendly slugs or UUIDs for technical routing.
+- Transcription Toggle: This boolean must be passed to the meeting room so 
+  the AI engine knows whether to process this user's frames.
+- Participants: Joining a room should ideally be an idempotent operation or 
+  check for existing active sessions to prevent duplicate "ghost" participants.
