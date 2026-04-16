@@ -28,6 +28,17 @@ function MeetingId() {
 	const [pinnedParticipant, setPinnedParticipant] = useState('Host Camera')
 	const [isSpeakerOn, setIsSpeakerOn] = useState(true)
 	const [isFullScreen, setIsFullScreen] = useState(false)
+	const [isHostSpeaking, setIsHostSpeaking] = useState(false) // New state for host speaking status
+	const [currentPage, setCurrentPage] = useState(1)
+	const [searchQuery, setSearchQuery] = useState('')
+	const participantsPerPage = 6
+
+	// Effect to update isHostSpeaking based on audioLevel
+	useEffect(() => {
+		// Define a threshold for audio level to consider someone "speaking"
+		const speakingThreshold = 0.05 // Adjust this value as needed
+		setIsHostSpeaking(audioLevel > speakingThreshold)
+	}, [audioLevel])
 
 	// Single piece of state: which menu is open ('view' | 'info' | null)
 	const [openMenu, setOpenMenu] = useState(null)
@@ -87,7 +98,7 @@ function MeetingId() {
 
 	const participants = useMemo(
 		() => [
-			{ id: 'cam-host', name: 'Host Camera', initials: 'HC', role: 'Presenter', status: 'Live', sharing: false, isSpeaking: true },
+			{ id: 'cam-host', name: 'Host Camera', initials: 'HC', role: 'Presenter', status: 'Live', sharing: false, isSpeaking: isHostSpeaking },
 			{ id: 'cam-1', name: 'Lebo M.', initials: 'LM', role: 'Participant', status: 'Online', sharing: false, isSpeaking: false },
 			{ id: 'cam-2', name: 'Ana K.', initials: 'AK', role: 'Participant', status: 'Muted', sharing: false, isSpeaking: false },
 			{ id: 'cam-3', name: 'David N.', initials: 'DN', role: 'Participant', status: 'Online', sharing: false, isSpeaking: true },
@@ -96,9 +107,37 @@ function MeetingId() {
 			{ id: 'cam-6', name: 'Sarah J.', initials: 'SJ', role: 'Participant', status: 'Online', sharing: false, isSpeaking: false },
 			{ id: 'cam-7', name: 'James W.', initials: 'JW', role: 'Participant', status: 'Muted', sharing: false, isSpeaking: false },
 			{ id: 'cam-8', name: 'Elena R.', initials: 'ER', role: 'Participant', status: 'Online', sharing: false, isSpeaking: false },
+			{ id: 'cam-9', name: 'Frank G.', initials: 'FG', role: 'Participant', status: 'Online', sharing: false, isSpeaking: false },
+			{ id: 'cam-10', name: 'Grace H.', initials: 'GH', role: 'Participant', status: 'Online', sharing: false, isSpeaking: false },
+			{ id: 'cam-11', name: 'Ivan I.', initials: 'II', role: 'Participant', status: 'Online', sharing: false, isSpeaking: false },
+			{ id: 'cam-12', name: 'Judy K.', initials: 'JK', role: 'Participant', status: 'Online', sharing: false, isSpeaking: false },
+			{ id: 'cam-13', name: 'Kevin L.', initials: 'KL', role: 'Participant', status: 'Online', sharing: false, isSpeaking: false },
+			{ id: 'cam-14', name: 'Mia N.', initials: 'MN', role: 'Participant', status: 'Online', sharing: false, isSpeaking: false },
+			{ id: 'cam-15', name: 'Oscar P.', initials: 'OP', role: 'Participant', status: 'Online', sharing: false, isSpeaking: false },
+			{ id: 'cam-16', name: 'Quinn R.', initials: 'QR', role: 'Participant', status: 'Online', sharing: false, isSpeaking: false },
+			{ id: 'cam-17', name: 'Sam T.', initials: 'ST', role: 'Participant', status: 'Online', sharing: false, isSpeaking: false },
+			{ id: 'cam-18', name: 'Uma V.', initials: 'UV', role: 'Participant', status: 'Online', sharing: false, isSpeaking: false },
 		],
-		[]
+		[isHostSpeaking]
 	)
+
+	const filteredParticipants = useMemo(() => {
+		if (!searchQuery) return participants
+		return participants.filter((p) =>
+			p.name.toLowerCase().includes(searchQuery.toLowerCase())
+		)
+	}, [participants, searchQuery])
+
+	const totalPages = Math.ceil(filteredParticipants.length / participantsPerPage)
+	const displayedParticipants = useMemo(() => {
+		const start = (currentPage - 1) * participantsPerPage
+		return filteredParticipants.slice(start, start + participantsPerPage)
+	}, [filteredParticipants, currentPage, participantsPerPage])
+
+	// Reset to page 1 when search changes
+	useEffect(() => {
+		setCurrentPage(1)
+	}, [searchQuery])
 
 	const someoneIsSharing = useMemo(
 		() => participants.some((p) => p.sharing) || screenOn,
@@ -353,7 +392,7 @@ function MeetingId() {
 									autoPlay
 									playsInline
 								/>
-							) : cameraOn && (
+							) : cameraOn ? (
 								<video
 									ref={videoRef}
 									className="gl-stage__video"
@@ -361,6 +400,10 @@ function MeetingId() {
 									playsInline
 									muted
 								/>
+							) : (
+								<div className="gl-stage__placeholder">
+									No one is sharing or has their camera on.
+								</div>
 							)}
 
 							{/* Floating Media Controls inside viewport */}
@@ -519,13 +562,42 @@ function MeetingId() {
 				{!isVideoEffectivelyMaximized && (
 					<aside className="gl-people" aria-label={isGridMode ? 'Meeting gallery' : 'Meeting participants'}>
 						<header className="gl-people__header">
-							<h2 className="gl-people__title">
-								{isGridMode ? 'Gallery View' : `People (${participants.length})`}
-							</h2>
+							<div className="gl-people__meeting-info" role="region" aria-label="Meeting information">
+								<div className="gl-people__search-wrapper">
+									<svg className="gl-search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+										<circle cx="11" cy="11" r="8"></circle>
+										<line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+									</svg>
+									<input
+										type="text"
+										className="gl-people__header-search"
+										placeholder="Search participants..."
+										aria-label="Search participants"
+										value={searchQuery}
+										onChange={(e) => setSearchQuery(e.target.value)}
+									/>
+								</div>
+								<div className="gl-people__meeting-timer" aria-label="Meeting duration">
+									00:00
+								</div>
+								<div className="gl-people__meeting-controls">
+									<div className="gl-people__control-item" aria-label={`Participants: ${participants.length}`}>
+										<svg viewBox="0 0 24 24" aria-hidden="true" className="gl-people__control-icon">
+											<path d="M16 11a4 4 0 1 0-4-4 4 4 0 0 0 4 4Zm-8 2a3 3 0 1 0-3-3 3 3 0 0 0 3 3Zm0 2c-2.2 0-4 1.2-4 2.7V20h8v-2.3C12 16.2 10.2 15 8 15Zm8-2c-2.7 0-5 1.6-5 3.5V20h10v-3.5C21 14.6 18.7 13 16 13Z" fill="currentColor" />
+										</svg>
+										<span>{participants.length}</span>
+									</div>
+									<div className="gl-people__control-item" aria-label={`Meeting code: ${meetingCode}`}>
+										<svg viewBox="0 0 24 24" aria-hidden="true" className="gl-people__control-icon">
+											<path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2Zm1 15h-2v-6h2v6Zm0-8h-2V7h2v2Z" fill="currentColor" />
+										</svg>
+									</div>
+								</div>
+							</div>
 						</header>
 
 						<div className={`gl-people__body${isGridMode ? ' is-grid' : ''}`}>
-							{participants.map((person) => {
+							{(isGridMode ? filteredParticipants : displayedParticipants).map((person) => {
 								const isPinned = person.name === pinnedParticipant
 								return (
 									<article key={person.id} className={`gl-person-card${isPinned ? ' is-pinned' : ''}`}>
@@ -549,6 +621,40 @@ function MeetingId() {
 								)
 							})}
 						</div>
+
+						{!isGridMode && (
+							<footer className="gl-people__footer">
+								<div className="gl-pagination">
+									<button
+										type="button"
+										className="gl-pagination__btn"
+										aria-label="Previous page"
+										disabled={currentPage === 1}
+										onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+									>
+										<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+											<polyline points="15 18 9 12 15 6"></polyline>
+										</svg>
+										<span>Back</span>
+									</button>
+									<span className="gl-pagination__label">
+										Page {currentPage} of {totalPages}
+									</span>
+									<button
+										type="button"
+										className="gl-pagination__btn"
+										aria-label="Next page"
+										disabled={currentPage === totalPages}
+										onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+									>
+										<span>Next</span>
+										<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+											<polyline points="9 18 15 12 9 6"></polyline>
+										</svg>
+									</button>
+								</div>
+							</footer>
+						)}
 					</aside>
 				)}
 			</section>
