@@ -1,13 +1,40 @@
-Connect participants and active speaker to real meeting state from your signaling/media layer.
-Add screen-share priority logic so shared content auto-promotes to stage.
-Persist selected layout mode per user session.
+-- Replace ? with the meeting_id
+SELECT 
+    mp.id AS id,                 -- e.g., 'cam-1', 'cam-host'
+    u.full_name AS name,         -- e.g., 'Lebo M.'
+    -- Optional: If you want SQL to generate initials, you can do something like:
+    -- CONCAT(SUBSTRING(u.first_name, 1, 1), SUBSTRING(u.last_name, 1, 1)) AS initials,
+    mp.role AS role,             -- 'Presenter', 'Participant'
+    mp.status AS status,         -- 'Live', 'Online', 'Muted'
+    mp.is_sharing AS sharing     -- true / false (maps to your new sharing boolean)
+FROM 
+    meeting_participants mp
+INNER JOIN 
+    users u ON mp.user_id = u.id
+WHERE 
+    mp.meeting_id = ?
+    AND mp.status != 'offline'   -- Only fetch people actively in the room
+ORDER BY 
+    -- Optional: Keep the Host/Presenter at the top of the list
+    CASE WHEN mp.role = 'Presenter' THEN 1 ELSE 2 END,
+    u.full_name ASC;
 
-Real participants and active speaker sync: this needs backend signaling infrastructure (room state, participant presence, events),
-    plus WebRTC services (STUN/TURN and signaling server).
-Screen-share auto-promote: mostly frontend logic once media events exist, but it depends on signaling events from backend
-    to keep all clients in sync.
-Persist layout mode: no backend required if you store locally (localStorage). Backend is only needed if you want the preference
-    to follow the user across devices/accounts.
+-------------------------------------------------
+Endpoints needed
 
--------------------------------------
+// Instead of the hardcoded useMemo array:
+const [participants, setParticipants] = useState([]);
+const [roomInfo, setRoomInfo] = useState({ meetingCode: '', roomName: '' });
+
+useEffect(() => {
+    // Fetch Meeting Details (Endpoint 1)
+    fetch(`/api/meetings/${meetingId}`)
+        .then(res => res.json())
+        .then(data => setRoomInfo(data));
+
+    // Fetch Participants (Endpoint 2) - This might also be handled via WebSockets for real-time updates
+    fetch(`/api/meetings/${meetingId}/participants`)
+        .then(res => res.json())
+        .then(data => setParticipants(data));
+}, [meetingId]);
 

@@ -87,31 +87,36 @@ function MeetingId() {
 
 	const participants = useMemo(
 		() => [
-			{ id: 'cam-host', name: 'Host Camera', initials: 'HC', role: 'Presenter', status: 'Live' },
-			{ id: 'cam-1', name: 'Lebo M.', initials: 'LM', role: 'Participant', status: 'Online' },
-			{ id: 'cam-2', name: 'Ana K.', initials: 'AK', role: 'Participant', status: 'Muted' },
-			{ id: 'cam-3', name: 'David N.', initials: 'DN', role: 'Participant', status: 'Online' },
-			{ id: 'cam-4', name: 'Nia S.', initials: 'NS', role: 'Participant', status: 'Online' },
+			{ id: 'cam-host', name: 'Host Camera', initials: 'HC', role: 'Presenter', status: 'Live', sharing: false },
+			{ id: 'cam-1', name: 'Lebo M.', initials: 'LM', role: 'Participant', status: 'Online', sharing: false },
+			{ id: 'cam-2', name: 'Ana K.', initials: 'AK', role: 'Participant', status: 'Muted', sharing: false },
+			{ id: 'cam-3', name: 'David N.', initials: 'DN', role: 'Participant', status: 'Online', sharing: false },
+			{ id: 'cam-4', name: 'Nia S.', initials: 'NS', role: 'Participant', status: 'Online', sharing: false },
 		],
 		[]
 	)
 
-	const autoLayoutMode = useMemo(() => {
-		if (participants.length >= 6) return 'grid'
-		return 'stage'
-	}, [participants.length])
+	const someoneIsSharing = useMemo(
+		() => participants.some((p) => p.sharing) || screenOn,
+		[participants, screenOn]
+	)
 
-	const effectiveLayoutMode = isAutoLayout ? autoLayoutMode : layoutMode
+	const autoLayoutMode = useMemo(() => {
+		if (someoneIsSharing) return 'stage'
+		return 'grid'
+	}, [someoneIsSharing])
+
+	const effectiveLayoutMode = screenOn ? 'stage' : (isAutoLayout ? autoLayoutMode : layoutMode)
 	const isGridMode = effectiveLayoutMode === 'grid'
 	const canMaximizeVideo = !isGridMode
 	const isVideoEffectivelyMaximized = canMaximizeVideo && isVideoMaximized
 
 	const autoLayoutReason =
-		participants.length >= 6
-			? 'Large room'
-			: screenOn
-				? 'Screen sharing'
-				: 'Standard room'
+		someoneIsSharing
+			? screenOn
+				? 'Screen sharing (Local)'
+				: 'Screen sharing (Peer)'
+			: 'No active share'
 
 	const layoutClassName = [
 		'gl-meeting-layout',
@@ -201,7 +206,8 @@ function MeetingId() {
 									className="gl-toolbar-menu__item"
 									role="menuitem"
 									onClick={() => onLayoutModeChange(isGridMode ? 'stage' : 'grid')}
-									disabled={isAutoLayout}
+									disabled={isAutoLayout || screenOn}
+									title={screenOn ? 'Layout is locked to Stage while you are sharing' : undefined}
 								>
 									{isGridMode ? (
 										<>
