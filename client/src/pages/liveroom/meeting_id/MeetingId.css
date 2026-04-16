@@ -12,7 +12,7 @@ html, body, #root, .gl-meeting-page {
 	min-height: 100vh;
 	display: flex;
 	flex-direction: column;
-	padding: 8px;
+	padding: var(--space-2);
 	background: var(--bg-level-0);
 	color: var(--text-primary);
 	overflow: hidden;
@@ -71,6 +71,22 @@ html, body, #root, .gl-meeting-page {
 	height: 18px;
 	background: var(--border-soft);
 	flex-shrink: 0;
+}
+
+.gl-toolbar-badge {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	min-width: 18px;
+	height: 18px;
+	padding: 0 var(--space-1);
+	background: var(--glass-surface-dense);
+	border: 1px solid var(--border-soft);
+	border-radius: var(--radius-sm);
+	font-size: 10px;
+	font-weight: var(--font-bold);
+	color: var(--text-primary);
+	margin-left: var(--space-1);
 }
 
 /* ── Dropdown trigger pill ── */
@@ -364,7 +380,7 @@ html, body, #root, .gl-meeting-page {
 .liveroom-audio-level__bar:nth-child(5) { height: 24px; }
 
 .liveroom-audio-level__bar--active {
-	background: rgba(80, 200, 140, 0.85);
+	background: var(--avatar-speaking-ring);
 }
 
 /* ── Control buttons (liveroom-ctrl) ── */
@@ -415,12 +431,8 @@ html, body, #root, .gl-meeting-page {
 
 /* Mic active — green */
 .liveroom-ctrl--mic.liveroom-ctrl--mic-on {
-	background: rgba(80, 200, 140, 0.45);
-	box-shadow: 0 2px 10px rgba(80, 200, 140, 0.30);
-}
-
-.liveroom-ctrl--mic.liveroom-ctrl--mic-on:hover {
-	background: rgba(80, 200, 140, 0.60);
+	background: var(--avatar-speaking-glow);
+	box-shadow: 0 2px 10px var(--avatar-speaking-glow);
 }
 
 /* Camera — off state (soft red) */
@@ -435,21 +447,21 @@ html, body, #root, .gl-meeting-page {
 
 /* Camera — on state (bright teal/green) */
 .liveroom-ctrl--cam.liveroom-ctrl--cam-on {
-	background: rgba(80, 200, 140, 0.45);
-	box-shadow: 0 2px 10px rgba(80, 200, 140, 0.30);
+	background: var(--avatar-speaking-glow);
+	box-shadow: 0 2px 10px var(--avatar-speaking-glow);
 }
 
 .liveroom-ctrl--cam.liveroom-ctrl--cam-on:hover {
-	background: rgba(80, 200, 140, 0.60);
+	background: var(--avatar-speaking-glow);
 }
 
 /* Screen Share states */
 .liveroom-ctrl--screen {
-	background: rgba(255, 255, 255, 0.14);
-	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+	background: var(--glass-surface-strong);
+	box-shadow: var(--shadow-soft);
 }
 .liveroom-ctrl--screen:hover {
-	background: rgba(255, 255, 255, 0.20);
+	background: var(--glass-surface-dense);
 }
 .liveroom-ctrl--screen.liveroom-ctrl--on {
 	background: rgba(130, 170, 255, 0.45);
@@ -461,12 +473,12 @@ html, body, #root, .gl-meeting-page {
 
 /* Speaker states */
 .liveroom-ctrl--speaker {
-	background: rgba(255, 255, 255, 0.14);
-	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+	background: var(--glass-surface-strong);
+	box-shadow: var(--shadow-soft);
 }
 .liveroom-ctrl--speaker.liveroom-ctrl--on {
-	background: rgba(80, 200, 140, 0.45);
-	box-shadow: 0 2px 10px rgba(80, 200, 140, 0.30);
+	background: var(--avatar-speaking-glow);
+	box-shadow: 0 2px 10px var(--avatar-speaking-glow);
 }
 .liveroom-ctrl--speaker.liveroom-ctrl--off {
 	background: rgba(220, 70, 70, 0.55);
@@ -540,7 +552,7 @@ html, body, #root, .gl-meeting-page {
 	font-size: var(--text-lg);
 	text-align: center;
 	padding: var(--space-4);
-	background: var(--shell-elevated);
+	/* background: var(--shell-elevated); */
 	border-radius: var(--border-radius);
 }
 
@@ -630,6 +642,15 @@ html, body, #root, .gl-meeting-page {
 	align-items: center;
 }
 
+.gl-people__header-title {
+	margin: 0;
+	font-family: var(--font-sans);
+	font-size: var(--text-sm);
+	font-weight: var(--font-semibold);
+	color: var(--text-primary);
+	flex: 1;
+}
+
 .gl-search-icon {
 	position: absolute;
 	left: 0;
@@ -703,6 +724,17 @@ html, body, #root, .gl-meeting-page {
 	color: var(--text-secondary);
 }
 
+.gl-people__control-item.is-active {
+	color: var(--text-primary);
+	background: var(--glass-surface-strong);
+	border-radius: var(--radius-sm);
+}
+
+.gl-people__control-item.is-active .gl-people__control-icon {
+	opacity: 1;
+	color: var(--text-primary);
+}
+
 .gl-people__title {
 	margin: 0;
 	font-family: var(--font-sans);
@@ -711,6 +743,111 @@ html, body, #root, .gl-meeting-page {
 	color: var(--text-secondary);
 	letter-spacing: 0.07em;
 	text-transform: uppercase;
+}
+
+/* Meeting Info Dock */
+.gl-meeting-info-dock {
+	padding: var(--space-4);
+	display: flex;
+	flex-direction: column;
+	gap: var(--space-5);
+	animation: fadeIn var(--transition-base);
+	min-height: 0;
+}
+
+@keyframes fadeIn {
+	from { opacity: 0; transform: translateY(10px); }
+	to { opacity: 1; transform: translateY(0); }
+}
+
+.gl-info-dock__title {
+	margin: 0;
+	font-size: var(--text-lg);
+	font-weight: var(--font-semibold);
+	color: var(--text-primary);
+	border-bottom: 1px solid var(--border-soft);
+	padding-bottom: var(--space-2);
+}
+
+.gl-info-dock__section {
+	display: flex;
+	flex-direction: column;
+	gap: var(--space-1);
+}
+
+.gl-info-dock__section label {
+	font-size: var(--text-xs);
+	font-weight: var(--font-semibold);
+	color: var(--text-muted);
+	text-transform: uppercase;
+	letter-spacing: 0.05em;
+}
+
+.gl-info-dock__section p {
+	margin: 0;
+	font-size: var(--text-sm);
+	color: var(--text-secondary);
+}
+
+.gl-info-dock__code-box {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	background: var(--glass-inner-plate-dense);
+	border: none;
+	border-radius: var(--radius-base);
+	padding: 0.5rem 0.75rem;
+	margin-top: 4px;
+}
+
+.gl-info-dock__code-box code {
+	font-family: var(--font-mono);
+	font-size: var(--text-base);
+	color: var(--text-primary);
+	letter-spacing: 0.05em;
+}
+
+.gl-info-dock__code-box button {
+	background: var(--glass-surface-strong);
+	border: none;
+	border-radius: var(--radius-sm);
+	color: var(--text-secondary);
+	font-size: var(--text-xs);
+	padding: 4px 8px;
+	cursor: pointer;
+	transition: all var(--transition-fast);
+}
+
+.gl-info-dock__code-box button:hover {
+	color: var(--text-primary);
+	background: var(--glass-surface-dense);
+	border-color: var(--border-standard);
+}
+
+.gl-info-dock__privacy {
+	margin-top: auto;
+	padding: var(--space-3);
+	background: var(--glass-surface-strong);
+	border: 1px solid var(--avatar-speaking-ring);
+	border-radius: var(--radius-base);
+	display: flex;
+	gap: var(--space-3);
+	align-items: flex-start;
+}
+
+.gl-privacy-icon {
+	width: 18px !important;
+	height: 18px !important;
+	color: var(--avatar-speaking-ring);
+	flex-shrink: 0;
+	margin-top: 2px;
+}
+
+.gl-info-dock__privacy p {
+	margin: 0;
+	font-size: var(--text-xs);
+	line-height: var(--line-relaxed);
+	color: var(--text-secondary);
 }
 
 .gl-people__body {
@@ -756,6 +893,13 @@ html, body, #root, .gl-meeting-page {
 	flex-shrink: 0;
 	border-top: 1px solid var(--border-soft);
 	background: var(--glass-surface-strong);
+}
+
+.gl-people__footer {
+	padding: var(--space-4);
+	border-top: 1px solid var(--border-soft);
+	background: var(--glass-surface-strong);
+	flex-shrink: 0;
 }
 
 .gl-pagination {
@@ -876,14 +1020,14 @@ html, body, #root, .gl-meeting-page {
 	width: 30px;
 	height: 30px;
 	border-radius: 50%;
-	background: rgba(100, 130, 220, 0.18);
-	border: 1px solid rgba(130, 160, 255, 0.22);
+	background: var(--glass-surface-strong);
+	border: 1px solid var(--border-soft);
 	display: flex;
 	align-items: center;
 	justify-content: center;
 	font-size: 9px;
 	font-weight: var(--font-semibold);
-	color: rgba(180, 200, 255, 0.72);
+	color: var(--text-secondary);
 	flex-shrink: 0;
 	letter-spacing: 0.03em;
 	transition: box-shadow var(--transition-fast), border-color var(--transition-fast);

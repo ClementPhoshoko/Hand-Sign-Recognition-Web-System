@@ -31,6 +31,7 @@ function MeetingId() {
 	const [isHostSpeaking, setIsHostSpeaking] = useState(false) // New state for host speaking status
 	const [currentPage, setCurrentPage] = useState(1)
 	const [searchQuery, setSearchQuery] = useState('')
+	const [showMeetingInfo, setShowMeetingInfo] = useState(false)
 	const participantsPerPage = 6
 
 	// Effect to update isHostSpeaking based on audioLevel
@@ -46,16 +47,14 @@ function MeetingId() {
 	const meetingPageRef = useRef(null)
 	const viewportRef = useRef(null)
 	const viewMenuRef = useRef(null)
-	const infoMenuRef = useRef(null)
 	const meetingCode = 'HSR-2419'
 	const roomName = 'Project Alpha - Strategy Meeting'
 
-	// Close when clicking outside both menus
+	// Close when clicking outside view menu
 	useEffect(() => {
 		const handleClickOutside = (e) => {
 			const insideView = viewMenuRef.current?.contains(e.target)
-			const insideInfo = infoMenuRef.current?.contains(e.target)
-			if (!insideView && !insideInfo) setOpenMenu(null)
+			if (!insideView) setOpenMenu(null)
 		}
 		document.addEventListener('mousedown', handleClickOutside)
 		return () => document.removeEventListener('mousedown', handleClickOutside)
@@ -310,58 +309,32 @@ function MeetingId() {
 
 					<div className="gl-toolbar-sep" aria-hidden="true" />
 
-					{/* Info dropdown */}
-					<div className="gl-toolbar-menu" ref={infoMenuRef}>
-						<button
-							type="button"
-							className={`gl-toolbar-pill${openMenu === 'info' ? ' is-open' : ''}`}
-							aria-haspopup="true"
-							aria-expanded={openMenu === 'info'}
-							aria-label="Meeting info"
-							onClick={() => toggleMenu('info')}
-						>
-							<svg viewBox="0 0 24 24" aria-hidden="true" className="gl-pill-icon">
-								<path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2Zm1 15h-2v-6h2v6Zm0-8h-2V7h2v2Z" fill="currentColor" />
-							</svg>
-							<span>Info</span>
-							<svg
-								viewBox="0 0 24 24"
-								aria-hidden="true"
-								className={`gl-pill-caret${openMenu === 'info' ? ' is-flipped' : ''}`}
-							>
-								<path d="m7 10 5 5 5-5H7Z" fill="currentColor" />
-							</svg>
-						</button>
+					{/* Participants toggle */}
+					<button
+						type="button"
+						className={`gl-toolbar-pill${!showMeetingInfo ? ' is-open' : ''}`}
+						onClick={() => setShowMeetingInfo(false)}
+						aria-label={`Participants: ${participants.length}`}
+					>
+						<svg viewBox="0 0 24 24" aria-hidden="true" className="gl-pill-icon">
+							<path d="M16 11a4 4 0 1 0-4-4 4 4 0 0 0 4 4Zm-8 2a3 3 0 1 0-3-3 3 3 0 0 0 3 3Zm0 2c-2.2 0-4 1.2-4 2.7V20h8v-2.3C12 16.2 10.2 15 8 15Zm8-2c-2.7 0-5 1.6-5 3.5V20h10v-3.5C21 14.6 18.7 13 16 13Z" fill="currentColor" />
+						</svg>
+						<span>People</span>
+						<span className="gl-toolbar-badge">{participants.length}</span>
+					</button>
 
-						{openMenu === 'info' && (
-							<div className="gl-toolbar-menu__panel" role="menu">
-								<div className="gl-toolbar-menu__meta">
-									<svg viewBox="0 0 24 24" aria-hidden="true" className="gl-menu-icon">
-										<path d="M7 4h10l1 2h3v2H3V6h3l1-2Zm-2 6h14v10H5V10Zm2 2v6h10v-6H7Z" fill="currentColor" />
-									</svg>
-									Meeting code: {meetingCode}
-								</div>
-								<div className="gl-toolbar-menu__meta">
-									<svg viewBox="0 0 24 24" aria-hidden="true" className="gl-menu-icon">
-										<path d="M16 11a4 4 0 1 0-4-4 4 4 0 0 0 4 4Zm-8 2a3 3 0 1 0-3-3 3 3 0 0 0 3 3Zm0 2c-2.2 0-4 1.2-4 2.7V20h8v-2.3C12 16.2 10.2 15 8 15Zm8-2c-2.7 0-5 1.6-5 3.5V20h10v-3.5C21 14.6 18.7 13 16 13Z" fill="currentColor" />
-									</svg>
-									Participants: {participants.length}
-								</div>
-								<div className="gl-toolbar-menu__meta">
-									<svg viewBox="0 0 24 24" aria-hidden="true" className="gl-menu-icon">
-										<path d="M4 6h16v12H4V6Zm2 2v8h12V8H6Zm4 10h4v2h-4v-2Z" fill="currentColor" />
-									</svg>
-									{isAutoLayout ? `Auto: ${autoLayoutMode}` : `Manual: ${layoutMode}`}
-								</div>
-								<div className="gl-toolbar-menu__meta">
-									<svg viewBox="0 0 24 24" aria-hidden="true" className="gl-menu-icon">
-										<path d="M12 3a9 9 0 0 0-9 9h2a7 7 0 1 1 7 7v2a9 9 0 0 0 0-18Z" fill="currentColor" />
-									</svg>
-									{isAutoLayout ? autoLayoutReason : 'Manual controls active'}
-								</div>
-							</div>
-						)}
-					</div>
+					{/* Info toggle */}
+					<button
+						type="button"
+						className={`gl-toolbar-pill${showMeetingInfo ? ' is-open' : ''}`}
+						onClick={() => setShowMeetingInfo(true)}
+						aria-label="Meeting information"
+					>
+						<svg viewBox="0 0 24 24" aria-hidden="true" className="gl-pill-icon">
+							<path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2Zm1 15h-2v-6h2v6Zm0-8h-2V7h2v2Z" fill="currentColor" />
+						</svg>
+						<span>Info</span>
+					</button>
 				</div>
 
 				{/* Leave button remains in header for accessibility/escape route */}
@@ -563,66 +536,88 @@ function MeetingId() {
 					<aside className="gl-people" aria-label={isGridMode ? 'Meeting gallery' : 'Meeting participants'}>
 						<header className="gl-people__header">
 							<div className="gl-people__meeting-info" role="region" aria-label="Meeting information">
-								<div className="gl-people__search-wrapper">
-									<svg className="gl-search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-										<circle cx="11" cy="11" r="8"></circle>
-										<line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-									</svg>
-									<input
-										type="text"
-										className="gl-people__header-search"
-										placeholder="Search participants..."
-										aria-label="Search participants"
-										value={searchQuery}
-										onChange={(e) => setSearchQuery(e.target.value)}
-									/>
-								</div>
+								{showMeetingInfo ? (
+									<h2 className="gl-people__header-title">Meeting Info</h2>
+								) : (
+									<div className="gl-people__search-wrapper">
+										<svg className="gl-search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+											<circle cx="11" cy="11" r="8"></circle>
+											<line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+										</svg>
+										<input
+											type="text"
+											className="gl-people__header-search"
+											placeholder="Search participants..."
+											aria-label="Search participants"
+											value={searchQuery}
+											onChange={(e) => setSearchQuery(e.target.value)}
+										/>
+									</div>
+								)}
 								<div className="gl-people__meeting-timer" aria-label="Meeting duration">
 									00:00
-								</div>
-								<div className="gl-people__meeting-controls">
-									<div className="gl-people__control-item" aria-label={`Participants: ${participants.length}`}>
-										<svg viewBox="0 0 24 24" aria-hidden="true" className="gl-people__control-icon">
-											<path d="M16 11a4 4 0 1 0-4-4 4 4 0 0 0 4 4Zm-8 2a3 3 0 1 0-3-3 3 3 0 0 0 3 3Zm0 2c-2.2 0-4 1.2-4 2.7V20h8v-2.3C12 16.2 10.2 15 8 15Zm8-2c-2.7 0-5 1.6-5 3.5V20h10v-3.5C21 14.6 18.7 13 16 13Z" fill="currentColor" />
-										</svg>
-										<span>{participants.length}</span>
-									</div>
-									<div className="gl-people__control-item" aria-label={`Meeting code: ${meetingCode}`}>
-										<svg viewBox="0 0 24 24" aria-hidden="true" className="gl-people__control-icon">
-											<path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2Zm1 15h-2v-6h2v6Zm0-8h-2V7h2v2Z" fill="currentColor" />
-										</svg>
-									</div>
 								</div>
 							</div>
 						</header>
 
-						<div className={`gl-people__body${isGridMode ? ' is-grid' : ''}`}>
-							{(isGridMode ? filteredParticipants : displayedParticipants).map((person) => {
-								const isPinned = person.name === pinnedParticipant
-								return (
-									<article key={person.id} className={`gl-person-card${isPinned ? ' is-pinned' : ''}`}>
-										<div className="gl-person-card__left">
-											<div className={`gl-person-card__avatar${person.isSpeaking ? ' is-speaking' : ''}`}>
-												{person.initials}
-											</div>
-											<div>
-												<p className="gl-person-card__name">{person.name}</p>
-												<p className="gl-person-card__meta">{person.role} · {person.status}</p>
-											</div>
+						<div className={`gl-people__body${(isGridMode && !showMeetingInfo) ? ' is-grid' : ''}`}>
+							{showMeetingInfo ? (
+								<div className="gl-meeting-info-dock">
+									<h3 className="gl-info-dock__title">Meeting Details</h3>
+									<div className="gl-info-dock__section">
+										<label>Room Name</label>
+										<p>{roomName}</p>
+									</div>
+									<div className="gl-info-dock__section">
+										<label>Meeting Code</label>
+										<div className="gl-info-dock__code-box">
+											<code className='gl-info-dock__code-box-code'>{meetingCode}</code>
+											<button type="button" onClick={() => navigator.clipboard.writeText(meetingCode)}>Copy</button>
 										</div>
-										<button
-											type="button"
-											className="gl-person-card__pin"
-											onClick={() => setPinnedParticipant(person.name)}
-										>
-											{isPinned ? 'Pinned' : 'Pin'}
-										</button>
-									</article>
-								)
-							})}
+									</div>
+									<div className="gl-info-dock__section">
+										<label>Status</label>
+										<p>{isAutoLayout ? `Auto: ${autoLayoutMode}` : `Manual: ${layoutMode}`}</p>
+									</div>
+									<div className="gl-info-dock__section">
+										<label>Participants</label>
+										<p>{participants.length} people in this meeting</p>
+									</div>
+									<div className="gl-info-dock__privacy">
+										<svg viewBox="0 0 24 24" aria-hidden="true" className="gl-privacy-icon">
+											<path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 10.99h7c-.53 4.12-3.28 7.79-7 8.94V12H5V6.3l7-3.11v8.8z" fill="currentColor" />
+										</svg>
+										<p>This meeting is secured with end-to-end encryption. Your media and data are private and protected.</p>
+									</div>
+								</div>
+							) : (
+								(isGridMode ? filteredParticipants : displayedParticipants).map((person) => {
+									const isPinned = person.name === pinnedParticipant
+									return (
+										<article key={person.id} className={`gl-person-card${isPinned ? ' is-pinned' : ''}`}>
+											<div className="gl-person-card__left">
+												<div className={`gl-person-card__avatar${person.isSpeaking ? ' is-speaking' : ''}`}>
+													{person.initials}
+												</div>
+												<div>
+													<p className="gl-person-card__name">{person.name}</p>
+													<p className="gl-person-card__meta">{person.role} · {person.status}</p>
+												</div>
+											</div>
+											<button
+												type="button"
+												className="gl-person-card__pin"
+												onClick={() => setPinnedParticipant(person.name)}
+											>
+												{isPinned ? 'Pinned' : 'Pin'}
+											</button>
+										</article>
+									)
+								})
+							)}
 						</div>
 
-						{!isGridMode && (
+						{!isGridMode && !showMeetingInfo && (
 							<footer className="gl-people__footer">
 								<div className="gl-pagination">
 									<button
