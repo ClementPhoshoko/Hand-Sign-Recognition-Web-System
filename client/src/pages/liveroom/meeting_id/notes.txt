@@ -10,7 +10,4 @@ Persist layout mode: no backend required if you store locally (localStorage). Ba
     to follow the user across devices/accounts.
 
 -------------------------------------
-Move all .gl-toolbar-control buttons (Camera, Mic, Speaker, Leave) from .gl-meeting-toolbar to .gl-stage__header.
-Style these action buttons as borderless, circular, icon-only (no text), using only SVGs.
-For dropdowns (View options, Meeting info), keep label + icon + chevron, but style as borderless and glassy.
-Ensure all colors, backgrounds, and effects use your design tokens from
+

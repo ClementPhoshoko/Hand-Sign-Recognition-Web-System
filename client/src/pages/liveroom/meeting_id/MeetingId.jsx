@@ -97,30 +97,27 @@ function MeetingId() {
 	)
 
 	const autoLayoutMode = useMemo(() => {
-		if (screenOn) return 'focus'
 		if (participants.length >= 6) return 'grid'
-		if (participants.length <= 2) return 'focus'
 		return 'stage'
-	}, [screenOn, participants.length])
+	}, [participants.length])
 
 	const effectiveLayoutMode = isAutoLayout ? autoLayoutMode : layoutMode
 	const isGridMode = effectiveLayoutMode === 'grid'
 	const canMaximizeVideo = !isGridMode
-	const isVideoEffectivelyMaximized = canMaximizeVideo && (isAutoLayout ? screenOn : isVideoMaximized)
+	const isVideoEffectivelyMaximized = canMaximizeVideo && isVideoMaximized
 
 	const autoLayoutReason =
-		screenOn
-			? 'Screen share active'
-			: participants.length >= 6
-				? 'Large room'
-				: participants.length <= 2
-					? 'Small room'
-					: 'Balanced room'
+		participants.length >= 6
+			? 'Large room'
+			: screenOn
+				? 'Screen sharing'
+				: 'Standard room'
 
 	const layoutClassName = [
 		'gl-meeting-layout',
 		`gl-meeting-layout--${effectiveLayoutMode}`,
 		isVideoEffectivelyMaximized ? 'gl-meeting-layout--video-max' : '',
+		screenOn ? 'is-sharing' : '',
 	]
 		.filter(Boolean)
 		.join(' ')
@@ -203,39 +200,24 @@ function MeetingId() {
 									type="button"
 									className="gl-toolbar-menu__item"
 									role="menuitem"
-									onClick={() => onLayoutModeChange('stage')}
+									onClick={() => onLayoutModeChange(isGridMode ? 'stage' : 'grid')}
 									disabled={isAutoLayout}
 								>
-									<svg viewBox="0 0 24 24" aria-hidden="true" className="gl-menu-icon">
-										<path d="M3 5h18v14H3V5Zm2 2v10h14V7H5Z" fill="currentColor" />
-									</svg>
-									Stage view
-								</button>
-
-								<button
-									type="button"
-									className="gl-toolbar-menu__item"
-									role="menuitem"
-									onClick={() => onLayoutModeChange('grid')}
-									disabled={isAutoLayout}
-								>
-									<svg viewBox="0 0 24 24" aria-hidden="true" className="gl-pill-icon">
-										<path d="M4 4h7v7H4V4Zm9 0h7v7h-7V4ZM4 13h7v7H4v-7Zm9 0h7v7h-7v-7Z" fill="currentColor" />
-									</svg>
-									Grid view
-								</button>
-
-								<button
-									type="button"
-									className="gl-toolbar-menu__item"
-									role="menuitem"
-									onClick={() => onLayoutModeChange('focus')}
-									disabled={isAutoLayout}
-								>
-									<svg viewBox="0 0 24 24" aria-hidden="true" className="gl-menu-icon">
-										<path d="M4 4h16v16H4V4Zm2 2v12h12V6H6Zm3 3h6v6H9V9Z" fill="currentColor" />
-									</svg>
-									Focus view
+									{isGridMode ? (
+										<>
+											<svg viewBox="0 0 24 24" aria-hidden="true" className="gl-menu-icon">
+												<path d="M3 5h18v14H3V5Zm2 2v10h14V7H5Z" fill="currentColor" />
+											</svg>
+											Stage view (Manual)
+										</>
+									) : (
+										<>
+											<svg viewBox="0 0 24 24" aria-hidden="true" className="gl-pill-icon">
+												<path d="M4 4h7v7H4V4Zm9 0h7v7h-7V4ZM4 13h7v7H4v-7Zm9 0h7v7h-7v-7Z" fill="currentColor" />
+											</svg>
+											Grid view (Manual)
+										</>
+									)}
 								</button>
 
 								<button
@@ -243,18 +225,23 @@ function MeetingId() {
 									className="gl-toolbar-menu__item"
 									role="menuitem"
 									onClick={onToggleVideoMaximize}
-									disabled={!canMaximizeVideo || isAutoLayout}
+									disabled={!canMaximizeVideo}
 								>
 									{isFullScreen ? (
-										<svg viewBox="0 0 24 24" aria-hidden="true" className="gl-menu-icon">
-											<path d="M4 14h6v6H8v-4H4v-2Zm10 6h2v-4h4v-2h-6v6ZM4 4h6v6H8V6H4V4Zm16 0v6h-6V4h2v2h4V4Z" fill="currentColor" />
-										</svg>
+										<>
+											<svg viewBox="0 0 24 24" aria-hidden="true" className="gl-menu-icon">
+												<path d="M4 14h6v6H8v-4H4v-2Zm10 6h2v-4h4v-2h-6v6ZM4 4h6v6H8V6H4V4Zm16 0v6h-6V4h2v2h4V4Z" fill="currentColor" />
+											</svg>
+											Restore screen
+										</>
 									) : (
-										<svg viewBox="0 0 24 24" aria-hidden="true" className="gl-menu-icon">
-											<path d="M4 10V4h6v2H6v4H4Zm10-6h6v6h-2V6h-4V4ZM4 20v-6h2v4h4v2H4Zm14-6h2v6h-6v-2h4v-4Z" fill="currentColor" />
-										</svg>
+										<>
+											<svg viewBox="0 0 24 24" aria-hidden="true" className="gl-menu-icon">
+												<path d="M4 10V4h6v2H6v4H4Zm10-6h6v6h-2V6h-4V4ZM4 20v-6h2v4h4v2H4Zm14-6h2v6h-6v-2h4v-4Z" fill="currentColor" />
+											</svg>
+											Full screen view
+										</>
 									)}
-									{isFullScreen ? 'Restore screen' : 'Full screen view'}
 								</button>
 
 								<button
@@ -352,7 +339,7 @@ function MeetingId() {
 							{screenOn ? (
 								<video
 									ref={screenVideoRef}
-									className="gl-stage__video"
+									className="gl-stage__video is-screen-share"
 									autoPlay
 									playsInline
 								/>

@@ -202,7 +202,7 @@
 }
 
 .gl-meeting-layout--stage  { grid-template-columns: minmax(0, 2.2fr) minmax(280px, 1fr); }
-.gl-meeting-layout--focus  { grid-template-columns: minmax(0, 3fr)   minmax(280px, 0.9fr); }
+.gl-meeting-layout--stage.is-sharing { grid-template-columns: minmax(0, 3fr) minmax(280px, 0.9fr); }
 .gl-meeting-layout--video-max { grid-template-columns: 1fr; }
 .gl-meeting-layout--grid   { grid-template-columns: minmax(0, 1fr); }
 
@@ -520,6 +520,11 @@
 	z-index: 0;
 }
 
+.gl-stage__video.is-screen-share {
+	object-fit: contain;
+	background: #000; /* Optional: black background for screen share letterboxing */
+}
+
 .gl-stage__maximize-btn {
 	position: absolute;
 	bottom: var(--space-6);
@@ -699,9 +704,11 @@
    RESPONSIVE
    ───────────────────────────────────────── */
 @media (max-width: 1200px) {
-	.gl-meeting-layout--stage,
-	.gl-meeting-layout--focus {
+	.gl-meeting-layout--stage {
 		grid-template-columns: minmax(0, 1.7fr) minmax(240px, 1fr);
+	}
+	.gl-meeting-layout--stage.is-sharing {
+		grid-template-columns: minmax(0, 2fr) minmax(240px, 0.9fr);
 	}
 }
 
@@ -715,7 +722,6 @@
 	}
 	.gl-meeting-layout,
 	.gl-meeting-layout--stage,
-	.gl-meeting-layout--focus,
 	.gl-meeting-layout--video-max,
 	.gl-meeting-layout--grid {
 		grid-template-columns: minmax(0, 1fr);
