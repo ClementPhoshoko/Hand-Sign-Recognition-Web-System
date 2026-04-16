@@ -2,6 +2,7 @@ import { useMemo, useState, useRef, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import useMediaDevices from '../../../hooks/useMediaDevices'
 import DevicePicker from '../DevicePicker'
+import PrimaryModal from '../../../components/modals/primary/PrimaryModal'
 import './MeetingId.css'
 
 function MeetingId() {
@@ -33,6 +34,7 @@ function MeetingId() {
 	const [searchQuery, setSearchQuery] = useState('')
 	const [activePanel, setActivePanel] = useState('people') // 'people' | 'info' | 'transcript'
 	const [shouldAutoScroll, setShouldAutoScroll] = useState(true)
+	const [showLeaveConfirm, setShowLeaveConfirm] = useState(false)
 	const participantsPerPage = 6
 
 	const scrollRef = useRef(null) // Ref for the scrollable body container
@@ -257,10 +259,18 @@ function MeetingId() {
 	}
 
 	const onLeaveMeeting = () => {
+		setShowLeaveConfirm(true)
+	}
+
+	const handleConfirmLeave = () => {
 		if (document.fullscreenElement) {
 			document.exitFullscreen()
 		}
 		navigate('/liveroom')
+	}
+
+	const handleCancelLeave = () => {
+		setShowLeaveConfirm(false)
 	}
 
 	return (
@@ -750,6 +760,17 @@ function MeetingId() {
 					</aside>
 				)}
 			</section>
+
+			{/* Leave Confirmation Modal */}
+			<PrimaryModal
+				open={showLeaveConfirm}
+				customMsg="Are you sure you want to leave the session? By exiting now, you will lose access to the live stream, real-time transcript updates, and active participant interactions. If you're currently presenting or sharing your screen, those streams will be terminated immediately. You can always rejoin later using the same meeting code."
+				firstOption="Let Us Leave"
+				secondOption="Let Us Stay"
+				onFirstOption={handleConfirmLeave}
+				onSecondOption={handleCancelLeave}
+				onClose={handleCancelLeave}
+			/>
 		</div>
 	)
 }
