@@ -126,6 +126,25 @@ function MeetingId() {
 
 	const toggleMenu = (name) => setOpenMenu((prev) => (prev === name ? null : name))
 
+	const handlePillClick = (panelName) => {
+		setActivePanel(panelName)
+		// If in native fullscreen, exit it
+		if (document.fullscreenElement) {
+			document.exitFullscreen()
+		}
+		// Exit maximized video mode
+		setIsVideoMaximized(false)
+		// Switch layout manually
+		setIsAutoLayout(false)
+		
+		// Transcript is docked to Stage view; others go to Grid/Gallery view
+		if (panelName === 'transcript') {
+			setLayoutMode('stage')
+		} else {
+			setLayoutMode('grid')
+		}
+	}
+
 	const toggleFullScreen = async () => {
 		if (!document.fullscreenElement) {
 			try {
@@ -194,7 +213,7 @@ function MeetingId() {
 		return 'grid'
 	}, [someoneIsSharing])
 
-	const effectiveLayoutMode = screenOn ? 'stage' : (isAutoLayout ? autoLayoutMode : layoutMode)
+	const effectiveLayoutMode = (screenOn || activePanel === 'transcript') ? 'stage' : (isAutoLayout ? autoLayoutMode : layoutMode)
 	const isGridMode = effectiveLayoutMode === 'grid'
 	const canMaximizeVideo = !isGridMode
 	const isVideoEffectivelyMaximized = canMaximizeVideo && isVideoMaximized
@@ -359,7 +378,7 @@ function MeetingId() {
 					<button
 						type="button"
 						className={`gl-toolbar-pill${activePanel === 'people' ? ' is-open' : ''}`}
-						onClick={() => setActivePanel('people')}
+						onClick={() => handlePillClick('people')}
 						aria-label={`Participants: ${participants.length}`}
 					>
 						<svg viewBox="0 0 24 24" aria-hidden="true" className="gl-pill-icon">
@@ -373,7 +392,7 @@ function MeetingId() {
 					<button
 						type="button"
 						className={`gl-toolbar-pill${activePanel === 'transcript' ? ' is-open' : ''}`}
-						onClick={() => setActivePanel('transcript')}
+						onClick={() => handlePillClick('transcript')}
 						aria-label="Meeting transcript"
 					>
 						<svg viewBox="0 0 24 24" aria-hidden="true" className="gl-pill-icon">
@@ -386,7 +405,7 @@ function MeetingId() {
 					<button
 						type="button"
 						className={`gl-toolbar-pill${activePanel === 'info' ? ' is-open' : ''}`}
-						onClick={() => setActivePanel('info')}
+						onClick={() => handlePillClick('info')}
 						aria-label="Meeting information"
 					>
 						<svg viewBox="0 0 24 24" aria-hidden="true" className="gl-pill-icon">
@@ -624,6 +643,7 @@ function MeetingId() {
 						<div 
 							ref={scrollRef}
 							onScroll={handleScroll}
+							key={activePanel} /* Key forces a fresh render & triggers entry animations */
 							className={`gl-people__body${(isGridMode && activePanel === 'people') ? ' is-grid' : ''}`}
 						>
 							{activePanel === 'info' ? (

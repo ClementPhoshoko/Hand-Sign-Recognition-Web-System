@@ -220,12 +220,26 @@ html, body, #root, .gl-meeting-page {
 	gap: var(--space-4);
 	align-items: stretch;
 	grid-template-rows: minmax(0, 1fr); /* Ensure the row doesn't expand beyond viewport */
+	transition: grid-template-columns var(--transition-slow); /* Smooth layout transition */
 }
 
 .gl-meeting-layout--stage  { grid-template-columns: minmax(0, 2.2fr) minmax(280px, 1fr); }
 .gl-meeting-layout--stage.is-sharing { grid-template-columns: minmax(0, 3fr) minmax(280px, 0.9fr); }
 .gl-meeting-layout--video-max { grid-template-columns: 1fr; }
 .gl-meeting-layout--grid   { grid-template-columns: minmax(0, 1fr); }
+
+/* ─────────────────────────────────────────
+   ANIMATIONS
+   ───────────────────────────────────────── */
+@keyframes panelFadeIn {
+	from { opacity: 0; transform: translateY(8px); }
+	to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes rowEntrance {
+	from { opacity: 0; transform: scale(0.98); }
+	to { opacity: 1; transform: scale(1); }
+}
 
 /* ─────────────────────────────────────────
    STAGE & PEOPLE containers
@@ -790,8 +804,8 @@ html, body, #root, .gl-meeting-page {
 	display: flex;
 	flex-direction: column;
 	gap: var(--space-5);
-	animation: fadeIn var(--transition-base);
 	min-height: 0;
+	animation: panelFadeIn var(--transition-base) forwards; /* Fluid entry animation */
 }
 
 @keyframes fadeIn {
@@ -929,6 +943,7 @@ html, body, #root, .gl-meeting-page {
 	flex-direction: column;
 	gap: var(--space-3);
 	padding: var(--space-2);
+	animation: panelFadeIn var(--transition-base) forwards; /* Fluid entry animation */
 }
 
 .gl-transcript-row {
@@ -939,11 +954,21 @@ html, body, #root, .gl-meeting-page {
 	display: flex;
 	flex-direction: column;
 	gap: var(--space-1);
-	transition: background var(--transition-fast);
+	transition: 
+		background var(--transition-fast),
+		transform var(--transition-fast);
+	animation: rowEntrance var(--transition-base) backwards; /* Subtle scale/fade entrance */
 }
+
+/* Staggered row animations for first few rows */
+.gl-transcript-row:nth-child(1) { animation-delay: 50ms; }
+.gl-transcript-row:nth-child(2) { animation-delay: 100ms; }
+.gl-transcript-row:nth-child(3) { animation-delay: 150ms; }
+.gl-transcript-row:nth-child(4) { animation-delay: 200ms; }
 
 .gl-transcript-row:hover {
 	background: var(--glass-surface-strong);
+	transform: translateX(4px); /* Stylish hover shift */
 }
 
 .gl-transcript-header {
@@ -993,6 +1018,18 @@ html, body, #root, .gl-meeting-page {
 	flex-shrink: 0;
 	border-top: 1px solid var(--border-soft);
 	background: var(--glass-surface-strong);
+	animation: rowEntrance var(--transition-base) backwards; /* Subtle scale/fade entrance */
+}
+
+.gl-person-card:nth-child(1) { animation-delay: 40ms; }
+.gl-person-card:nth-child(2) { animation-delay: 80ms; }
+.gl-person-card:nth-child(3) { animation-delay: 120ms; }
+.gl-person-card:nth-child(4) { animation-delay: 160ms; }
+
+.gl-person-card:hover {
+	background: var(--glass-surface-dense);
+	transform: scale(1.01); /* Subtle stylish hover scale */
+	z-index: 2;
 }
 
 .gl-people__footer {
