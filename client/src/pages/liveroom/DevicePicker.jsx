@@ -27,20 +27,20 @@ function DevicePicker({ kind, icon, label, devices, selectedId, onSelect }) {
 
 	return (
 		<div className={`liveroom-pill${open ? ' liveroom-pill--open' : ''}`} ref={wrapRef}>
-			<button
-				type="button"
-				className="liveroom-pill__trigger"
+			<div
+				className={`liveroom-pill__trigger${!hasDevices ? ' is-disabled' : ''}`}
 				onClick={() => hasDevices && setOpen((v) => !v)}
 				aria-expanded={open}
 				aria-haspopup="listbox"
-				disabled={!hasDevices}
+				role="button"
+				tabIndex={hasDevices ? 0 : -1}
 			>
 				{icon}
 				<span className="liveroom-pill__label">{activeLabel}</span>
 				<svg className={`liveroom-pill__arrow${open ? ' liveroom-pill__arrow--flip' : ''}`} width="12" height="12" viewBox="0 0 24 24" fill="none">
 					<path d="M6 9l6 6 6-6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
 				</svg>
-			</button>
+			</div>
 
 			{open && hasDevices && (
 				<ul className="liveroom-pill__dropdown" role="listbox">

@@ -31,8 +31,34 @@ function MeetingId() {
 	const [isHostSpeaking, setIsHostSpeaking] = useState(false) // New state for host speaking status
 	const [currentPage, setCurrentPage] = useState(1)
 	const [searchQuery, setSearchQuery] = useState('')
-	const [showMeetingInfo, setShowMeetingInfo] = useState(false)
+	const [activePanel, setActivePanel] = useState('people') // 'people' | 'info' | 'transcript'
+	const [shouldAutoScroll, setShouldAutoScroll] = useState(true)
 	const participantsPerPage = 6
+
+	const scrollRef = useRef(null) // Ref for the scrollable body container
+
+	const [transcriptData, setTranscriptData] = useState([
+		{ id: 1, time: '10:02', speaker: 'Lebo M.', text: 'Hi everyone, thanks for joining the strategy meeting today.' },
+		{ id: 2, time: '10:03', speaker: 'Ana K.', text: 'Glad to be here. Excited to see the new project updates.' },
+		{ id: 3, time: '10:05', speaker: 'Host Camera', text: 'Let\'s start by reviewing the Q2 goals. I\'ll share my screen.' },
+		{ id: 4, time: '10:07', speaker: 'David N.', text: 'The timeline for the Alpha phase looks solid, but we need to verify the resources.' },
+		{ id: 5, time: '10:10', speaker: 'Nia S.', text: 'I can help with the resource allocation audit next week.' },
+		{ id: 6, time: '10:12', speaker: 'Lebo M.', text: 'I\'ll share the project timeline again.' },
+		{ id: 7, time: '10:14', speaker: 'Ana K.', text: 'I\'ll share the project updates.' },
+		{ id: 8, time: '10:16', speaker: 'Host Camera', text: 'We\'ll continue the discussion.' },
+		{ id: 9, time: '10:18', speaker: 'David N.', text: 'I\'ll share the project updates.' },
+		{ id: 10, time: '10:20', speaker: 'Nia S.', text: 'I can help with the resource allocation audit next week.' },
+		{ id: 11, time: '10:22', speaker: 'Lebo M.', text: 'I\'ll share the project timeline again.' },
+		{ id: 12, time: '10:24', speaker: 'Ana K.', text: 'I\'ll share the project updates.' },
+		{ id: 13, time: '10:26', speaker: 'Host Camera', text: 'We\'ll continue the discussion.' },
+		{ id: 14, time: '10:28', speaker: 'David N.', text: 'I\'ll share the project updates.' },
+		{ id: 15, time: '10:30', speaker: 'Nia S.', text: 'Adding more rows to test scrolling performance.' },
+		{ id: 16, time: '10:32', speaker: 'Lebo M.', text: 'Row 16 of the transcript is here.' },
+		{ id: 17, time: '10:34', speaker: 'Ana K.', text: 'Row 17 confirming the scroll works.' },
+		{ id: 18, time: '10:36', speaker: 'David N.', text: 'Row 18 - checking if this is visible.' },
+		{ id: 19, time: '10:38', speaker: 'Host Camera', text: 'Row 19 - almost at twenty.' },
+		{ id: 20, time: '10:40', speaker: 'Nia S.', text: 'Row 20 - scrolling should definitely be active now.' },
+	])
 
 	// Effect to update isHostSpeaking based on audioLevel
 	useEffect(() => {
@@ -41,12 +67,32 @@ function MeetingId() {
 		setIsHostSpeaking(audioLevel > speakingThreshold)
 	}, [audioLevel])
 
+	// Auto-scroll to bottom for transcripts
+	useEffect(() => {
+		if (activePanel === 'transcript' && shouldAutoScroll && scrollRef.current) {
+			const { scrollHeight, clientHeight } = scrollRef.current;
+			scrollRef.current.scrollTo({
+				top: scrollHeight - clientHeight,
+				behavior: 'smooth'
+			});
+		}
+	}, [transcriptData, activePanel, shouldAutoScroll]);
+
+	const handleScroll = () => {
+		if (!scrollRef.current) return;
+		const { scrollTop, scrollHeight, clientHeight } = scrollRef.current;
+		// If user is near the bottom (within 20px), enable auto-scroll
+		const isAtBottom = scrollHeight - scrollTop <= clientHeight + 20;
+		setShouldAutoScroll(isAtBottom);
+	};
+
 	// Single piece of state: which menu is open ('view' | 'info' | null)
 	const [openMenu, setOpenMenu] = useState(null)
 
 	const meetingPageRef = useRef(null)
 	const viewportRef = useRef(null)
 	const viewMenuRef = useRef(null)
+
 	const meetingCode = 'HSR-2419'
 	const roomName = 'Project Alpha - Strategy Meeting'
 
@@ -312,8 +358,8 @@ function MeetingId() {
 					{/* Participants toggle */}
 					<button
 						type="button"
-						className={`gl-toolbar-pill${!showMeetingInfo ? ' is-open' : ''}`}
-						onClick={() => setShowMeetingInfo(false)}
+						className={`gl-toolbar-pill${activePanel === 'people' ? ' is-open' : ''}`}
+						onClick={() => setActivePanel('people')}
 						aria-label={`Participants: ${participants.length}`}
 					>
 						<svg viewBox="0 0 24 24" aria-hidden="true" className="gl-pill-icon">
@@ -323,11 +369,24 @@ function MeetingId() {
 						<span className="gl-toolbar-badge">{participants.length}</span>
 					</button>
 
+					{/* Transcript toggle */}
+					<button
+						type="button"
+						className={`gl-toolbar-pill${activePanel === 'transcript' ? ' is-open' : ''}`}
+						onClick={() => setActivePanel('transcript')}
+						aria-label="Meeting transcript"
+					>
+						<svg viewBox="0 0 24 24" aria-hidden="true" className="gl-pill-icon">
+							<path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z" fill="currentColor" />
+						</svg>
+						<span>Transcript</span>
+					</button>
+
 					{/* Info toggle */}
 					<button
 						type="button"
-						className={`gl-toolbar-pill${showMeetingInfo ? ' is-open' : ''}`}
-						onClick={() => setShowMeetingInfo(true)}
+						className={`gl-toolbar-pill${activePanel === 'info' ? ' is-open' : ''}`}
+						onClick={() => setActivePanel('info')}
 						aria-label="Meeting information"
 					>
 						<svg viewBox="0 0 24 24" aria-hidden="true" className="gl-pill-icon">
@@ -536,8 +595,10 @@ function MeetingId() {
 					<aside className="gl-people" aria-label={isGridMode ? 'Meeting gallery' : 'Meeting participants'}>
 						<header className="gl-people__header">
 							<div className="gl-people__meeting-info" role="region" aria-label="Meeting information">
-								{showMeetingInfo ? (
+								{activePanel === 'info' ? (
 									<h2 className="gl-people__header-title">Meeting Info</h2>
+								) : activePanel === 'transcript' ? (
+									<h2 className="gl-people__header-title">Transcript</h2>
 								) : (
 									<div className="gl-people__search-wrapper">
 										<svg className="gl-search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -560,8 +621,12 @@ function MeetingId() {
 							</div>
 						</header>
 
-						<div className={`gl-people__body${(isGridMode && !showMeetingInfo) ? ' is-grid' : ''}`}>
-							{showMeetingInfo ? (
+						<div 
+							ref={scrollRef}
+							onScroll={handleScroll}
+							className={`gl-people__body${(isGridMode && activePanel === 'people') ? ' is-grid' : ''}`}
+						>
+							{activePanel === 'info' ? (
 								<div className="gl-meeting-info-dock">
 									<h3 className="gl-info-dock__title">Meeting Details</h3>
 									<div className="gl-info-dock__section">
@@ -590,6 +655,18 @@ function MeetingId() {
 										<p>This meeting is secured with end-to-end encryption. Your media and data are private and protected.</p>
 									</div>
 								</div>
+							) : activePanel === 'transcript' ? (
+								<div className="gl-transcript-dock">
+									{transcriptData.map((entry) => (
+										<div key={entry.id} className="gl-transcript-row">
+											<div className="gl-transcript-header">
+												<span className="gl-transcript-speaker">{entry.speaker}</span>
+												<span className="gl-transcript-time">{entry.time}</span>
+											</div>
+											<p className="gl-transcript-text">{entry.text}</p>
+										</div>
+									))}
+								</div>
 							) : (
 								(isGridMode ? filteredParticipants : displayedParticipants).map((person) => {
 									const isPinned = person.name === pinnedParticipant
@@ -617,7 +694,7 @@ function MeetingId() {
 							)}
 						</div>
 
-						{!isGridMode && !showMeetingInfo && (
+						{!isGridMode && activePanel === 'people' && (
 							<footer className="gl-people__footer">
 								<div className="gl-pagination">
 									<button
