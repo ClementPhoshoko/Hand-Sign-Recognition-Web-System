@@ -598,16 +598,21 @@
 }
 
 .gl-people__body {
-	/* flex: 1; */
+	flex: 1;
 	min-height: 0;
 	overflow: auto;
 	padding: var(--space-3);
-	display: grid;
-	/* gap: var(--space-1); */
-	grid-template-columns: 1fr;
+	display: flex;
+	flex-direction: column;
+	gap: var(--space-1);
+	height: 100%;
 }
 .gl-people__body.is-grid {
-	grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+	grid-auto-rows: 1fr;
+	gap: var(--space-3);
+	align-content: stretch;
 }
 
 /* ── Person card ── */
@@ -618,12 +623,43 @@
 	gap: var(--space-3);
 	padding: 0.72rem 0.85rem;
 	background: var(--glass-surface);
-	/* border: 1px solid var(--border-soft); */
-	/* border-radius: var(--radius-base); */
-	/* box-shadow: var(--glow-inner); */
+	border: 1px solid transparent;
+	border-radius: var(--radius-base);
 	transition:
 		border-color var(--transition-fast),
 		box-shadow var(--transition-fast);
+}
+
+.is-grid .gl-person-card {
+	flex-direction: column;
+	justify-content: center;
+	text-align: center;
+	background: var(--glass-inner-plate-dense);
+	border: 1px solid var(--border-soft);
+	padding: var(--space-4);
+	height: 100%;
+	box-sizing: border-box;
+}
+
+.is-grid .gl-person-card__left {
+	flex-direction: column;
+	gap: var(--space-3);
+	align-items: center;
+}
+
+.is-grid .gl-person-card__avatar {
+	width: 64px;
+	height: 64px;
+	font-size: 1.2rem;
+}
+
+.is-grid .gl-person-card__name {
+	font-size: var(--text-base);
+	white-space: normal;
+}
+
+.is-grid .gl-person-card__pin {
+	margin-top: var(--space-2);
 }
 .gl-person-card.is-pinned {
 	/* border-color: rgba(130, 170, 255, 0.36); */
