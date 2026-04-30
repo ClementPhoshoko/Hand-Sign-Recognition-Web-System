@@ -17,9 +17,18 @@
 	animation: pm-overlay-in 200ms ease-out both;
 }
 
+.pm-overlay--exit {
+	animation: pm-overlay-out 300ms ease-in both;
+}
+
 @keyframes pm-overlay-in {
 	from { opacity: 0; }
 	to   { opacity: 1; }
+}
+
+@keyframes pm-overlay-out {
+	from { opacity: 1; }
+	to   { opacity: 0; }
 }
 
 /* ── Panel ── */
@@ -28,8 +37,8 @@
 	width: 90%;
 	max-width: 400px;
 	padding: var(--space-6);
-	background: var(--glass-inner-plate-dense);
-	border: 1px solid var(--border-soft);
+	/* background: var(--glass-inner-plate-dense); */
+	/* border: 1px solid var(--border-soft); */
 	border-radius: var(--border-radius);
 	backdrop-filter: var(--glass-blur);
 	-webkit-backdrop-filter: var(--glass-blur);
@@ -43,6 +52,11 @@
 	animation: pm-panel-in 280ms cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
+.pm-panel--exit {
+	animation: pm-panel-out 320ms cubic-bezier(0.22, 1, 0.36, 1) both;
+	pointer-events: none;
+}
+
 @keyframes pm-panel-in {
 	from {
 		opacity: 0;
@@ -54,16 +68,17 @@
 	}
 }
 
-/* Top highlight edge */
-.pm-highlight {
-	position: absolute;
-	top: 0;
-	left: 0;
-	right: 0;
-	height: 1px;
-	background: linear-gradient(90deg, transparent, var(--top-highlight), transparent);
-	border-radius: var(--border-radius) var(--border-radius) 0 0;
-	pointer-events: none;
+@keyframes pm-panel-out {
+	0% {
+		opacity: 1;
+		transform: translate(0, 0) scale(1) rotate(0deg);
+		filter: blur(0px);
+	}
+	100% {
+		opacity: 0;
+		transform: translate(-40px, 80px) scale(0.9) rotate(-5deg);
+		filter: blur(8px);
+	}
 }
 
 /* ── Message ── */
@@ -112,8 +127,8 @@
 
 /* Primary action */
 .pm-btn--primary {
-	background: var(--strong-white);
-	color: var(--shell);
+	background: none;
+	color: var(--orb-halo);
 }
 
 .pm-btn--primary:hover {
@@ -124,17 +139,14 @@
 
 /* Secondary / cancel action */
 .pm-btn--secondary {
-	background: var(--glass-surface-strong);
-	color: var(--text-secondary);
-	border: 1px solid var(--border-soft);
+	background: none;
+	color: var(--orb-halo);
 }
 
 .pm-btn--secondary:hover {
-	background: var(--glass-surface);
-	border-color: var(--border-standard);
-	color: var(--text-primary);
+	opacity: 0.88;
 	transform: translateY(-1px);
-	box-shadow: var(--shadow-soft);
+	box-shadow: var(--shadow-glow);
 }
 
 /* ── Reduced motion ── */
