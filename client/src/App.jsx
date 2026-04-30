@@ -7,6 +7,8 @@ import AuthLayout from './pages/auth/AuthLayout'
 import LiveroomLayout from './pages/liveroom/LiveroomLayout'
 import MeetingId from './pages/liveroom/meeting_id/MeetingId'
 import UploadLayout from './pages/upload/UploadLayout'
+import Video_Extracts from './pages/upload/video_extracts/Video_Extracts'
+import Photo_Extracts from './pages/upload/photo_extracts/Photo_Extracts'
 import './App.css'
 
 function AppContent() {
@@ -27,6 +29,8 @@ function AppContent() {
           <Route path="/liveroom/meeting" element={<MeetingId />} />
           <Route path="/liveroom/meeting/:meetingId" element={<MeetingId />} />
           <Route path="/upload" element={<UploadLayout />} />
+          <Route path="/upload/videoExtracts" element={<Video_Extracts />} />
+          <Route path="/upload/photoExtracts" element={<Photo_Extracts />} />
         </Routes>
       </main>
       {!hideNavFoot && <Foot />}

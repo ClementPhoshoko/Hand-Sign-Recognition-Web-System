@@ -4,12 +4,15 @@
 
 .upload-shell {
 	position: relative;
-	flex: 1;
 	display: flex;
 	flex-direction: column;
-	padding: 1.5rem 1.8rem;
-	overflow-y: auto;
-	scrollbar-width: none;
+	align-items: center;
+	justify-content: center;
+	background: var(--shell);
+	padding-top: calc(var(--nav-height, 0px) + var(--space-6));
+	padding-bottom: var(--space-6);
+	min-height: 100vh;
+	box-sizing: border-box;
 }
 
 .upload-shell::-webkit-scrollbar {
@@ -18,10 +21,11 @@
 
 /* ── Ambient orbs ── */
 .upload-canvas {
-	position: absolute;
+	position: fixed;
 	inset: 0;
 	pointer-events: none;
 	z-index: 0;
+	overflow: hidden;
 }
 
 .upload-orb {
@@ -51,20 +55,21 @@
 .upload-wrap {
 	position: relative;
 	z-index: 1;
-	max-width: 1000px;
-	margin: 2rem auto;
 	width: 100%;
+	max-width: 1100px;
 	display: flex;
 	flex-direction: column;
-	gap: 2rem;
+	align-items: center;
+	gap: var(--space-5);
+	padding: 0 var(--space-4);
 }
 
 .upload-header {
-	text-align: left;
+	text-align: center;
 	display: flex;
 	flex-direction: column;
-	align-items: flex-start;
-	padding: 0 var(--space-6);
+	align-items: center;
+	width: 100%;
 }
 
 .upload-main-tabs {
@@ -139,21 +144,22 @@
 
 /* ── Single-column body ── */
 .upload-body {
+	display: flex;
+	gap: var(--space-5);
 	width: 100%;
-	padding: var(--space-6);
+	align-items: stretch;
+	padding: var(--space-5);
 	background: var(--glass-surface);
-	border-radius: var(--radius-lg, 24px);
+	border-radius: var(--radius-lg, 20px);
 	backdrop-filter: var(--glass-blur);
 	-webkit-backdrop-filter: var(--glass-blur);
-	box-shadow: var(--shadow-deep);
+	box-shadow: var(--shadow-soft);
 	transition: all var(--transition-base);
-	height: 450px; /* Fixed height to keep layout consistent */
+	height: 450px; /* Consistent height across video and photo */
 }
 
 .upload-body--two-col {
-	display: flex;
-	gap: var(--space-6);
-	align-items: stretch;
+	/* redundant but kept for consistency */
 }
 
 /* Columns */
@@ -162,8 +168,8 @@
 	min-width: 0;
 	display: flex;
 	flex-direction: column;
-	height: 100%;
-	border: 2px dashed var(--border-highlight); /* Switched to dashed for better visibility */
+	min-height: 400px;
+	border: 2px dashed var(--border-highlight);
 	border-radius: 20px;
 	transition: all var(--transition-base);
 	background: rgba(255, 255, 255, 0.02);
@@ -183,7 +189,6 @@
 	flex-direction: column;
 	gap: var(--space-4);
 	animation: uploadFadeIn 0.4s ease-out both;
-	height: 100%;
 }
 
 @keyframes uploadFadeIn {
@@ -194,6 +199,8 @@
 /* Sidebar Unified Card */
 .upload-sidebar-card {
 	--card-padding: var(--space-4);
+	width: 100%;
+	box-sizing: border-box;
 	background: var(--glass-inner-plate);
 	border: 1px solid var(--border-soft);
 	border-radius: 20px;
@@ -202,7 +209,6 @@
 	flex-direction: column;
 	gap: var(--space-4);
 	box-shadow: var(--shadow-deep);
-	height: 100%;
 	overflow-y: auto;
 	scrollbar-width: none;
 }

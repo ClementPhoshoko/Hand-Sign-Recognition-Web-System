@@ -5,6 +5,8 @@ const routeLabels = {
 	auth: 'Authentication',
 	login: 'Login',
 	register: 'Register',
+	videoExtracts: 'Video Extracts',
+	photoExtracts: 'Sign Analysis',
 }
 
 function formatSegment(segment) {

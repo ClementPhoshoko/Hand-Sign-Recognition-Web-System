@@ -1,8 +1,10 @@
 import { useState, useRef, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 import Breadcrumbs from '../../components/breadcrumbs/Breadcrumbs'
 import './UploadLayout.css'
 
 function UploadLayout() {
+	const navigate = useNavigate()
 	const [mediaType, setMediaType] = useState('video') // 'video' | 'photo'
 	const [file, setFile] = useState(null)
 	const [previewUrl, setPreviewUrl] = useState(null)
@@ -91,6 +93,18 @@ function UploadLayout() {
 
 	const triggerFileInput = () => {
 		fileInputRef.current?.click()
+	}
+
+	const handleActionClick = () => {
+		if (progress.conversion === 100) {
+			if (mediaType === 'video') {
+				navigate('/upload/videoExtracts')
+			} else {
+				navigate('/upload/photoExtracts')
+			}
+		} else {
+			handleStartProcessing()
+		}
 	}
 
 	const formatFileName = (name) => {
@@ -235,7 +249,7 @@ function UploadLayout() {
 										<div className="upload-prop-item">
 											<span className="upload-prop-label">Status</span>
 											<p className="upload-prop-value">
-												{progress.conversion === 100 ? 'Completed' : 'Processing...'}
+												{progress.conversion === 100 ? 'Completed' : (isProcessing ? 'Processing...' : 'Ready')}
 											</p>
 										</div>
 									</div>
@@ -274,13 +288,23 @@ function UploadLayout() {
 								<button 
 									type="button" 
 									className={`upload-convert-action-btn ${isProcessing ? 'is-disabled' : ''}`}
-									onClick={handleStartProcessing}
+									onClick={handleActionClick}
 									disabled={isProcessing}
 								>
-									{isProcessing ? (progress.upload < 100 ? 'Uploading...' : 'Converting...') : 'Start Upload & Convert'}
-									<svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-										<path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-									</svg>
+									{isProcessing 
+										? (progress.upload < 100 ? 'Uploading...' : 'Converting...') 
+										: (progress.conversion === 100 ? 'View Transcripts' : 'Start Upload & Convert')
+									}
+									{progress.conversion === 100 ? (
+										<svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+											<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+											<circle cx="12" cy="12" r="3" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+										</svg>
+									) : (
+										<svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+											<path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+										</svg>
+									)}
 								</button>
 							</div>
 						</aside>

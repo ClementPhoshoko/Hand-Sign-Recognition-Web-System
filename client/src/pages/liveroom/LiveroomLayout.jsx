@@ -39,6 +39,10 @@ function LiveroomLayout() {
 		navigate(`/liveroom/meeting?meetingid=${encodeURIComponent(meetingId)}`, { state })
 	}
 
+	const goToExtracts = () => {
+		navigate('/upload/videoExtracts')
+	}
+
 	const handleCreateRoom = ({ roomName, name, gestureTranscription }) => {
 		goToMeeting({
 			meetingId: createMeetingId(roomName),
