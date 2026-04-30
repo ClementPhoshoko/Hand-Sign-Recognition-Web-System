@@ -60,40 +60,47 @@
 }
 
 .upload-header {
-	text-align: center;
+	text-align: left;
 	display: flex;
 	flex-direction: column;
-	align-items: center;
+	align-items: flex-start;
+	padding: 0 var(--space-6);
 }
 
 .upload-main-tabs {
 	display: flex;
-	gap: var(--space-2);
-	margin-top: var(--space-5);
+	gap: var(--space-1);
 	background: var(--glass-inner-plate);
-	padding: 6px;
-	border-radius: 999px;
 	border: 1px solid var(--border-soft);
+	border-radius: var(--radius-full);
+	padding: 4px;
+	backdrop-filter: var(--glass-blur);
+	-webkit-backdrop-filter: var(--glass-blur);
 	width: fit-content;
+	margin-top: var(--space-6);
 }
 
 .upload-main-tab {
+	position: relative;
+	padding: var(--space-2) var(--space-6);
+	font-family: var(--font-sans);
+	font-size: var(--text-sm);
+	font-weight: var(--font-medium);
+	color: var(--text-muted);
+	background: transparent;
+	border: none;
+	border-radius: var(--radius-full);
+	cursor: pointer;
+	transition: color var(--transition-fast), background var(--transition-fast);
+	white-space: nowrap;
 	display: flex;
 	align-items: center;
 	gap: 8px;
-	padding: 10px 24px;
-	border: none;
-	background: transparent;
-	color: var(--text-muted);
-	font-size: var(--text-sm);
-	font-weight: var(--font-semibold);
-	border-radius: 999px;
-	cursor: pointer;
-	transition: all var(--transition-fast);
 }
 
 .upload-main-tab svg {
 	opacity: 0.7;
+	transition: opacity var(--transition-fast);
 }
 
 .upload-main-tab:hover {
@@ -101,10 +108,14 @@
 	background: var(--glass-surface);
 }
 
+.upload-main-tab:hover svg {
+	opacity: 0.9;
+}
+
 .upload-main-tab.is-active {
-	background: var(--strong-white);
-	color: var(--shell);
-	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+	color: var(--text-primary);
+	background: var(--glass-surface-strong);
+	box-shadow: var(--glow-inner);
 }
 
 .upload-main-tab.is-active svg {
@@ -115,12 +126,15 @@
 	font-size: var(--text-4xl);
 	font-weight: var(--font-bold);
 	color: var(--text-primary);
-	margin-bottom: 0.5rem;
+	margin-bottom: 0.75rem;
 }
 
 .upload-subtitle {
 	color: var(--text-secondary);
-	font-size: var(--text-base);
+	font-size: var(--text-sm);
+	line-height: 1.6;
+	max-width: 600px;
+	opacity: 0.8;
 }
 
 /* ── Single-column body ── */

@@ -114,7 +114,10 @@ function UploadLayout() {
 				<header className="upload-header">
 					<h1 className="upload-title">Upload {mediaType === 'video' ? 'Video' : 'Photo'}</h1>
 					<p className="upload-subtitle">
-						Upload your sign language {mediaType} for recognition and analysis.
+						Upload your sign language {mediaType} for recognition and analysis. 
+						For best results, ensure the subject is well-lit, the background is neutral, 
+						and all hand gestures are clearly visible within the frame. 
+						Supported formats: {mediaType === 'video' ? 'MP4, MOV, AVI' : 'JPG, PNG, WEBP'}.
 					</p>
 
 					{/* ── Main Media Type Tabs ── */}
