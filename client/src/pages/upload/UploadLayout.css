@@ -8,7 +8,12 @@
 	display: flex;
 	flex-direction: column;
 	padding: 1.5rem 1.8rem;
-	overflow: hidden;
+	overflow-y: auto;
+	scrollbar-width: none;
+}
+
+.upload-shell::-webkit-scrollbar {
+	display: none;
 }
 
 /* ── Ambient orbs ── */
@@ -144,16 +149,18 @@
 	display: flex;
 	flex-direction: column;
 	height: 100%;
-	border: 2px dotted var(--border-highlight);
-	border-radius: 18px;
+	border: 2px dashed var(--border-highlight); /* Switched to dashed for better visibility */
+	border-radius: 20px;
 	transition: all var(--transition-base);
-	background: rgba(255, 255, 255, 0.01);
-	overflow: hidden; /* Ensure video cover stays within border radius */
+	background: rgba(255, 255, 255, 0.02);
+	overflow: hidden;
+	position: relative;
 }
 
 .upload-main-col:hover {
 	border-color: var(--orb-halo);
-	background: var(--glass-surface-strong);
+	background: rgba(255, 255, 255, 0.04);
+	box-shadow: inset 0 0 20px rgba(176, 214, 255, 0.05);
 }
 
 .upload-side-col {
@@ -172,13 +179,14 @@
 
 /* Sidebar Unified Card */
 .upload-sidebar-card {
+	--card-padding: var(--space-4);
 	background: var(--glass-inner-plate);
 	border: 1px solid var(--border-soft);
 	border-radius: 20px;
-	padding: var(--space-5);
+	padding: var(--card-padding) var(--card-padding) 0 var(--card-padding);
 	display: flex;
 	flex-direction: column;
-	gap: var(--space-5);
+	gap: var(--space-4);
 	box-shadow: var(--shadow-deep);
 	height: 100%;
 	overflow-y: auto;
@@ -211,6 +219,53 @@
 	opacity: 0.9;
 }
 
+/* Convert Action Button */
+.upload-convert-action-btn {
+	margin-top: auto;
+	background: none;
+	border: none;
+	border-top: 1px solid var(--border-soft);
+	padding: var(--space-4) var(--space-2);
+	color: var(--orb-halo);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: var(--space-3);
+	font-size: var(--text-sm);
+	font-weight: var(--font-bold);
+	text-transform: uppercase;
+	letter-spacing: 0.05em;
+	cursor: pointer;
+	transition: all var(--transition-base);
+	width: calc(100% + (var(--card-padding) * 2));
+	margin-left: calc(var(--card-padding) * -1);
+	position: sticky;
+	bottom: 0;
+	background: var(--glass-inner-plate);
+	backdrop-filter: blur(10px);
+	z-index: 5;
+}
+
+.upload-convert-action-btn:hover:not(:disabled) {
+	background: var(--glass-surface-strong);
+	border-color: var(--orb-halo);
+	color: #fff;
+}
+
+.upload-convert-action-btn:disabled {
+	opacity: 0.5;
+	cursor: not-allowed;
+	color: var(--text-muted);
+}
+
+.upload-convert-action-btn svg {
+	transition: transform var(--transition-base);
+}
+
+.upload-convert-action-btn:hover svg {
+	transform: scale(1.1) rotate(5deg);
+}
+
 /* Properties View */
 .upload-props {
 	display: flex;
@@ -235,7 +290,9 @@
 	margin: 0;
 	font-size: var(--text-sm);
 	color: var(--text-primary);
-	word-break: break-all;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
 }
 
 /* Progress View */

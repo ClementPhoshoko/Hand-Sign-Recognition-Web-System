@@ -7,6 +7,7 @@ function UploadLayout() {
 	const [file, setFile] = useState(null)
 	const [previewUrl, setPreviewUrl] = useState(null)
 	const [isPlaying, setIsPlaying] = useState(false)
+	const [isProcessing, setIsProcessing] = useState(false)
 	const [progress, setProgress] = useState({ upload: 0, conversion: 0 })
 	const fileInputRef = useRef(null)
 	const videoPreviewRef = useRef(null)
@@ -25,6 +26,7 @@ function UploadLayout() {
 		if (previewUrl) URL.revokeObjectURL(previewUrl)
 		setPreviewUrl(null)
 		setIsPlaying(false)
+		setIsProcessing(false)
 		setProgress({ upload: 0, conversion: 0 })
 	}
 
@@ -38,9 +40,8 @@ function UploadLayout() {
 			const url = URL.createObjectURL(selectedFile)
 			setPreviewUrl(url)
 			setIsPlaying(false)
-
-			// Simulate progress
-			simulateProgress()
+			setIsProcessing(false)
+			setProgress({ upload: 0, conversion: 0 })
 		}
 	}
 
@@ -56,13 +57,19 @@ function UploadLayout() {
 		setIsPlaying(!isPlaying)
 	}
 
-	const simulateProgress = () => {
+	const handleStartProcessing = () => {
+		if (isProcessing) return
+		setIsProcessing(true)
+		
+		// 1. Start Upload
 		let up = 0
+		setProgress({ upload: 0, conversion: 0 })
 		const upInterval = setInterval(() => {
 			up += Math.floor(Math.random() * 15) + 5
 			if (up >= 100) {
 				up = 100
 				clearInterval(upInterval)
+				// 2. Start Conversion after Upload finished
 				startConversion()
 			}
 			setProgress(prev => ({ ...prev, upload: up }))
@@ -76,6 +83,7 @@ function UploadLayout() {
 			if (conv >= 100) {
 				conv = 100
 				clearInterval(convInterval)
+				setIsProcessing(false)
 			}
 			setProgress(prev => ({ ...prev, conversion: conv }))
 		}, 500)
@@ -83,6 +91,13 @@ function UploadLayout() {
 
 	const triggerFileInput = () => {
 		fileInputRef.current?.click()
+	}
+
+	const formatFileName = (name) => {
+		if (!name) return ''
+		const maxLength = 46
+		if (name.length <= maxLength) return name
+		return name.substring(0, maxLength - 3) + '...'
 	}
 
 	return (
@@ -208,7 +223,7 @@ function UploadLayout() {
 									<div className="upload-props">
 										<div className="upload-prop-item">
 											<span className="upload-prop-label">File Title</span>
-											<p className="upload-prop-value">{file.name}</p>
+											<p className="upload-prop-value">{formatFileName(file.name)}</p>
 										</div>
 										<div className="upload-prop-item">
 											<span className="upload-prop-label">Media Type</span>
@@ -252,6 +267,18 @@ function UploadLayout() {
 										</div>
 									</div>
 								</div>
+
+								<button 
+									type="button" 
+									className={`upload-convert-action-btn ${isProcessing ? 'is-disabled' : ''}`}
+									onClick={handleStartProcessing}
+									disabled={isProcessing}
+								>
+									{isProcessing ? (progress.upload < 100 ? 'Uploading...' : 'Converting...') : 'Start Upload & Convert'}
+									<svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+										<path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+									</svg>
+								</button>
 							</div>
 						</aside>
 					)}
