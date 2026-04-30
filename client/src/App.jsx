@@ -13,11 +13,11 @@ function AppContent() {
   const location = useLocation()
 
   // Define paths where Nav and Foot should be hidden
-  const isMeetingPage = location.pathname.startsWith('/liveroom/meeting')
+  const hideNavFoot = location.pathname.startsWith('/liveroom/meeting') || location.pathname.startsWith('/auth')
 
   return (
     <div className="app-root" data-theme={theme}>
-      {!isMeetingPage && <Nav />}
+      {!hideNavFoot && <Nav />}
       <main className="app-main">
         <Routes>
           <Route path="/" element={<Homepage />} />
@@ -27,7 +27,7 @@ function AppContent() {
           <Route path="/liveroom/meeting/:meetingId" element={<MeetingId />} />
         </Routes>
       </main>
-      {!isMeetingPage && <Foot />}
+      {!hideNavFoot && <Foot />}
     </div>
   )
 }

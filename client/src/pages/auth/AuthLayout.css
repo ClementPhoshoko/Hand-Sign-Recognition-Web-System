@@ -6,24 +6,33 @@
 .auth-shell {
 	position: fixed;
 	inset: 0;
-	background-size: cover;
-	background-position: center;
-	background-repeat: no-repeat;
 	display: flex;
 	align-items: flex-start;
 	justify-content: center;
+	background-size: cover;
+	background-position: center;
+	background-repeat: no-repeat;
 	padding-top: 8vh;
 	padding-bottom: 8vh;
-	overflow-y: auto;
 	box-sizing: border-box;
+	z-index: 100; /* Ensure it covers everything */
+	
+	/* Hide scrollbar while allowing scroll if content grows */
+	overflow-y: auto;
+	scrollbar-width: none; /* Firefox */
+	-ms-overflow-style: none; /* IE/Edge */
+}
+
+.auth-shell::-webkit-scrollbar {
+	display: none; /* Chrome, Safari, Opera */
 }
 
 .auth-shell::after {
 	content: '';
 	position: fixed;
 	inset: 0;
-	background: rgba(8, 10, 15, 0.45);
-	z-index: 0;
+	background: var(--auth-overlay);
+	z-index: -1;
 	pointer-events: none;
 }
 
