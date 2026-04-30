@@ -211,7 +211,7 @@ function DropFAQ() {
 /* ── Nav item config ─────────────────────────────────────────────── */
 const NAV_ITEMS = [
 	{ label: 'Live Translation', Drop: DropLiveTranslation, to: '/liveroom' },
-	{ label: 'Upload / Convert', Drop: DropUploadConvert },
+	{ label: 'Upload / Convert', Drop: DropUploadConvert, to: '/upload' },
 	{ label: 'How it Works', Drop: DropHowItWorks, wide: true },
 	{ label: 'FAQ', Drop: DropFAQ },
 ]

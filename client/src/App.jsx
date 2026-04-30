@@ -6,6 +6,7 @@ import Foot from './components/footer/Foot'
 import AuthLayout from './pages/auth/AuthLayout'
 import LiveroomLayout from './pages/liveroom/LiveroomLayout'
 import MeetingId from './pages/liveroom/meeting_id/MeetingId'
+import UploadLayout from './pages/upload/UploadLayout'
 import './App.css'
 
 function AppContent() {
@@ -25,6 +26,7 @@ function AppContent() {
           <Route path="/liveroom" element={<LiveroomLayout />} />
           <Route path="/liveroom/meeting" element={<MeetingId />} />
           <Route path="/liveroom/meeting/:meetingId" element={<MeetingId />} />
+          <Route path="/upload" element={<UploadLayout />} />
         </Routes>
       </main>
       {!hideNavFoot && <Foot />}
