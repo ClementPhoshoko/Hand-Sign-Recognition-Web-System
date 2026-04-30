@@ -11,7 +11,6 @@
 	align-items: center;
 	justify-content: center;
 	background: var(--shell);
-	overflow: hidden;
 	padding-top: calc(var(--nav-height, 0px) + var(--space-6));
 	padding-bottom: var(--space-6);
 }

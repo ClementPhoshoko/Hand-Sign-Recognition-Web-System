@@ -5,10 +5,8 @@
 .homepage-shell {
 	flex: 1;
 	position: relative;
-	overflow: hidden;
 	display: flex;
 	flex-direction: column;
-	min-height: calc(100vh - 80px); /* below nav */
 }
 
 /* Page content — sits above the canvas via z-index: 1 */
@@ -699,7 +697,7 @@
 ═══════════════════════════════════════════════════════════════ */
 
 .hp-canvas {
-	position: absolute;
+	position: fixed;
 	inset: 0;
 	pointer-events: none;
 	z-index: 0;

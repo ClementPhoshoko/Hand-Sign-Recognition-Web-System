@@ -14,19 +14,17 @@ function App() {
   return (
     <BrowserRouter>
       <div className="app-root" data-theme={theme}>
-        <Routes>
-          <Route path="/" element={
-            <>
-              <Nav />
-              <Homepage />
-              <Foot />
-            </>
-          } />
-          <Route path="/auth" element={<AuthLayout />} />
-          <Route path="/liveroom" element={<LiveroomLayout />} />
-          <Route path="/liveroom/meeting" element={<MeetingId />} />
-          <Route path="/liveroom/meeting/:meetingId" element={<MeetingId />} />
-        </Routes>
+        <Nav />
+        <main className="app-main">
+          <Routes>
+            <Route path="/" element={<Homepage />} />
+            <Route path="/auth" element={<AuthLayout />} />
+            <Route path="/liveroom" element={<LiveroomLayout />} />
+            <Route path="/liveroom/meeting" element={<MeetingId />} />
+            <Route path="/liveroom/meeting/:meetingId" element={<MeetingId />} />
+          </Routes>
+        </main>
+        <Foot />
       </div>
     </BrowserRouter>
   )
