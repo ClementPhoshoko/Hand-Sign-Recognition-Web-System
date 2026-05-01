@@ -29,8 +29,8 @@ function AppContent() {
           <Route path="/liveroom/meeting" element={<MeetingId />} />
           <Route path="/liveroom/meeting/:meetingId" element={<MeetingId />} />
           <Route path="/upload" element={<UploadLayout />} />
-          <Route path="/upload/videoExtracts" element={<Video_Extracts />} />
-          <Route path="/upload/photoExtracts" element={<Photo_Extracts />} />
+          <Route path="/upload/videoExtracts/:videoId?" element={<Video_Extracts />} />
+          <Route path="/upload/photoExtracts/:imageId?" element={<Photo_Extracts />} />
         </Routes>
       </main>
       {!hideNavFoot && <Foot />}
