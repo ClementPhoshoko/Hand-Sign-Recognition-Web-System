@@ -1,0 +1,44 @@
+# Tour Component - How it works & how to use
+
+## How it works
+- Uses React Joyride library under the hood
+- Wraps Joyride with our Liquid Glass Design System styling
+- Shows guided tooltips that highlight elements on the page
+
+## Files
+- `Tour.jsx` - Main component that uses React Joyride
+- `TourButton.jsx` - Button to trigger the tour
+- `Tour.css` - Styling for the tour (uses design tokens)
+- `index.js` - Exports both components
+
+## How to use
+1. Import TourButton:
+   ```jsx
+   import { TourButton } from './components/tour'
+   ```
+
+2. Define your tour steps:
+   ```jsx
+   const tourSteps = [
+     {
+       target: '#element-id',  // CSS selector of element to highlight
+       content: (
+         <div>
+           <h3>Title</h3>
+           <p>Description here</p>
+         </div>
+       ),
+       disableBeacon: true,  // Hide pulsing beacon
+       placement: 'bottom',  // Where tooltip shows (top/bottom/left/right)
+     }
+   ]
+   ```
+
+3. Add the button to your UI:
+   ```jsx
+   <TourButton 
+     steps={tourSteps} 
+     buttonText="Start Tour" 
+     buttonIcon={<YourIcon />}
+   />
+   ```

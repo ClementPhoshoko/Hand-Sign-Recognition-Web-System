@@ -1,0 +1,366 @@
+.tour-overlay {
+	position: fixed;
+	inset: 0;
+	background: rgba(0, 0, 0, 0.65);
+	z-index: 9999;
+	animation: fadeIn 0.2s ease-out;
+}
+
+@keyframes fadeIn {
+	from { opacity: 0; }
+	to { opacity: 1; }
+}
+
+.tour-highlight {
+	position: absolute;
+	border-radius: 16px;
+	border: 2px solid var(--orb-halo);
+	box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.65), 0 0 30px var(--orb-halo);
+	pointer-events: none;
+	animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+	0%, 100% { box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.65), 0 0 20px rgba(176, 214, 255, 0.3); }
+	50% { box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.65), 0 0 40px rgba(176, 214, 255, 0.5); }
+}
+
+.tour-tooltip {
+	position: fixed;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	max-width: 420px;
+	width: 90vw;
+	padding: var(--space-6);
+	display: flex;
+	flex-direction: column;
+	gap: var(--space-4);
+	animation: slideUp 0.3s ease-out;
+	z-index: 10000;
+}
+
+@keyframes slideUp {
+	from {
+		opacity: 0;
+		transform: translate(-50%, -45%);
+	}
+	to {
+		opacity: 1;
+		transform: translate(-50%, -50%);
+	}
+}
+
+.tour-icon {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 48px;
+	height: 48px;
+	border-radius: var(--radius-full);
+	background: linear-gradient(135deg, var(--orb-primary), var(--orb-halo));
+	color: var(--shell);
+	font-size: 1.5rem;
+	flex-shrink: 0;
+}
+
+.tour-title {
+	margin: 0;
+	font-size: var(--text-xl);
+	font-weight: var(--font-bold);
+	color: var(--text-primary);
+	letter-spacing: -0.01em;
+}
+
+.tour-content {
+	margin: 0;
+	font-size: var(--text-sm);
+	line-height: var(--line-relaxed);
+	color: var(--text-secondary);
+}
+
+.tour-footer {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	padding-top: var(--space-2);
+	border-top: 1px solid var(--border-soft);
+}
+
+.tour-progress {
+	font-size: var(--text-xs);
+	color: var(--text-muted);
+	font-weight: var(--font-medium);
+	letter-spacing: 0.05em;
+	text-transform: uppercase;
+}
+
+.tour-buttons {
+	display: flex;
+	align-items: center;
+	gap: var(--space-3);
+}
+
+.tour-btn {
+	display: inline-flex;
+	align-items: center;
+	gap: var(--space-2);
+	padding: 8px 16px;
+	border-radius: var(--radius-full);
+	font-size: var(--text-sm);
+	font-weight: var(--font-semibold);
+	cursor: pointer;
+	transition: all var(--transition-base);
+	border: none;
+	outline: none;
+}
+
+.tour-btn--secondary {
+	background: transparent;
+	color: var(--text-muted);
+}
+
+.tour-btn--secondary:hover {
+	color: var(--text-secondary);
+}
+
+.tour-btn--ghost {
+	background: var(--glass-surface);
+	border: 1px solid var(--border-soft);
+	color: var(--text-primary);
+}
+
+.tour-btn--ghost:hover {
+	background: var(--glass-surface-strong);
+	border-color: var(--border-standard);
+	transform: translateY(-1px);
+}
+
+.tour-btn--primary {
+	background: var(--orb-primary);
+	color: var(--shell);
+	box-shadow: 0 4px 14px rgba(120, 170, 255, 0.35);
+}
+
+.tour-btn--primary:hover {
+	transform: translateY(-2px);
+	filter: brightness(1.08);
+	box-shadow: 0 8px 20px rgba(120, 170, 255, 0.45);
+}
+
+.tour-btn:active {
+	transform: translateY(0);
+}
+
+.tour-beacon-btn {
+	display: inline-flex;
+	align-items: center;
+	gap: var(--space-2);
+	padding: 10px 18px;
+	border-radius: var(--radius-full);
+	background: var(--glass-surface);
+	border: 1px solid var(--border-soft);
+	color: var(--text-secondary);
+	font-size: var(--text-sm);
+	font-weight: var(--font-medium);
+	cursor: pointer;
+	transition: all var(--transition-fast);
+	box-shadow: var(--glow-outer), var(--glow-inner);
+	position: relative;
+	overflow: visible;
+}
+
+.tour-beacon-btn::before {
+	content: '';
+	position: absolute;
+	inset: -4px;
+	border-radius: inherit;
+	border: 2px solid var(--orb-halo);
+	opacity: 0.6;
+	animation: beaconPulseOuter 2s ease-in-out infinite;
+	pointer-events: none;
+}
+
+.tour-beacon-btn::after {
+	content: '';
+	position: absolute;
+	inset: 0;
+	border-radius: inherit;
+	background: linear-gradient(135deg, var(--orb-primary), var(--orb-halo));
+	opacity: 0;
+	transition: opacity var(--transition-fast);
+	z-index: -1;
+}
+
+.tour-beacon-btn:hover {
+	background: var(--glass-surface-strong);
+	border-color: var(--orb-halo);
+	color: var(--orb-halo);
+	transform: translateY(-1px) scale(1.02);
+	box-shadow: 
+		0 0 0 1px var(--orb-halo),
+		0 0 20px rgba(176, 214, 255, 0.4),
+		0 0 40px rgba(176, 214, 255, 0.2);
+}
+
+.tour-beacon-btn:hover::after {
+	opacity: 0.1;
+}
+
+.tour-beacon-icon {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	color: var(--orb-halo);
+}
+
+.tour-beacon-label {
+	font-weight: var(--font-semibold);
+}
+
+@keyframes beaconPulseOuter {
+	0%, 100% {
+		transform: scale(1);
+		opacity: 0.6;
+	}
+	50% {
+		transform: scale(1.1);
+		opacity: 0.3;
+	}
+}
+
+
+
+.react-joyride__floater {
+	z-index: 10000 !important;
+}
+
+.react-joyride__tooltip {
+	background: var(--glass-inner-plate) !important;
+	backdrop-filter: var(--glass-blur) !important;
+	-webkit-backdrop-filter: var(--glass-blur) !important;
+	border: none !important;
+	border-radius: var(--border-radius) !important;
+	box-shadow: 
+		var(--glow-outer),
+		var(--glow-inner),
+		var(--shadow-deep) !important;
+	background-image: var(--glass-gradient) !important;
+	padding: var(--space-5) !important;
+}
+
+.react-joyride__tooltip::before {
+	content: '';
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	height: 1px;
+	background: linear-gradient(90deg, transparent, var(--top-highlight), transparent);
+}
+
+.react-joyride__tooltip h1,
+.react-joyride__tooltip h2,
+.react-joyride__tooltip h3 {
+	color: var(--text-primary) !important;
+	font-weight: var(--font-bold) !important;
+	font-size: var(--text-lg) !important;
+	margin: 0 0 var(--space-2) 0 !important;
+}
+
+.react-joyride__tooltip p,
+.react-joyride__tooltip div {
+	color: var(--text-secondary) !important;
+	font-size: var(--text-sm) !important;
+	line-height: var(--line-relaxed) !important;
+	margin: 0 !important;
+}
+
+.react-joyride__button {
+	display: inline-flex !important;
+	align-items: center !important;
+	gap: var(--space-2) !important;
+	padding: 8px 16px !important;
+	border-radius: var(--radius-full) !important;
+	font-size: var(--text-sm) !important;
+	font-weight: var(--font-semibold) !important;
+	cursor: pointer !important;
+	transition: all var(--transition-fast) !important;
+	border: 1px solid transparent !important;
+	background: transparent !important;
+	color: var(--text-secondary) !important;
+}
+
+.react-joyride__button:hover {
+	background: var(--glass-surface) !important;
+	border-color: var(--border-soft) !important;
+	color: var(--orb-halo) !important;
+	transform: translateY(-1px) !important;
+}
+
+.react-joyride__button[data-testid="button-close"] {
+	color: var(--text-muted) !important;
+}
+
+.react-joyride__button[data-testid="button-close"]:hover {
+	color: var(--text-secondary) !important;
+}
+
+.react-joyride__button[data-testid="button-primary"],
+.react-joyride__button[data-testid="button-back"] {
+	color: var(--orb-halo) !important;
+}
+
+.react-joyride__button[data-testid="button-primary"]:hover,
+.react-joyride__button[data-testid="button-back"]:hover {
+	background: var(--glass-surface) !important;
+	border-color: var(--border-soft) !important;
+}
+
+.react-joyride__button svg {
+	width: 16px !important;
+	height: 16px !important;
+}
+
+.react-joyride__spotlight {
+	border: 2px solid var(--orb-halo) !important;
+	box-shadow: 0 0 30px var(--orb-halo) !important;
+}
+
+.react-joyride__beacon {
+	background: var(--orb-primary) !important;
+	box-shadow: 
+		0 0 0 4px rgba(110, 158, 255, 0.25), 
+		0 0 0 8px rgba(110, 158, 255, 0.12),
+		0 0 20px rgba(176, 214, 255, 0.4) !important;
+	animation: beaconPulse 2s ease-in-out infinite !important;
+}
+
+@keyframes beaconPulse {
+	0%, 100% {
+		transform: scale(1);
+		box-shadow: 
+			0 0 0 4px rgba(110, 158, 255, 0.25), 
+			0 0 0 8px rgba(110, 158, 255, 0.12),
+			0 0 20px rgba(176, 214, 255, 0.3);
+	}
+	50% {
+		transform: scale(1.1);
+		box-shadow: 
+			0 0 0 6px rgba(110, 158, 255, 0.3), 
+			0 0 0 12px rgba(110, 158, 255, 0.15),
+			0 0 30px rgba(176, 214, 255, 0.5);
+	}
+}
+
+.react-joyride__progress {
+	color: var(--text-muted) !important;
+	font-size: var(--text-xs) !important;
+	font-weight: var(--font-medium) !important;
+	letter-spacing: 0.05em !important;
+	text-transform: uppercase !important;
+}
+
+.react-joyride__arrow {
+	color: var(--orb-halo) !important;
+}
