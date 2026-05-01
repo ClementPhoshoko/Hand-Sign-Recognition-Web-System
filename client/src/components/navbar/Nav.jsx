@@ -1,6 +1,7 @@
 import { useState, useRef } from 'react'
 import { Link } from 'react-router-dom'
 import './Nav.css'
+import logo from '../../assets/circular_tech_logo_with_circuit_lines.png'
 
 /* ── Small chevron that rotates when open ───────────────────────── */
 function Caret({ open }) {
@@ -236,7 +237,7 @@ function Nav() {
 			<nav className="gl-nav" aria-label="Main navigation">
 				<div className="gl-nav-left">
 					<div className="gl-nav-icon" aria-hidden="true">
-						GL
+						<img src={logo} alt="GL Web System Logo" />
 					</div>
 					<div className="gl-nav-title" aria-label="Website name">
 						GL-Web System

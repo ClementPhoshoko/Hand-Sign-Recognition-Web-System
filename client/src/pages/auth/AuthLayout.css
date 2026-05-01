@@ -246,10 +246,10 @@
 
 /* ── Avatar ──────────────────────────────────────────────────────── */
 .auth-avatar {
-	width: 64px;
-	height: 64px;
+	width: 96px;
+	height: 96px;
 	border-radius: 999px;
-	background: linear-gradient(135deg, var(--avatar-bg-start), var(--avatar-bg-end));
+	background: var(--strong-white);
 	color: var(--avatar-text-color);
 	font-size: var(--text-lg);
 	font-weight: var(--font-bold);
@@ -260,12 +260,19 @@
 	flex-shrink: 0;
 	box-shadow: 0 0 0 3px var(--border-soft), var(--shadow-glow);
 	user-select: none;
+	overflow: hidden;
+}
+
+.auth-avatar img {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
 }
 
 /* ── System name ─────────────────────────────────────────────────── */
 .auth-system-name {
 	margin: 0;
-	font-size: var(--text-base);
+	font-size: var(--space-6);
 	font-weight: var(--font-semibold);
 	color: var(--text-primary);
 	letter-spacing: 0.03em;

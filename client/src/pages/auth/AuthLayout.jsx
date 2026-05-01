@@ -1,5 +1,6 @@
 import { useState, useRef, useLayoutEffect } from 'react'
 import bgImg from '../../assets/avatars/hello_from_the_video_call_1.png'
+import logo from '../../assets/circular_tech_logo_with_circuit_lines.png'
 import Breadcrumbs from '../../components/breadcrumbs/Breadcrumbs'
 import Login from './login/Login'
 import Register from './register/Register'
@@ -194,7 +195,9 @@ function AuthLayout() {
 				<div className="auth-card" role="main" ref={cardRef} onTransitionEnd={handleCardTransitionEnd}>
 
 				{/* Avatar */}
-				<div className="auth-avatar" aria-hidden="true">GL</div>
+				<div className="auth-avatar" aria-hidden="true">
+					<img src={logo} alt="GL Web System Logo" />
+				</div>
 
 				{/* System name */}
 				<p className="auth-system-name">GL Web System</p>

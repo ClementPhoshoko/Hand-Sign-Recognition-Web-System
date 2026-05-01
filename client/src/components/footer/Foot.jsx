@@ -1,4 +1,5 @@
 import './Foot.css'
+import logo from '../../assets/circular_tech_logo_with_circuit_lines.png'
 
 const FOOTER_LINKS = [
 	{
@@ -24,7 +25,9 @@ function Foot() {
 
 				{/* Brand column */}
 				<div className="gl-foot-brand">
-					<div className="gl-foot-logo" aria-hidden="true">GL</div>
+					<div className="gl-foot-logo" aria-hidden="true">
+						<img src={logo} alt="GL Web System Logo" />
+					</div>
 					<p className="gl-foot-name">Gesture to Linguistic<br />Web System</p>
 					<address className="gl-foot-address" aria-label="Location">
 						<svg viewBox="0 0 16 16" aria-hidden="true" focusable="false">
