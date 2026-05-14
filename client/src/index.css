@@ -38,6 +38,7 @@ body {
 body {
   background-color: var(--bg-level-0);
   color: var(--text-primary);
+  overflow-x: hidden;
   transition: background-color var(--transition-base),
     color var(--transition-base);
 }

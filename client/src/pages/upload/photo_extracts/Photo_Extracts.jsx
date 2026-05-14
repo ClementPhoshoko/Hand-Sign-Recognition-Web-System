@@ -35,25 +35,25 @@ function Photo_Extracts() {
 				</header>
 
 				<div className="photo-extracts-body">
-					<div className="photo-extracts-card">
-						<div className="photo-extracts-card-header">
+					<article className="photo-extracts-card">
+						<header className="photo-extracts-card-header">
 							<div className="photo-extracts-card-header-left">
-								<h3 className="photo-extracts-section-title">Recognition Result</h3>
-								<span className="photo-extracts-id">{recognitionResult.imageId}</span>
+								<h3 className="photo-extracts-section-title">Analysis Report</h3>
+								<span className="photo-extracts-id">ID: {recognitionResult.imageId}</span>
 							</div>
 							<div className="photo-extracts-actions">
-								<button className="photo-extracts-action-btn">
-									<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+								<button className="photo-extracts-action-btn" aria-label="Download analysis report">
+									<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
 										<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/>
 									</svg>
-									Download Report
+									Export PDF
 								</button>
 							</div>
-						</div>
+						</header>
 
-						<div className="photo-extracts-result-section">
+						<section className="photo-extracts-result-section">
 							<div className="photo-extracts-badge">
-								<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+								<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" aria-hidden="true">
 									<path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
 								</svg>
 								Detected Meaning
@@ -71,25 +71,25 @@ function Photo_Extracts() {
 								</div>
 							</div>
 
-							<div className="photo-extracts-divider" />
+							<div className="photo-extracts-divider" aria-hidden="true" />
 
 							<div className="photo-extracts-description">
-								<h3 className="photo-extracts-section-title">Description</h3>
+								<h3 className="photo-extracts-section-title">Visual Breakdown</h3>
 								<p>{recognitionResult.description}</p>
 							</div>
 
-							<div className="photo-extracts-divider" />
+							<div className="photo-extracts-divider" aria-hidden="true" />
 
 							<div className="photo-extracts-tags-section">
-								<h3 className="photo-extracts-section-title">Tags</h3>
+								<h3 className="photo-extracts-section-title">Contextual Tags</h3>
 								<div className="photo-extracts-tags">
 									{recognitionResult.tags.map(tag => (
 										<span key={tag} className="photo-extracts-tag">{tag}</span>
 									))}
 								</div>
 							</div>
-						</div>
-					</div>
+						</section>
+					</article>
 				</div>
 			</div>
 		</div>

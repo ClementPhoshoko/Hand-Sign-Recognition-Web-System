@@ -1,0 +1,259 @@
+.gl-preview-card {
+	position: fixed;
+	width: 240px; /* Slightly wider for the extended description */
+	background: var(--glass-inner-plate-dense);
+	border: 1px solid var(--border-highlight);
+	border-radius: 14px;
+	backdrop-filter: var(--glass-blur);
+	-webkit-backdrop-filter: var(--glass-blur);
+	box-shadow: 
+		var(--glow-outer),
+		var(--glow-inner),
+		var(--shadow-deep);
+	padding: var(--space-3);
+	z-index: 1000;
+	pointer-events: auto;
+	transform-origin: top left;
+	transition: 
+		top 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+		left 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+		opacity 0.3s ease,
+		height 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+	animation: previewSlideDown 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;
+	display: flex;
+	flex-direction: column;
+	gap: var(--space-3);
+	min-height: 40px;
+}
+
+.gl-preview-card.is-loading {
+	justify-content: flex-start;
+	align-items: flex-start;
+	min-height: 40px;
+	background: none !important;
+	border: none !important;
+	backdrop-filter: none !important;
+	-webkit-backdrop-filter: none !important;
+	box-shadow: none !important;
+	padding: 0;
+}
+
+.gl-preview-card.is-loading .gl-preview-card__loader {
+	flex-direction: row;
+	padding: 0; /* No background/padding for loader as requested */
+	background: none;
+	border: none;
+	box-shadow: none;
+	backdrop-filter: none;
+}
+
+.gl-preview-card.is-loading .gl-preview-card__glow {
+	display: none;
+}
+
+.gl-preview-card__loader {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	gap: var(--space-2);
+	animation: loaderFadeIn 0.3s ease-out both;
+}
+
+@keyframes loaderFadeIn {
+	from { opacity: 0; transform: scale(0.9); }
+	to { opacity: 1; transform: scale(1); }
+}
+
+.gl-preview-card__spinner {
+	width: 18px;
+	height: 18px;
+}
+
+.gl-preview-card__spinner svg {
+	animation: rotate 2s linear infinite;
+	width: 100%;
+	height: 100%;
+}
+
+.gl-preview-card__spinner circle {
+	stroke: var(--orb-halo);
+	stroke-linecap: round;
+	animation: dash 1.5s ease-in-out infinite;
+}
+
+@keyframes rotate {
+	100% { transform: rotate(360deg); }
+}
+
+@keyframes dash {
+	0% { stroke-dasharray: 1, 150; stroke-dashoffset: 0; }
+	50% { stroke-dasharray: 90, 150; stroke-dashoffset: -35; }
+	100% { stroke-dasharray: 90, 150; stroke-dashoffset: -124; }
+}
+
+@keyframes previewSlideDown {
+	from { 
+		opacity: 0; 
+		transform: translateY(-8px) scaleY(0.95);
+		clip-path: inset(0 0 100% 0);
+	}
+	to { 
+		opacity: 1; 
+		transform: translateY(0) scaleY(1);
+		clip-path: inset(0 0 0 0);
+	}
+}
+
+.gl-preview-card__glow {
+	position: absolute;
+	inset: 0;
+	background: radial-gradient(circle at top left, rgba(120, 170, 255, 0.15), transparent 70%);
+	border-radius: inherit;
+	pointer-events: none;
+}
+
+.gl-preview-card__top {
+	display: flex;
+	justify-content: flex-end; /* Move badge to top right */
+	margin-bottom: -10px;
+	position: relative;
+	z-index: 2;
+}
+
+.gl-preview-card__badge {
+	display: inline-flex;
+	align-items: center;
+	gap: 3px;
+	font-size: 8px;
+	font-weight: var(--font-bold);
+	color: var(--orb-halo);
+	text-transform: uppercase;
+	letter-spacing: 0.05em;
+	background: rgba(120, 170, 255, 0.1);
+	padding: 2px 6px;
+	border-radius: var(--radius-full);
+	border: 1px solid rgba(120, 170, 255, 0.2);
+}
+
+.gl-preview-card__header {
+	display: flex;
+	align-items: center;
+	gap: var(--space-2);
+	position: relative;
+	z-index: 1;
+}
+
+.gl-preview-card__avatar-wrap {
+	position: relative;
+}
+
+.gl-preview-card__avatar {
+	width: 44px; /* Smaller avatar */
+	height: 44px;
+	border-radius: 50%;
+	border: 1.5px solid var(--border-soft);
+	overflow: visible; /* Changed to visible for speaking effect */
+	background: var(--glass-surface-strong);
+	box-shadow: var(--shadow-soft);
+	position: relative;
+	transition: border-color var(--transition-fast);
+}
+
+.gl-preview-card__avatar img {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	border-radius: 50%;
+	position: relative;
+	z-index: 2;
+}
+
+/* Preview Card Speaking Effect */
+.gl-preview-card__avatar.is-speaking::before,
+.gl-preview-card__avatar.is-speaking::after {
+	content: '';
+	position: absolute;
+	inset: -1px;
+	border-radius: 50%;
+	background: var(--orb-halo);
+	opacity: 0;
+	z-index: 1;
+	animation: speakingRipple 2s cubic-bezier(0, 0, 0.2, 1) infinite;
+}
+
+.gl-preview-card__avatar.is-speaking::after {
+	animation-delay: 1s;
+}
+
+.gl-preview-card__avatar.is-speaking {
+	border-color: var(--orb-halo);
+}
+
+@keyframes speakingRipple {
+	0% {
+		transform: scale(1);
+		opacity: 0.6;
+	}
+	100% {
+		transform: scale(1.6);
+		opacity: 0;
+	}
+}
+
+.gl-preview-card__status-indicator {
+	position: absolute;
+	bottom: 1px;
+	right: 1px;
+	width: 10px;
+	height: 10px;
+	border-radius: 50%;
+	border: 2px solid var(--shell-elevated);
+}
+
+.gl-preview-card__status-indicator.is-online,
+.gl-preview-card__status-indicator.is-live {
+	background: #50c88c;
+	box-shadow: 0 0 8px rgba(80, 200, 140, 0.5);
+}
+
+.gl-preview-card__status-indicator.is-muted,
+.gl-preview-card__status-indicator.is-offline {
+	background: var(--text-muted);
+}
+
+.gl-preview-card__identity {
+	display: flex;
+	flex-direction: column;
+	gap: 1px;
+}
+
+.gl-preview-card__name {
+	margin: 0;
+	font-size: var(--text-sm);
+	font-weight: var(--font-bold);
+	color: var(--text-primary);
+	letter-spacing: -0.01em;
+}
+
+.gl-preview-card__role {
+	font-size: 10px;
+	color: var(--orb-halo);
+	font-weight: var(--font-semibold);
+	text-transform: uppercase;
+	letter-spacing: 0.05em;
+}
+
+.gl-preview-card__body {
+	position: relative;
+	z-index: 1;
+	display: flex;
+	flex-direction: column;
+}
+
+.gl-preview-card__description {
+	margin: 0;
+	font-size: 11px;
+	line-height: 1.4;
+	color: var(--text-secondary);
+	opacity: 0.9;
+}

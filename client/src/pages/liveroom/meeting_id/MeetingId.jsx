@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import useMediaDevices from '../../../hooks/useMediaDevices'
 import DevicePicker from '../DevicePicker'
 import PrimaryModal from '../../../components/modals/primary/PrimaryModal'
+import PreviewCard from './preview_card/PreviewCard'
 import './MeetingId.css'
 
 function MeetingId() {
@@ -35,6 +36,10 @@ function MeetingId() {
 	const [activePanel, setActivePanel] = useState('people') // 'people' | 'info' | 'transcript'
 	const [shouldAutoScroll, setShouldAutoScroll] = useState(true)
 	const [showLeaveConfirm, setShowLeaveConfirm] = useState(false)
+	const [hoveredParticipant, setHoveredParticipant] = useState(null)
+	const [previewPosition, setPreviewPosition] = useState({ x: 0, y: 0 })
+	const hoverTimeoutRef = useRef(null)
+	const dwellTimeoutRef = useRef(null)
 	const participantsPerPage = 6
 
 	const scrollRef = useRef(null) // Ref for the scrollable body container
@@ -164,25 +169,25 @@ function MeetingId() {
 
 	const participants = useMemo(
 		() => [
-			{ id: 'cam-host', name: 'Host Camera', initials: 'HC', role: 'Presenter', status: 'Live', sharing: false, isSpeaking: isHostSpeaking },
-			{ id: 'cam-1', name: 'Lebo M.', initials: 'LM', role: 'Participant', status: 'Online', sharing: false, isSpeaking: false },
-			{ id: 'cam-2', name: 'Ana K.', initials: 'AK', role: 'Participant', status: 'Muted', sharing: false, isSpeaking: false },
-			{ id: 'cam-3', name: 'David N.', initials: 'DN', role: 'Participant', status: 'Online', sharing: false, isSpeaking: true },
-			{ id: 'cam-4', name: 'Nia S.', initials: 'NS', role: 'Participant', status: 'Online', sharing: false, isSpeaking: false },
-			{ id: 'cam-5', name: 'Marcus T.', initials: 'MT', role: 'Participant', status: 'Muted', sharing: false, isSpeaking: false },
-			{ id: 'cam-6', name: 'Sarah J.', initials: 'SJ', role: 'Participant', status: 'Online', sharing: false, isSpeaking: false },
-			{ id: 'cam-7', name: 'James W.', initials: 'JW', role: 'Participant', status: 'Muted', sharing: false, isSpeaking: false },
-			{ id: 'cam-8', name: 'Elena R.', initials: 'ER', role: 'Participant', status: 'Online', sharing: false, isSpeaking: false },
-			{ id: 'cam-9', name: 'Frank G.', initials: 'FG', role: 'Participant', status: 'Online', sharing: false, isSpeaking: false },
-			{ id: 'cam-10', name: 'Grace H.', initials: 'GH', role: 'Participant', status: 'Online', sharing: false, isSpeaking: false },
-			{ id: 'cam-11', name: 'Ivan I.', initials: 'II', role: 'Participant', status: 'Online', sharing: false, isSpeaking: false },
-			{ id: 'cam-12', name: 'Judy K.', initials: 'JK', role: 'Participant', status: 'Online', sharing: false, isSpeaking: false },
-			{ id: 'cam-13', name: 'Kevin L.', initials: 'KL', role: 'Participant', status: 'Online', sharing: false, isSpeaking: false },
-			{ id: 'cam-14', name: 'Mia N.', initials: 'MN', role: 'Participant', status: 'Online', sharing: false, isSpeaking: false },
-			{ id: 'cam-15', name: 'Oscar P.', initials: 'OP', role: 'Participant', status: 'Online', sharing: false, isSpeaking: false },
-			{ id: 'cam-16', name: 'Quinn R.', initials: 'QR', role: 'Participant', status: 'Online', sharing: false, isSpeaking: false },
-			{ id: 'cam-17', name: 'Sam T.', initials: 'ST', role: 'Participant', status: 'Online', sharing: false, isSpeaking: false },
-			{ id: 'cam-18', name: 'Uma V.', initials: 'UV', role: 'Participant', status: 'Online', sharing: false, isSpeaking: false },
+			{ id: 'cam-host', name: 'Host Camera', initials: 'HC', role: 'Presenter', status: 'Live', sharing: false, isSpeaking: isHostSpeaking, avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Host' },
+			{ id: 'cam-1', name: 'Lebo M.', initials: 'LM', role: 'Participant', status: 'Online', sharing: false, isSpeaking: false, avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Lebo' },
+			{ id: 'cam-2', name: 'Ana K.', initials: 'AK', role: 'Participant', status: 'Muted', sharing: false, isSpeaking: false, avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Ana' },
+			{ id: 'cam-3', name: 'David N.', initials: 'DN', role: 'Participant', status: 'Online', sharing: false, isSpeaking: true, avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=David' },
+			{ id: 'cam-4', name: 'Nia S.', initials: 'NS', role: 'Participant', status: 'Online', sharing: false, isSpeaking: false, avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Nia' },
+			{ id: 'cam-5', name: 'Marcus T.', initials: 'MT', role: 'Participant', status: 'Muted', sharing: false, isSpeaking: false, avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Marcus' },
+			{ id: 'cam-6', name: 'Sarah J.', initials: 'SJ', role: 'Participant', status: 'Online', sharing: false, isSpeaking: false, avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Sarah' },
+			{ id: 'cam-7', name: 'James W.', initials: 'JW', role: 'Participant', status: 'Muted', sharing: false, isSpeaking: false, avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=James' },
+			{ id: 'cam-8', name: 'Elena R.', initials: 'ER', role: 'Participant', status: 'Online', sharing: false, isSpeaking: false, avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Elena' },
+			{ id: 'cam-9', name: 'Frank G.', initials: 'FG', role: 'Participant', status: 'Online', sharing: false, isSpeaking: false, avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Frank' },
+			{ id: 'cam-10', name: 'Grace H.', initials: 'GH', role: 'Participant', status: 'Online', sharing: false, isSpeaking: false, avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Grace' },
+			{ id: 'cam-11', name: 'Ivan I.', initials: 'II', role: 'Participant', status: 'Online', sharing: false, isSpeaking: false, avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Ivan' },
+			{ id: 'cam-12', name: 'Judy K.', initials: 'JK', role: 'Participant', status: 'Online', sharing: false, isSpeaking: false, avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Judy' },
+			{ id: 'cam-13', name: 'Kevin L.', initials: 'KL', role: 'Participant', status: 'Online', sharing: false, isSpeaking: false, avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Kevin' },
+			{ id: 'cam-14', name: 'Mia N.', initials: 'MN', role: 'Participant', status: 'Online', sharing: false, isSpeaking: false, avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Mia' },
+			{ id: 'cam-15', name: 'Oscar P.', initials: 'OP', role: 'Participant', status: 'Online', sharing: false, isSpeaking: false, avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Oscar' },
+			{ id: 'cam-16', name: 'Quinn R.', initials: 'QR', role: 'Participant', status: 'Online', sharing: false, isSpeaking: false, avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Quinn' },
+			{ id: 'cam-17', name: 'Sam T.', initials: 'ST', role: 'Participant', status: 'Online', sharing: false, isSpeaking: false, avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Sam' },
+			{ id: 'cam-18', name: 'Uma V.', initials: 'UV', role: 'Participant', status: 'Online', sharing: false, isSpeaking: false, avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Uma' },
 		],
 		[isHostSpeaking]
 	)
@@ -194,11 +199,23 @@ function MeetingId() {
 		)
 	}, [participants, searchQuery])
 
-	const totalPages = Math.ceil(filteredParticipants.length / participantsPerPage)
+	const sortedParticipants = useMemo(() => {
+		const list = [...filteredParticipants]
+		if (pinnedParticipant) {
+			const pinnedIdx = list.findIndex(p => p.name === pinnedParticipant)
+			if (pinnedIdx > -1) {
+				const [pinnedItem] = list.splice(pinnedIdx, 1)
+				return [pinnedItem, ...list]
+			}
+		}
+		return list
+	}, [filteredParticipants, pinnedParticipant])
+
+	const totalPages = Math.ceil(sortedParticipants.length / participantsPerPage)
 	const displayedParticipants = useMemo(() => {
 		const start = (currentPage - 1) * participantsPerPage
-		return filteredParticipants.slice(start, start + participantsPerPage)
-	}, [filteredParticipants, currentPage, participantsPerPage])
+		return sortedParticipants.slice(start, start + participantsPerPage)
+	}, [sortedParticipants, currentPage, participantsPerPage])
 
 	// Reset to page 1 when search changes
 	useEffect(() => {
@@ -698,25 +715,71 @@ function MeetingId() {
 									))}
 								</div>
 							) : (
-								(isGridMode ? filteredParticipants : displayedParticipants).map((person) => {
+								(isGridMode ? sortedParticipants : displayedParticipants).map((person) => {
 									const isPinned = person.name === pinnedParticipant
 									return (
-										<article key={person.id} className={`gl-person-card${isPinned ? ' is-pinned' : ''}`}>
+										<article 
+											key={person.id} 
+											className={`gl-person-card${isPinned ? ' is-pinned' : ''}`}
+											onMouseEnter={() => {
+												if (hoverTimeoutRef.current) clearTimeout(hoverTimeoutRef.current)
+											}}
+											onMouseMove={(e) => {
+												if (dwellTimeoutRef.current) clearTimeout(dwellTimeoutRef.current)
+												
+												const clientX = e.clientX
+												const clientY = e.clientY
+
+												// Only trigger after the cursor "rests" (stops moving) for 1.2 seconds
+												dwellTimeoutRef.current = setTimeout(() => {
+													// Intelligent positioning: open at current rest point with boundary awareness
+													const cardWidth = 240
+													const cardHeight = 200
+													
+													let x = clientX + 15
+													let y = clientY + 15
+													
+													if (x + cardWidth > window.innerWidth) x = clientX - cardWidth - 15
+													if (y + cardHeight > window.innerHeight) y = clientY - cardHeight - 15
+
+													setPreviewPosition({ x, y })
+													setHoveredParticipant(person)
+												}, 1200)
+											}}
+											onMouseLeave={() => {
+												if (dwellTimeoutRef.current) clearTimeout(dwellTimeoutRef.current)
+												hoverTimeoutRef.current = setTimeout(() => {
+													setHoveredParticipant(null)
+												}, 100)
+											}}
+										>
 											<div className="gl-person-card__left">
 												<div className={`gl-person-card__avatar${person.isSpeaking ? ' is-speaking' : ''}`}>
-													{person.initials}
+													<img src={person.avatar} alt={person.name} draggable="false" />
 												</div>
-												<div>
+												<div className="gl-person-card__info">
 													<p className="gl-person-card__name">{person.name}</p>
 													<p className="gl-person-card__meta">{person.role} · {person.status}</p>
 												</div>
 											</div>
 											<button
 												type="button"
-												className="gl-person-card__pin"
-												onClick={() => setPinnedParticipant(person.name)}
+												className={`gl-person-card__pin${isPinned ? ' is-active' : ''}`}
+												onClick={() => {
+													setPinnedParticipant(isPinned ? null : person.name)
+													if (!isPinned) {
+														setLayoutMode('stage')
+														setIsAutoLayout(false)
+														// Reset page to 1 so the pinned person is visible at the top
+														setCurrentPage(1)
+													}
+												}}
+												aria-label={isPinned ? 'Unpin participant' : 'Pin participant'}
 											>
-												{isPinned ? 'Pinned' : 'Pin'}
+												<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+													<line x1="12" y1="17" x2="12" y2="22"></line>
+													<path d="M5 17h14v-1.76a2 2 0 0 0-1.11-1.79l-1.79-.9A2 2 0 0 1 15 10.76V6a3 3 0 0 0-3-3 3 3 0 0 0-3 3v4.76a2 2 0 0 1-1.1 1.79l-1.79.9A2 2 0 0 0 5 15.24V17z"></path>
+												</svg>
 											</button>
 										</article>
 									)
@@ -771,6 +834,22 @@ function MeetingId() {
 				onSecondOption={handleCancelLeave}
 				onClose={handleCancelLeave}
 			/>
+
+			{hoveredParticipant && (
+				<PreviewCard 
+					key={hoveredParticipant.id}
+					participant={hoveredParticipant} 
+					position={previewPosition} 
+					onMouseEnter={() => {
+						if (hoverTimeoutRef.current) clearTimeout(hoverTimeoutRef.current)
+					}}
+					onMouseLeave={() => {
+						hoverTimeoutRef.current = setTimeout(() => {
+							setHoveredParticipant(null)
+						}, 100)
+					}}
+				/>
+			)}
 		</div>
 	)
 }
