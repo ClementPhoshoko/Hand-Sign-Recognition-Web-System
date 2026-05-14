@@ -14,7 +14,7 @@ function PreviewCard({ participant, position, onMouseEnter, onMouseLeave }) {
 
 	if (!participant) return null
 
-	const { name, avatar, role, status, isSpeaking } = participant
+	const { name, avatar, role, status, isSpeaking, isVerified } = participant
 
 	return (
 		<div 
@@ -39,12 +39,21 @@ function PreviewCard({ participant, position, onMouseEnter, onMouseLeave }) {
 			) : (
 				<>
 					<div className="gl-preview-card__top">
-						<div className="gl-preview-card__badge">
-							<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" aria-hidden="true">
-								<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
-							</svg>
-							Verified
-						</div>
+						{isVerified ? (
+							<div className="gl-preview-card__badge is-verified">
+								<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" aria-hidden="true">
+									<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+								</svg>
+								Verified
+							</div>
+						) : (
+							<div className="gl-preview-card__badge is-unverified">
+								<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" aria-hidden="true">
+									<circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+								</svg>
+								Not Verified
+							</div>
+						)}
 					</div>
 
 					<div className="gl-preview-card__header">
@@ -66,6 +75,11 @@ function PreviewCard({ participant, position, onMouseEnter, onMouseLeave }) {
 							{role === 'Presenter' || role === 'Host' 
 								? `${name} is the host of this meeting, responsible for coordinating the session, managing participant interactions, and overseeing the overall presentation flow and technical aspects of the meeting.` 
 								: `${name} is an active participant in this meeting, engaging in collaborative discussions, contributing valuable insights to the project, and working together with the team to achieve the meeting objectives.`}
+							{!isVerified && (
+								<span className="gl-preview-card__verified-advice">
+									{" "}Note: This user has not completed the identity verification process. Please exercise caution when sharing sensitive information or granting elevated permissions during the session.
+								</span>
+							)}
 						</p>
 					</div>
 				</>

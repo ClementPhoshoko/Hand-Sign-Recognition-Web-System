@@ -1,5 +1,6 @@
 import { useMemo, useState, useRef, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { motion, AnimatePresence } from 'framer-motion'
 import useMediaDevices from '../../../hooks/useMediaDevices'
 import DevicePicker from '../DevicePicker'
 import PrimaryModal from '../../../components/modals/primary/PrimaryModal'
@@ -39,6 +40,7 @@ function MeetingId() {
 	const [showLeaveConfirm, setShowLeaveConfirm] = useState(false)
 	const [hoveredParticipant, setHoveredParticipant] = useState(null)
 	const [previewPosition, setPreviewPosition] = useState({ x: 0, y: 0 })
+	const [toast, setToast] = useState(null)
 	const hoverTimeoutRef = useRef(null)
 	const dwellTimeoutRef = useRef(null)
 	const participantsPerPage = 6
@@ -145,8 +147,8 @@ function MeetingId() {
 		// Switch layout manually
 		setIsAutoLayout(false)
 		
-		// Transcript is docked to Stage view; others go to Grid/Gallery view
-		if (panelName === 'transcript') {
+		// Transcript and Info are docked to Stage view; others go to Grid/Gallery view
+		if (panelName === 'transcript' || panelName === 'info') {
 			setLayoutMode('stage')
 		} else {
 			setLayoutMode('grid')
@@ -170,25 +172,25 @@ function MeetingId() {
 
 	const participants = useMemo(
 		() => [
-			{ id: 'cam-host', name: 'Host Camera', initials: 'HC', role: 'Presenter', status: 'Live', sharing: false, isSpeaking: isHostSpeaking, avatar: getAvatarUrl('Host') },
-			{ id: 'cam-1', name: 'Lebo M.', initials: 'LM', role: 'Participant', status: 'Online', sharing: false, isSpeaking: false, avatar: getAvatarUrl('Lebo') },
-			{ id: 'cam-2', name: 'Ana K.', initials: 'AK', role: 'Participant', status: 'Muted', sharing: false, isSpeaking: false, avatar: getAvatarUrl('Ana') },
-			{ id: 'cam-3', name: 'David N.', initials: 'DN', role: 'Participant', status: 'Online', sharing: false, isSpeaking: true, avatar: getAvatarUrl('David') },
-			{ id: 'cam-4', name: 'Nia S.', initials: 'NS', role: 'Participant', status: 'Online', sharing: false, isSpeaking: false, avatar: getAvatarUrl('Nia') },
-			{ id: 'cam-5', name: 'Marcus T.', initials: 'MT', role: 'Participant', status: 'Muted', sharing: false, isSpeaking: false, avatar: getAvatarUrl('Marcus') },
-			{ id: 'cam-6', name: 'Sarah J.', initials: 'SJ', role: 'Participant', status: 'Online', sharing: false, isSpeaking: false, avatar: getAvatarUrl('Sarah') },
-			{ id: 'cam-7', name: 'James W.', initials: 'JW', role: 'Participant', status: 'Muted', sharing: false, isSpeaking: false, avatar: getAvatarUrl('James') },
-			{ id: 'cam-8', name: 'Elena R.', initials: 'ER', role: 'Participant', status: 'Online', sharing: false, isSpeaking: false, avatar: getAvatarUrl('Elena') },
-			{ id: 'cam-9', name: 'Frank G.', initials: 'FG', role: 'Participant', status: 'Online', sharing: false, isSpeaking: false, avatar: getAvatarUrl('Frank') },
-			{ id: 'cam-10', name: 'Grace H.', initials: 'GH', role: 'Participant', status: 'Online', sharing: false, isSpeaking: false, avatar: getAvatarUrl('Grace') },
-			{ id: 'cam-11', name: 'Ivan I.', initials: 'II', role: 'Participant', status: 'Online', sharing: false, isSpeaking: false, avatar: getAvatarUrl('Ivan') },
-			{ id: 'cam-12', name: 'Judy K.', initials: 'JK', role: 'Participant', status: 'Online', sharing: false, isSpeaking: false, avatar: getAvatarUrl('Judy') },
-			{ id: 'cam-13', name: 'Kevin L.', initials: 'KL', role: 'Participant', status: 'Online', sharing: false, isSpeaking: false, avatar: getAvatarUrl('Kevin') },
-			{ id: 'cam-14', name: 'Mia N.', initials: 'MN', role: 'Participant', status: 'Online', sharing: false, isSpeaking: false, avatar: getAvatarUrl('Mia') },
-			{ id: 'cam-15', name: 'Oscar P.', initials: 'OP', role: 'Participant', status: 'Online', sharing: false, isSpeaking: false, avatar: getAvatarUrl('Oscar') },
-			{ id: 'cam-16', name: 'Quinn R.', initials: 'QR', role: 'Participant', status: 'Online', sharing: false, isSpeaking: false, avatar: getAvatarUrl('Quinn') },
-			{ id: 'cam-17', name: 'Sam T.', initials: 'ST', role: 'Participant', status: 'Online', sharing: false, isSpeaking: false, avatar: getAvatarUrl('Sam') },
-			{ id: 'cam-18', name: 'Uma V.', initials: 'UV', role: 'Participant', status: 'Online', sharing: false, isSpeaking: false, avatar: getAvatarUrl('Uma') },
+			{ id: 'cam-host', name: 'Host Camera', initials: 'HC', role: 'Presenter', status: 'Live', sharing: false, isSpeaking: isHostSpeaking, avatar: getAvatarUrl('Host'), isVerified: true },
+			{ id: 'cam-1', name: 'Lebo M.', initials: 'LM', role: 'Participant', status: 'Online', sharing: false, isSpeaking: false, avatar: getAvatarUrl('Lebo'), isVerified: true },
+			{ id: 'cam-2', name: 'Ana K.', initials: 'AK', role: 'Participant', status: 'Muted', sharing: false, isSpeaking: false, avatar: getAvatarUrl('Ana'), isVerified: false },
+			{ id: 'cam-3', name: 'David N.', initials: 'DN', role: 'Participant', status: 'Online', sharing: false, isSpeaking: true, avatar: getAvatarUrl('David'), isVerified: true },
+			{ id: 'cam-4', name: 'Nia S.', initials: 'NS', role: 'Participant', status: 'Online', sharing: false, isSpeaking: false, avatar: getAvatarUrl('Nia'), isVerified: false },
+			{ id: 'cam-5', name: 'Marcus T.', initials: 'MT', role: 'Participant', status: 'Muted', sharing: false, isSpeaking: false, avatar: getAvatarUrl('Marcus'), isVerified: false },
+			{ id: 'cam-6', name: 'Sarah J.', initials: 'SJ', role: 'Participant', status: 'Online', sharing: false, isSpeaking: false, avatar: getAvatarUrl('Sarah'), isVerified: true },
+			{ id: 'cam-7', name: 'James W.', initials: 'JW', role: 'Participant', status: 'Muted', sharing: false, isSpeaking: false, avatar: getAvatarUrl('James'), isVerified: false },
+			{ id: 'cam-8', name: 'Elena R.', initials: 'ER', role: 'Participant', status: 'Online', sharing: false, isSpeaking: false, avatar: getAvatarUrl('Elena'), isVerified: true },
+			{ id: 'cam-9', name: 'Frank G.', initials: 'FG', role: 'Participant', status: 'Online', sharing: false, isSpeaking: false, avatar: getAvatarUrl('Frank'), isVerified: false },
+			{ id: 'cam-10', name: 'Grace H.', initials: 'GH', role: 'Participant', status: 'Online', sharing: false, isSpeaking: false, avatar: getAvatarUrl('Grace'), isVerified: true },
+			{ id: 'cam-11', name: 'Ivan I.', initials: 'II', role: 'Participant', status: 'Online', sharing: false, isSpeaking: false, avatar: getAvatarUrl('Ivan'), isVerified: false },
+			{ id: 'cam-12', name: 'Judy K.', initials: 'JK', role: 'Participant', status: 'Online', sharing: false, isSpeaking: false, avatar: getAvatarUrl('Judy'), isVerified: true },
+			{ id: 'cam-13', name: 'Kevin L.', initials: 'KL', role: 'Participant', status: 'Online', sharing: false, isSpeaking: false, avatar: getAvatarUrl('Kevin'), isVerified: false },
+			{ id: 'cam-14', name: 'Mia N.', initials: 'MN', role: 'Participant', status: 'Online', sharing: false, isSpeaking: false, avatar: getAvatarUrl('Mia'), isVerified: true },
+			{ id: 'cam-15', name: 'Oscar P.', initials: 'OP', role: 'Participant', status: 'Online', sharing: false, isSpeaking: false, avatar: getAvatarUrl('Oscar'), isVerified: false },
+			{ id: 'cam-16', name: 'Quinn R.', initials: 'QR', role: 'Participant', status: 'Online', sharing: false, isSpeaking: false, avatar: getAvatarUrl('Quinn'), isVerified: false },
+			{ id: 'cam-17', name: 'Sam T.', initials: 'ST', role: 'Participant', status: 'Online', sharing: false, isSpeaking: false, avatar: getAvatarUrl('Sam'), isVerified: true },
+			{ id: 'cam-18', name: 'Uma V.', initials: 'UV', role: 'Participant', status: 'Online', sharing: false, isSpeaking: false, avatar: getAvatarUrl('Uma'), isVerified: false },
 		],
 		[isHostSpeaking]
 	)
@@ -233,7 +235,7 @@ function MeetingId() {
 		return 'grid'
 	}, [someoneIsSharing])
 
-	const effectiveLayoutMode = (screenOn || activePanel === 'transcript') ? 'stage' : (isAutoLayout ? autoLayoutMode : layoutMode)
+	const effectiveLayoutMode = (screenOn || activePanel === 'transcript' || activePanel === 'info') ? 'stage' : (isAutoLayout ? autoLayoutMode : layoutMode)
 	const isGridMode = effectiveLayoutMode === 'grid'
 	const canMaximizeVideo = !isGridMode
 	const isVideoEffectivelyMaximized = canMaximizeVideo && isVideoMaximized
@@ -289,6 +291,11 @@ function MeetingId() {
 
 	const handleCancelLeave = () => {
 		setShowLeaveConfirm(false)
+	}
+
+	const showToast = (message) => {
+		setToast(message)
+		setTimeout(() => setToast(null), 3000)
 	}
 
 	return (
@@ -716,15 +723,28 @@ function MeetingId() {
 									))}
 								</div>
 							) : (
-								(isGridMode ? sortedParticipants : displayedParticipants).map((person) => {
-									const isPinned = person.name === pinnedParticipant
-									return (
-										<article 
-											key={person.id} 
-											className={`gl-person-card${isPinned ? ' is-pinned' : ''}`}
-											onMouseEnter={() => {
-												if (hoverTimeoutRef.current) clearTimeout(hoverTimeoutRef.current)
-											}}
+								<AnimatePresence mode="popLayout">
+									{(isGridMode ? sortedParticipants : displayedParticipants).map((person) => {
+										const isPinned = person.name === pinnedParticipant
+										return (
+											<motion.article 
+												key={person.id}
+												layout
+												initial={{ opacity: 0, scale: 0.9 }}
+												animate={{ 
+													opacity: 1, 
+													scale: 1,
+													rotate: isPinned ? [0, -2, 2, -1, 1, 0] : 0 
+												}}
+												exit={{ opacity: 0, scale: 0.9 }}
+												transition={{ 
+													layout: { type: "spring", stiffness: 300, damping: 30 },
+													rotate: { duration: 0.5, ease: "easeInOut" }
+												}}
+												className={`gl-person-card${isPinned ? ' is-pinned' : ''}`}
+												onMouseEnter={() => {
+													if (hoverTimeoutRef.current) clearTimeout(hoverTimeoutRef.current)
+												}}
 											onMouseMove={(e) => {
 												if (dwellTimeoutRef.current) clearTimeout(dwellTimeoutRef.current)
 												
@@ -766,13 +786,18 @@ function MeetingId() {
 											<button
 												type="button"
 												className={`gl-person-card__pin${isPinned ? ' is-active' : ''}`}
-												onClick={() => {
-													setPinnedParticipant(isPinned ? null : person.name)
-													if (!isPinned) {
+												onClick={(e) => {
+													e.stopPropagation()
+													const newPinnedState = isPinned ? null : person.name
+													setPinnedParticipant(newPinnedState)
+													
+													if (newPinnedState) {
+														showToast(`${person.name} pinned to top`)
 														setLayoutMode('stage')
 														setIsAutoLayout(false)
-														// Reset page to 1 so the pinned person is visible at the top
 														setCurrentPage(1)
+													} else {
+														showToast(`${person.name} unpinned`)
 													}
 												}}
 												aria-label={isPinned ? 'Unpin participant' : 'Pin participant'}
@@ -782,9 +807,10 @@ function MeetingId() {
 													<path d="M5 17h14v-1.76a2 2 0 0 0-1.11-1.79l-1.79-.9A2 2 0 0 1 15 10.76V6a3 3 0 0 0-3-3 3 3 0 0 0-3 3v4.76a2 2 0 0 1-1.1 1.79l-1.79.9A2 2 0 0 0 5 15.24V17z"></path>
 												</svg>
 											</button>
-										</article>
+										</motion.article>
 									)
-								})
+								})}
+								</AnimatePresence>
 							)}
 						</div>
 
@@ -828,7 +854,7 @@ function MeetingId() {
 			{/* Leave Confirmation Modal */}
 			<PrimaryModal
 				open={showLeaveConfirm}
-				customMsg="Are you sure you want to leave the session? By exiting now, you will lose access to the live stream, real-time transcript updates, and active participant interactions. If you're currently presenting or sharing your screen, those streams will be terminated immediately. You can always rejoin later using the same meeting code."
+				customMsg="Are you sure you want to leave? Exiting now will disconnect you from the live stream, transcript updates, and participant interactions. Any active screen sharing will end immediately. You can rejoin anytime using the meeting code."
 				firstOption="Let Us Leave"
 				secondOption="Let Us Stay"
 				onFirstOption={handleConfirmLeave}
@@ -851,6 +877,22 @@ function MeetingId() {
 					}}
 				/>
 			)}
+
+			<AnimatePresence>
+				{toast && (
+					<motion.div 
+						className="gl-toast"
+						initial={{ opacity: 0, y: 20, x: '-50%' }}
+						animate={{ opacity: 1, y: 0, x: '-50%' }}
+						exit={{ opacity: 0, y: 20, x: '-50%' }}
+					>
+						<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+							<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+						</svg>
+						{toast}
+					</motion.div>
+				)}
+			</AnimatePresence>
 		</div>
 	)
 }

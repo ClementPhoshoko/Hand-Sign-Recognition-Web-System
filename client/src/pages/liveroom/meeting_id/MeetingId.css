@@ -384,6 +384,35 @@ html, body, #root, .gl-meeting-page {
 	z-index: 5;
 }
 
+/* ── Toast Notification ── */
+.gl-toast {
+	position: fixed;
+	bottom: var(--space-6);
+	left: 50%;
+	background: var(--glass-inner-plate-dense);
+	border: 1px solid var(--border-highlight);
+	padding: 0.6rem 1rem;
+	border-radius: var(--radius-full);
+	backdrop-filter: var(--glass-blur);
+	-webkit-backdrop-filter: var(--glass-blur);
+	box-shadow: 
+		var(--glow-outer),
+		var(--glow-inner),
+		var(--shadow-deep);
+	color: var(--text-primary);
+	font-size: var(--text-xs);
+	font-weight: var(--font-semibold);
+	display: flex;
+	align-items: center;
+	gap: 0.6rem;
+	z-index: 2000;
+	pointer-events: none;
+}
+
+.gl-toast svg {
+	color: var(--orb-halo);
+}
+
 /* ── Audio Level Indicator ── */
 .liveroom-audio-level {
 	display: flex;
@@ -1099,11 +1128,10 @@ html, body, #root, .gl-meeting-page {
 }
 
 .gl-person-card.is-pinned {
-	box-shadow: var(--glow-outer);
-	border-radius: var(--radius-base);
 	background: var(--glass-surface-strong);
-	border-color: var(--border-soft);
-	z-index: 5;
+	box-shadow: var(--glow-inner);
+	border-radius: var(--radius-base);
+	z-index: 2;
 }
 
 .gl-person-card__left {
