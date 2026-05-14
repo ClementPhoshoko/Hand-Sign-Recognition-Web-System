@@ -4,6 +4,7 @@ import useMediaDevices from '../../../hooks/useMediaDevices'
 import DevicePicker from '../DevicePicker'
 import PrimaryModal from '../../../components/modals/primary/PrimaryModal'
 import PreviewCard from './preview_card/PreviewCard'
+import { getAvatarUrl } from '../../../utils/avatarUtils'
 import './MeetingId.css'
 
 function MeetingId() {
@@ -46,23 +47,23 @@ function MeetingId() {
 
 	const [transcriptData, setTranscriptData] = useState([
 		{ id: 1, time: '10:02', speaker: 'Lebo M.', text: 'Hi everyone, thanks for joining the strategy meeting today.' },
-		{ id: 2, time: '10:03', speaker: 'Ana K.', text: 'Glad to be here. Excited to see the new project updates.' },
+		{ id: 2, time: '10:03', speaker: 'Alex K.', text: 'Glad to be here. Excited to see the new project updates.' },
 		{ id: 3, time: '10:05', speaker: 'Host Camera', text: 'Let\'s start by reviewing the Q2 goals. I\'ll share my screen.' },
-		{ id: 4, time: '10:07', speaker: 'David N.', text: 'The timeline for the Alpha phase looks solid, but we need to verify the resources.' },
+		{ id: 4, time: '10:07', speaker: 'Sam N.', text: 'The timeline for the Alpha phase looks solid, but we need to verify the resources.' },
 		{ id: 5, time: '10:10', speaker: 'Nia S.', text: 'I can help with the resource allocation audit next week.' },
 		{ id: 6, time: '10:12', speaker: 'Lebo M.', text: 'I\'ll share the project timeline again.' },
-		{ id: 7, time: '10:14', speaker: 'Ana K.', text: 'I\'ll share the project updates.' },
+		{ id: 7, time: '10:14', speaker: 'Alex K.', text: 'I\'ll share the project updates.' },
 		{ id: 8, time: '10:16', speaker: 'Host Camera', text: 'We\'ll continue the discussion.' },
-		{ id: 9, time: '10:18', speaker: 'David N.', text: 'I\'ll share the project updates.' },
+		{ id: 9, time: '10:18', speaker: 'Sam N.', text: 'I\'ll share the project updates.' },
 		{ id: 10, time: '10:20', speaker: 'Nia S.', text: 'I can help with the resource allocation audit next week.' },
 		{ id: 11, time: '10:22', speaker: 'Lebo M.', text: 'I\'ll share the project timeline again.' },
-		{ id: 12, time: '10:24', speaker: 'Ana K.', text: 'I\'ll share the project updates.' },
+		{ id: 12, time: '10:24', speaker: 'Alex K.', text: 'I\'ll share the project updates.' },
 		{ id: 13, time: '10:26', speaker: 'Host Camera', text: 'We\'ll continue the discussion.' },
-		{ id: 14, time: '10:28', speaker: 'David N.', text: 'I\'ll share the project updates.' },
+		{ id: 14, time: '10:28', speaker: 'Sam N.', text: 'I\'ll share the project updates.' },
 		{ id: 15, time: '10:30', speaker: 'Nia S.', text: 'Adding more rows to test scrolling performance.' },
 		{ id: 16, time: '10:32', speaker: 'Lebo M.', text: 'Row 16 of the transcript is here.' },
-		{ id: 17, time: '10:34', speaker: 'Ana K.', text: 'Row 17 confirming the scroll works.' },
-		{ id: 18, time: '10:36', speaker: 'David N.', text: 'Row 18 - checking if this is visible.' },
+		{ id: 17, time: '10:34', speaker: 'Alex K.', text: 'Row 17 confirming the scroll works.' },
+		{ id: 18, time: '10:36', speaker: 'Sam N.', text: 'Row 18 - checking if this is visible.' },
 		{ id: 19, time: '10:38', speaker: 'Host Camera', text: 'Row 19 - almost at twenty.' },
 		{ id: 20, time: '10:40', speaker: 'Nia S.', text: 'Row 20 - scrolling should definitely be active now.' },
 	])
@@ -169,25 +170,25 @@ function MeetingId() {
 
 	const participants = useMemo(
 		() => [
-			{ id: 'cam-host', name: 'Host Camera', initials: 'HC', role: 'Presenter', status: 'Live', sharing: false, isSpeaking: isHostSpeaking, avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Host' },
-			{ id: 'cam-1', name: 'Lebo M.', initials: 'LM', role: 'Participant', status: 'Online', sharing: false, isSpeaking: false, avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Lebo' },
-			{ id: 'cam-2', name: 'Ana K.', initials: 'AK', role: 'Participant', status: 'Muted', sharing: false, isSpeaking: false, avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Ana' },
-			{ id: 'cam-3', name: 'David N.', initials: 'DN', role: 'Participant', status: 'Online', sharing: false, isSpeaking: true, avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=David' },
-			{ id: 'cam-4', name: 'Nia S.', initials: 'NS', role: 'Participant', status: 'Online', sharing: false, isSpeaking: false, avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Nia' },
-			{ id: 'cam-5', name: 'Marcus T.', initials: 'MT', role: 'Participant', status: 'Muted', sharing: false, isSpeaking: false, avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Marcus' },
-			{ id: 'cam-6', name: 'Sarah J.', initials: 'SJ', role: 'Participant', status: 'Online', sharing: false, isSpeaking: false, avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Sarah' },
-			{ id: 'cam-7', name: 'James W.', initials: 'JW', role: 'Participant', status: 'Muted', sharing: false, isSpeaking: false, avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=James' },
-			{ id: 'cam-8', name: 'Elena R.', initials: 'ER', role: 'Participant', status: 'Online', sharing: false, isSpeaking: false, avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Elena' },
-			{ id: 'cam-9', name: 'Frank G.', initials: 'FG', role: 'Participant', status: 'Online', sharing: false, isSpeaking: false, avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Frank' },
-			{ id: 'cam-10', name: 'Grace H.', initials: 'GH', role: 'Participant', status: 'Online', sharing: false, isSpeaking: false, avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Grace' },
-			{ id: 'cam-11', name: 'Ivan I.', initials: 'II', role: 'Participant', status: 'Online', sharing: false, isSpeaking: false, avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Ivan' },
-			{ id: 'cam-12', name: 'Judy K.', initials: 'JK', role: 'Participant', status: 'Online', sharing: false, isSpeaking: false, avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Judy' },
-			{ id: 'cam-13', name: 'Kevin L.', initials: 'KL', role: 'Participant', status: 'Online', sharing: false, isSpeaking: false, avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Kevin' },
-			{ id: 'cam-14', name: 'Mia N.', initials: 'MN', role: 'Participant', status: 'Online', sharing: false, isSpeaking: false, avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Mia' },
-			{ id: 'cam-15', name: 'Oscar P.', initials: 'OP', role: 'Participant', status: 'Online', sharing: false, isSpeaking: false, avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Oscar' },
-			{ id: 'cam-16', name: 'Quinn R.', initials: 'QR', role: 'Participant', status: 'Online', sharing: false, isSpeaking: false, avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Quinn' },
-			{ id: 'cam-17', name: 'Sam T.', initials: 'ST', role: 'Participant', status: 'Online', sharing: false, isSpeaking: false, avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Sam' },
-			{ id: 'cam-18', name: 'Uma V.', initials: 'UV', role: 'Participant', status: 'Online', sharing: false, isSpeaking: false, avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Uma' },
+			{ id: 'cam-host', name: 'Host Camera', initials: 'HC', role: 'Presenter', status: 'Live', sharing: false, isSpeaking: isHostSpeaking, avatar: getAvatarUrl('Host') },
+			{ id: 'cam-1', name: 'Lebo M.', initials: 'LM', role: 'Participant', status: 'Online', sharing: false, isSpeaking: false, avatar: getAvatarUrl('Lebo') },
+			{ id: 'cam-2', name: 'Ana K.', initials: 'AK', role: 'Participant', status: 'Muted', sharing: false, isSpeaking: false, avatar: getAvatarUrl('Ana') },
+			{ id: 'cam-3', name: 'David N.', initials: 'DN', role: 'Participant', status: 'Online', sharing: false, isSpeaking: true, avatar: getAvatarUrl('David') },
+			{ id: 'cam-4', name: 'Nia S.', initials: 'NS', role: 'Participant', status: 'Online', sharing: false, isSpeaking: false, avatar: getAvatarUrl('Nia') },
+			{ id: 'cam-5', name: 'Marcus T.', initials: 'MT', role: 'Participant', status: 'Muted', sharing: false, isSpeaking: false, avatar: getAvatarUrl('Marcus') },
+			{ id: 'cam-6', name: 'Sarah J.', initials: 'SJ', role: 'Participant', status: 'Online', sharing: false, isSpeaking: false, avatar: getAvatarUrl('Sarah') },
+			{ id: 'cam-7', name: 'James W.', initials: 'JW', role: 'Participant', status: 'Muted', sharing: false, isSpeaking: false, avatar: getAvatarUrl('James') },
+			{ id: 'cam-8', name: 'Elena R.', initials: 'ER', role: 'Participant', status: 'Online', sharing: false, isSpeaking: false, avatar: getAvatarUrl('Elena') },
+			{ id: 'cam-9', name: 'Frank G.', initials: 'FG', role: 'Participant', status: 'Online', sharing: false, isSpeaking: false, avatar: getAvatarUrl('Frank') },
+			{ id: 'cam-10', name: 'Grace H.', initials: 'GH', role: 'Participant', status: 'Online', sharing: false, isSpeaking: false, avatar: getAvatarUrl('Grace') },
+			{ id: 'cam-11', name: 'Ivan I.', initials: 'II', role: 'Participant', status: 'Online', sharing: false, isSpeaking: false, avatar: getAvatarUrl('Ivan') },
+			{ id: 'cam-12', name: 'Judy K.', initials: 'JK', role: 'Participant', status: 'Online', sharing: false, isSpeaking: false, avatar: getAvatarUrl('Judy') },
+			{ id: 'cam-13', name: 'Kevin L.', initials: 'KL', role: 'Participant', status: 'Online', sharing: false, isSpeaking: false, avatar: getAvatarUrl('Kevin') },
+			{ id: 'cam-14', name: 'Mia N.', initials: 'MN', role: 'Participant', status: 'Online', sharing: false, isSpeaking: false, avatar: getAvatarUrl('Mia') },
+			{ id: 'cam-15', name: 'Oscar P.', initials: 'OP', role: 'Participant', status: 'Online', sharing: false, isSpeaking: false, avatar: getAvatarUrl('Oscar') },
+			{ id: 'cam-16', name: 'Quinn R.', initials: 'QR', role: 'Participant', status: 'Online', sharing: false, isSpeaking: false, avatar: getAvatarUrl('Quinn') },
+			{ id: 'cam-17', name: 'Sam T.', initials: 'ST', role: 'Participant', status: 'Online', sharing: false, isSpeaking: false, avatar: getAvatarUrl('Sam') },
+			{ id: 'cam-18', name: 'Uma V.', initials: 'UV', role: 'Participant', status: 'Online', sharing: false, isSpeaking: false, avatar: getAvatarUrl('Uma') },
 		],
 		[isHostSpeaking]
 	)
