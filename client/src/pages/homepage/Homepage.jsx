@@ -4,7 +4,7 @@ import ovInputImg     from '../../assets/avatars/sign detection.png'
 import ovDetectImg    from '../../assets/avatars/gesture tracking.png'
 import ovTranscribeImg from '../../assets/avatars/gesture tracking 2.png'
 import ovOutputImg    from '../../assets/avatars/hello_world_output_2.png'
-import morePanelAvatar from '../../assets/avatars/faq resources 2.png'
+import morePanelAvatar from '../../assets/avatars/man_pointing_north_east_seating_2.png'
 import './Homepage.css'
 
 const USE_CASES = [

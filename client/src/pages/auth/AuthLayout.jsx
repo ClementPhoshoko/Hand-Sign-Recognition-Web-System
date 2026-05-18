@@ -1,5 +1,5 @@
 import { useState, useRef, useLayoutEffect } from 'react'
-import bgImg from '../../assets/avatars/sign detection.png'
+import bgImg from '../../assets/avatars/hello_from_the_video_call_1.png'
 import logo from '../../assets/circular_tech_logo_with_circuit_lines.png'
 import Breadcrumbs from '../../components/breadcrumbs/Breadcrumbs'
 import Login from './login/Login'
