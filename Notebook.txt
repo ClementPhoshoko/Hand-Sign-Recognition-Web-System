@@ -1,0 +1,69 @@
+===================================================================
+   GL WEB SYSTEM: PROJECT DESCRIPTION & FEATURE OVERVIEW
+===================================================================
+
+This document provides a comprehensive overview of the Gesture to Linguistic (GL) Web System, 
+focusing on the core modules: Live Meetings, Video Extracts, and Image Extracts.
+
+-------------------------------------------------------------------
+1. CORE PURPOSE
+-------------------------------------------------------------------
+The GL Web System is a real-time accessibility platform designed to bridge the gap between 
+sign language and spoken language. It uses advanced computer vision (MediaPipe) and 
+machine learning to detect hand gestures and translate them into readable text.
+
+-------------------------------------------------------------------
+2. LIVE ROOM (MEETING) FEATURES
+-------------------------------------------------------------------
+Located in: client/src/pages/liveroom/meeting_id/
+
+The Live Room is a real-time collaborative space for virtual meetings with integrated 
+sign language recognition.
+
+Key Features:
+- Real-time Video/Audio: Seamless camera and microphone management.
+- Screen Sharing: High-priority screen sharing for presentations.
+- Intelligent Layouts:
+    * Stage View: Focuses on the active presenter or shared screen.
+    * Grid View: Display all participants in a gallery format.
+    * Auto-Layout: Automatically switches focus based on active screen sharing or speaking.
+- Integrated Transcript: Real-time logging of spoken conversation and recognized gestures.
+- Participant Management: Searchable list of participants with status indicators (Live, Muted, Sharing).
+- Media Controls: Persistent toolbar for toggling camera, mic, screen share, and full-screen modes.
+- Audio Visualizers: Real-time feedback on microphone input levels.
+
+-------------------------------------------------------------------
+3. VIDEO EXTRACTS FEATURES
+-------------------------------------------------------------------
+Located in: client/src/pages/upload/video_extracts/
+
+This module handles the post-processing of uploaded videos to extract linguistic data.
+
+Key Features:
+- Batch Transcription: Analyzes entire video files for sign language gestures.
+- Time-coded Results: Every detected sign or phrase is mapped to a specific timestamp in the video.
+- Confidence Scoring: Visual bars and percentages indicating the engine's certainty for each detection.
+- Export Capabilities: Allows users to export the generated transcripts as .SRT subtitle files.
+- Pagination: Organized view for navigating through long video transcriptions.
+
+-------------------------------------------------------------------
+4. PHOTO EXTRACTS FEATURES
+-------------------------------------------------------------------
+Located in: client/src/pages/upload/photo_extracts/
+
+This module focuses on the detailed analysis of static images containing sign language gestures.
+
+Key Features:
+- Sign Analysis Report: Provides a deep dive into a single detected gesture.
+- Visual Breakdown: Descriptive explanations of how the sign is formed (finger positions, orientation).
+- Meaning Mapping: Directly translates the gesture into its linguistic meaning (e.g., "Peace / Victory").
+- Contextual Tagging: Categorizes gestures (e.g., "Greeting", "Common Gestures") for better searchability.
+- Export to PDF: Allows for the generation and download of a professional analysis report.
+
+-------------------------------------------------------------------
+5. TECHNICAL FOUNDATION
+-------------------------------------------------------------------
+- Frontend: React with Framer Motion for smooth, high-end UI transitions.
+- State Management: Hooks (useState, useMemo, useEffect) for reactive data flow.
+- Media Handling: Custom 'useMediaDevices' hook for robust camera/screen management.
+- Styling: Modular CSS following a Glassmorphism design system.
