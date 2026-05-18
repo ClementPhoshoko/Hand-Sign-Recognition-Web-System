@@ -7,6 +7,7 @@ const routeLabels = {
 	register: 'Register',
 	videoExtracts: 'Video Extracts',
 	photoExtracts: 'Sign Analysis',
+	profile: 'User Profile',
 }
 
 function formatSegment(segment) {

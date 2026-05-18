@@ -9,6 +9,7 @@ import MeetingId from './pages/liveroom/meeting_id/MeetingId'
 import UploadLayout from './pages/upload/UploadLayout'
 import Video_Extracts from './pages/upload/video_extracts/Video_Extracts'
 import Photo_Extracts from './pages/upload/photo_extracts/Photo_Extracts'
+import Dashboard from './pages/dashboard/Dashboard'
 import './App.css'
 
 function AppContent() {
@@ -31,6 +32,7 @@ function AppContent() {
           <Route path="/upload" element={<UploadLayout />} />
           <Route path="/upload/videoExtracts/:videoId?" element={<Video_Extracts />} />
           <Route path="/upload/photoExtracts/:imageId?" element={<Photo_Extracts />} />
+          <Route path="/profile" element={<Dashboard />} />
         </Routes>
       </main>
       {!hideNavFoot && <Foot />}

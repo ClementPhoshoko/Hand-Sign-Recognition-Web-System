@@ -1,0 +1,44 @@
+.gl-db-container {
+  min-height: 100vh;
+  background-color: var(--shell);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: var(--space-6);
+  font-family: var(--font-sans);
+  position: relative;
+}
+
+.gl-db-shell {
+  width: 100%;
+  max-width: 1200px;
+  display: flex;
+  gap: var(--space-6);
+  padding: var(--space-6);
+  background: var(--shell-soft);
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow-deep);
+}
+
+.gl-db-left-column {
+  flex: 2;
+  display: flex;
+  flex-direction: column;
+}
+
+.gl-db-right-column {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+}
+
+@media (max-width: 1024px) {
+  .gl-db-shell {
+    flex-direction: column;
+  }
+  
+  .gl-db-left-column, .gl-db-right-column {
+    flex: 1;
+  }
+}
