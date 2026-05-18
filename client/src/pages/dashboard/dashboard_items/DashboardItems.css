@@ -92,7 +92,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  color: white;
+  color: var(--text-primary);
   opacity: 0;
   transition: opacity var(--transition-fast);
   pointer-events: none;
@@ -155,7 +155,7 @@
   color: var(--text-primary);
   font-size: var(--text-4xl);
   font-weight: var(--font-bold);
-  margin: 0px 0px 10px 0px;
+  margin: 10px 0px 10px 0px;
   letter-spacing: -0.02em;
 }
 
@@ -237,14 +237,21 @@
 }
 
 .gl-db-btn-join {
-  padding: var(--space-2) var(--space-4);
-  border-radius: var(--radius-base);
-  border: 1px solid var(--border-standard);
-  background: var(--glass-surface);
+  background: none;
+  border: none;
   color: var(--text-primary);
-  font-weight: var(--font-medium);
+  font-weight: var(--font-semibold);
   cursor: pointer;
-  transition: var(--transition-fast);
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  transition: color var(--transition-fast);
+}
+
+.gl-db-btn-join:hover {
+  color: var(--text-secondary);
 }
 
 .gl-db-btn-edit, .gl-db-btn-password-link {
@@ -255,8 +262,8 @@
   text-align: left;
   padding: 0;
   cursor: pointer;
-  text-decoration: underline;
-  transition: var(--transition-fast);
+  text-decoration: none;
+  transition: color var(--transition-fast);
 }
 
 .gl-db-btn-edit:hover, .gl-db-btn-password-link:hover {
@@ -264,16 +271,12 @@
 }
 
 .gl-db-btn-join.is-live {
-  background: linear-gradient(135deg, #ff4d4d, #ff8c00);
-  border: none;
-  color: white;
-  font-weight: var(--font-bold);
-  box-shadow: 0 4px 12px rgba(255, 77, 77, 0.3);
+  color: var(--orb-primary);
+  text-decoration: none;
 }
 
 .gl-db-btn-join.is-live:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 16px rgba(255, 77, 77, 0.4);
+  color: var(--orb-accent-right);
 }
 
 /* Activity Density Styles */
@@ -332,6 +335,7 @@
   align-items: center;
   justify-content: center;
   position: relative;
+  color: var(--text-primary);
 }
 
 .gl-db-heatmap-square.is-empty {
@@ -343,8 +347,8 @@
 .gl-db-calendar-date {
   font-size: 10px;
   font-weight: var(--font-bold);
-  color: var(--avatar-text-color);
-  opacity: 0.6;
+  color: var(--text-primary);
+  opacity: 0.8;
 }
 
 .gl-db-heatmap-square:hover {
@@ -353,9 +357,19 @@
 }
 
 .gl-db-heatmap-square.level-0 { background: var(--glass-surface); }
-.gl-db-heatmap-square.level-1 { background: rgba(120, 170, 255, 0.25); border-color: rgba(120, 170, 255, 0.1); }
-.gl-db-heatmap-square.level-2 { background: rgba(120, 170, 255, 0.55); border-color: rgba(120, 170, 255, 0.2); }
-.gl-db-heatmap-square.level-3 { background: rgba(120, 170, 255, 0.85); border-color: rgba(120, 170, 255, 0.3); box-shadow: 0 0 8px rgba(120, 170, 255, 0.2); }
+.gl-db-heatmap-square.level-1 { 
+  background: color-mix(in srgb, var(--orb-primary), transparent 75%); 
+  border-color: color-mix(in srgb, var(--orb-primary), transparent 90%); 
+}
+.gl-db-heatmap-square.level-2 { 
+  background: color-mix(in srgb, var(--orb-primary), transparent 45%); 
+  border-color: color-mix(in srgb, var(--orb-primary), transparent 80%); 
+}
+.gl-db-heatmap-square.level-3 { 
+  background: color-mix(in srgb, var(--orb-primary), transparent 15%); 
+  border-color: color-mix(in srgb, var(--orb-primary), transparent 70%); 
+  box-shadow: 0 0 8px color-mix(in srgb, var(--orb-primary), transparent 80%); 
+}
 
 .gl-db-heatmap-footer {
   display: flex;
@@ -385,7 +399,7 @@
   align-items: center;
   gap: var(--space-2);
   font-size: var(--text-xs);
-  color: #ff4d4d;
+  color: var(--avatar-speaking-ring);
   font-weight: var(--font-bold);
   text-transform: uppercase;
   margin-bottom: var(--space-2);
@@ -394,9 +408,9 @@
 .gl-db-live-dot {
   width: 8px;
   height: 8px;
-  background: #ff4d4d;
+  background: var(--avatar-speaking-ring);
   border-radius: var(--radius-full);
-  box-shadow: 0 0 8px #ff4d4d;
+  box-shadow: 0 0 8px var(--avatar-speaking-glow);
   animation: pulse 2s infinite;
 }
 
@@ -406,16 +420,6 @@
   100% { transform: scale(1); opacity: 1; }
 }
 
-.gl-db-recap-badge {
-  font-size: var(--text-xs);
-  padding: 2px 8px;
-  background: rgba(80, 200, 140, 0.15);
-  color: #50c88c;
-  border-radius: var(--radius-full);
-  font-weight: var(--font-semibold);
-}
-
-/* Recent Meetings */
 .gl-db-meetings-list {
   display: flex;
   flex-direction: column;
@@ -429,7 +433,7 @@
   padding: var(--space-3);
   background: var(--glass-surface);
   border-radius: var(--radius-sm);
-  border: 1px solid transparent;
+  border: none;
   transition: var(--transition-fast);
 }
 
