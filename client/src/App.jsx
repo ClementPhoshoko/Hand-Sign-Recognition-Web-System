@@ -10,6 +10,7 @@ import UploadLayout from './pages/upload/UploadLayout'
 import Video_Extracts from './pages/upload/video_extracts/Video_Extracts'
 import Photo_Extracts from './pages/upload/photo_extracts/Photo_Extracts'
 import Dashboard from './pages/dashboard/Dashboard'
+import Notifications from './pages/notifications/Notifications'
 import './App.css'
 
 function AppContent() {
@@ -33,6 +34,7 @@ function AppContent() {
           <Route path="/upload/videoExtracts/:videoId?" element={<Video_Extracts />} />
           <Route path="/upload/photoExtracts/:imageId?" element={<Photo_Extracts />} />
           <Route path="/profile" element={<Dashboard />} />
+          <Route path="/notifications" element={<Notifications />} />
         </Routes>
       </main>
       {!hideNavFoot && <Foot />}
