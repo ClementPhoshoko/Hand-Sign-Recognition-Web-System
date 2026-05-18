@@ -255,17 +255,13 @@ function Nav() {
 									onMouseEnter={() => openDrop(label)}
 									onMouseLeave={scheduleDrop}
 								>
-									{to ? (
-										<Link to={to} className={`gl-nav-link${isActive ? ' is-active' : ''}`}>
-											{label}
-											<Caret open={isActive} />
-										</Link>
-									) : (
-										<a href="#" className={`gl-nav-link${isActive ? ' is-active' : ''}`}>
-											{label}
-											<Caret open={isActive} />
-										</a>
-									)}
+									<Link 
+										to={to || "#"} 
+										className={`gl-nav-link${isActive ? ' is-active' : ''}`}
+									>
+										{label}
+										<Caret open={isActive} />
+									</Link>
 
 									{isActive && (
 										<div
@@ -297,13 +293,11 @@ function Nav() {
 
 			<div className="gl-nav-right">
 				<span className="gl-nav-advisory" aria-hidden="true">Click to login or register</span>
-				<button className="gl-user-pill" type="button" aria-label="User account">
-					<Link to="/auth" aria-label="Login or register">
-						<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-							<path d="M12 12a5 5 0 1 0-5-5 5 5 0 0 0 5 5Zm0 2c-4.418 0-8 2.239-8 5v1h16v-1c0-2.761-3.582-5-8-5Z" />
-						</svg>
-					</Link>
-				</button>
+				<Link to="/auth" className="gl-user-pill" aria-label="Login or register">
+					<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+						<path d="M12 12a5 5 0 1 0-5-5 5 5 0 0 0 5 5Zm0 2c-4.418 0-8 2.239-8 5v1h16v-1c0-2.761-3.582-5-8-5Z" />
+					</svg>
+				</Link>
 			</div>
 		</header>
 	)
