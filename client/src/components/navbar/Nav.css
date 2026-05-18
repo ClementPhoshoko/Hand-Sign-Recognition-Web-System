@@ -115,7 +115,13 @@
 	gap: 0;
 	flex-shrink: 0;
 	margin-left: 0;
+	position: relative;
+}
+
+.gl-nav-advisory-wrap {
 	overflow: hidden;
+	display: flex;
+	align-items: center;
 }
 
 .gl-nav-advisory {

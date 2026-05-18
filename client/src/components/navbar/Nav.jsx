@@ -1,5 +1,6 @@
 import { useState, useRef } from 'react'
 import { Link } from 'react-router-dom'
+import NavOptions from './NavOptions'
 import './Nav.css'
 import logo from '../../assets/circular_tech_logo_with_circuit_lines.png'
 
@@ -221,7 +222,9 @@ const NAV_ITEMS = [
 function Nav() {
 	const [isMenuOpen, setIsMenuOpen] = useState(false)
 	const [activeDropdown, setActiveDropdown] = useState(null)
+	const [isUserOptionsOpen, setIsUserOptionsOpen] = useState(false)
 	const closeTimer = useRef(null)
+	const userTimer = useRef(null)
 
 	const openDrop = (label) => {
 		clearTimeout(closeTimer.current)
@@ -230,6 +233,15 @@ function Nav() {
 
 	const scheduleDrop = () => {
 		closeTimer.current = setTimeout(() => setActiveDropdown(null), 140)
+	}
+
+	const openUserOptions = () => {
+		clearTimeout(userTimer.current)
+		setIsUserOptionsOpen(true)
+	}
+
+	const scheduleUserOptions = () => {
+		userTimer.current = setTimeout(() => setIsUserOptionsOpen(false), 140)
 	}
 
 	return (
@@ -291,13 +303,21 @@ function Nav() {
 				</button>
 			</nav>
 
-			<div className="gl-nav-right">
-				<span className="gl-nav-advisory" aria-hidden="true">Click to login or register</span>
+			<div 
+				className="gl-nav-right"
+				onMouseEnter={openUserOptions}
+				onMouseLeave={scheduleUserOptions}
+			>
+				<div className="gl-nav-advisory-wrap">
+					<span className="gl-nav-advisory" aria-hidden="true">Click to login or register</span>
+				</div>
 				<Link to="/auth" className="gl-user-pill" aria-label="Login or register">
 					<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
 						<path d="M12 12a5 5 0 1 0-5-5 5 5 0 0 0 5 5Zm0 2c-4.418 0-8 2.239-8 5v1h16v-1c0-2.761-3.582-5-8-5Z" />
 					</svg>
 				</Link>
+
+				<NavOptions isOpen={isUserOptionsOpen} />
 			</div>
 		</header>
 	)

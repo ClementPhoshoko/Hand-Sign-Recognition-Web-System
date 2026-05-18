@@ -1,0 +1,101 @@
+.gl-nav-options {
+	position: absolute;
+	top: 100%;
+	right: 0;
+	margin-top: 1rem;
+	display: flex;
+	flex-direction: column;
+	align-items: flex-end;
+	gap: 0.8rem;
+	pointer-events: none;
+	z-index: 100;
+}
+
+.gl-nav-options.is-open {
+	pointer-events: auto;
+}
+
+.gl-option-item-wrap {
+	display: flex;
+	align-items: center;
+	gap: 0.75rem;
+	opacity: 0;
+	transform: translateY(-10px) scale(0.95);
+	transition: opacity 300ms ease, transform 300ms cubic-bezier(0.34, 1.56, 0.64, 1);
+	transition-delay: calc(var(--index) * 60ms);
+	cursor: pointer;
+}
+
+.gl-nav-options.is-open .gl-option-item-wrap {
+	opacity: 1;
+	transform: translateY(0) scale(1);
+}
+
+.gl-option-item-wrap:hover .gl-option-label {
+	color: var(--text-primary);
+}
+
+.gl-option-item-wrap:hover .gl-option-circle {
+	transform: scale(1.1);
+	filter: brightness(0.98);
+	color: var(--text-primary);
+	box-shadow: var(--glow-outer);
+}
+
+/* Chain effect: small line connecting items */
+.gl-option-item-wrap::after {
+	content: '';
+	position: absolute;
+	top: -0.8rem;
+	right: 25px; /* Half of circle width (52/2) - half of line width */
+	width: 2px;
+	height: 0.8rem;
+	background: var(--border-standard);
+	opacity: 0.4;
+	transition: background 200ms ease, opacity 200ms ease;
+}
+
+.gl-option-item-wrap:hover::after {
+	background: var(--top-highlight);
+	opacity: 0.8;
+}
+
+.gl-option-item-wrap:first-child::after {
+	display: none;
+}
+
+.gl-option-label {
+	font-size: var(--text-sm);
+	font-weight: var(--font-medium);
+	color: var(--text-secondary);
+	white-space: nowrap;
+	opacity: 0;
+	transform: translateX(10px);
+	transition: opacity 300ms ease, transform 300ms ease, color 200ms ease;
+	transition-delay: calc(var(--index) * 60ms + 100ms);
+}
+
+.gl-nav-options.is-open .gl-option-label {
+	opacity: 1;
+	transform: translateX(0);
+}
+
+.gl-option-circle {
+	width: 52px;
+	height: 52px;
+	border-radius: 50%;
+	background: var(--strong-white);
+	color: var(--shell);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	box-shadow: var(--shadow-soft);
+	transition: transform 200ms ease, filter 200ms ease, box-shadow 200ms ease, color 200ms ease;
+	text-decoration: none;
+	border: 1px solid var(--border-highlight);
+}
+
+.gl-option-circle svg {
+	width: 20px;
+	height: 20px;
+}
