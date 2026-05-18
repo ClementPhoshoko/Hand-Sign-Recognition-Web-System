@@ -13,7 +13,10 @@ const RecentMeetingsSection = () => {
 
   return (
     <div className="gl-db-section gl-db-meetings-section">
-      <h2 className="gl-db-section-title">Live Hub & Meetings</h2>
+      <div className="gl-db-section-title">
+        <div className="gl-db-title-content">Live Hub & Meetings</div>
+        <button className="gl-db-btn-view-more">view more</button>
+      </div>
       <div className="gl-db-meetings-list">
         {displayMeetings.map(meeting => (
           <div key={meeting.id} className="gl-db-meeting-item">

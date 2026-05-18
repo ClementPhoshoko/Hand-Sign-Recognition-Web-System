@@ -52,7 +52,9 @@ const SettingsSection = () => {
   return (
     <div className="gl-db-section gl-db-activity-section">
       <div className="gl-db-activity-header">
-        <h2 className="gl-db-section-title">Activity Pulse</h2>
+        <div className="gl-db-section-title">
+          <div className="gl-db-title-content">Activity Pulse</div>
+        </div>
         <span className="gl-db-activity-total">{monthName}</span>
       </div>
       
