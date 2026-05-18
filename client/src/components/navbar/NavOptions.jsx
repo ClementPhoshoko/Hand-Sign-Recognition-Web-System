@@ -6,6 +6,7 @@ function NavOptions({ isOpen }) {
 		{
 			label: 'Notifications',
 			to: '/notifications',
+			recent: 'New hand sign detected in Liveroom #42',
 			icon: (
 				<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
 					<path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
@@ -42,10 +43,13 @@ function NavOptions({ isOpen }) {
 			{options.map((option, index) => (
 				<div 
 					key={option.label} 
-					className="gl-option-item-wrap"
+					className={`gl-option-item-wrap${option.recent ? ' has-recent' : ''}`}
 					style={{ '--index': index }}
 				>
-					<span className="gl-option-label">{option.label}</span>
+					<div className="gl-option-content">
+						<span className="gl-option-label">{option.label}</span>
+						{option.recent && <span className="gl-option-recent">{option.recent}</span>}
+					</div>
 					<Link to={option.to} className="gl-option-circle" aria-label={option.label}>
 						{option.icon}
 					</Link>
